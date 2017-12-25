@@ -1,6 +1,5 @@
 package com.fku.merchant.app.strategy.scalping;
 
-import com.fku.merchant.app.exchange.GdaxExchangeFactory;
 import com.fku.merchant.app.strategy.StrategyException;
 import com.fku.merchant.app.strategy.TradingStrategy;
 import lombok.extern.log4j.Log4j2;
@@ -9,7 +8,8 @@ import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.trade.LimitOrder;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -20,19 +20,18 @@ import java.math.BigDecimal;
 @Component
 public class ScalpingStrategy implements TradingStrategy {
 
-    @Value("${exchange.gdax.apiKey}")
-    private String apiKey;
-    @Value("${exchange.gdax.secret}")
-    private String secret;
-    @Value("${exchange.gdax.passphrase}")
-    private String passphrase;
     private final CurrencyPair CURRENCY_PAIR = CurrencyPair.BTC_EUR;
+    private final Exchange exchange;
 
-    private Exchange gdaxExchange;
+    public ScalpingStrategy(@Qualifier("exchange") Exchange exchange) {
+        this.exchange = exchange;
+    }
 
     @PostConstruct
-    public void setUp() {
-        gdaxExchange = GdaxExchangeFactory.createExchange(apiKey, secret, passphrase);
+    private void init() {
+        log.info("Strategy [{}] is initialized", this.getClass());
+        log.info("Strategy executes on [{}] exchange market", exchange.getExchangeSpecification().getExchangeName());
+        log.info("Trading currency pair is [{}]", CURRENCY_PAIR);
     }
 
     @Override
@@ -43,8 +42,8 @@ public class ScalpingStrategy implements TradingStrategy {
 
     private void firstRun() {
         try {
-            OrderBook orderBook = gdaxExchange.getMarketDataService().getOrderBook(CURRENCY_PAIR);
-//            gdaxExchange.getMarketDataService().getOrderBook(CURRENCY_PAIR);
+            OrderBook orderBook = exchange.getMarketDataService().getOrderBook(CURRENCY_PAIR);
+//            exchange.getMarketDataService().getOrderBook(CURRENCY_PAIR);
             // BID = the price at which a market maker is willing to buy
             // ASK = SELL
             orderBook.getBids().stream()
@@ -63,7 +62,7 @@ public class ScalpingStrategy implements TradingStrategy {
                         );
 
                         try {
-                            gdaxExchange.getTradeService().placeLimitOrder(newBuyLimitOrder);
+                            exchange.getTradeService().placeLimitOrder(newBuyLimitOrder);
                         } catch (IOException e) {
                             log.error("Failed to place buy limit order", e);
                         }

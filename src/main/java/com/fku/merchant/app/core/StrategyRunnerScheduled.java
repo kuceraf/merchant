@@ -5,7 +5,6 @@ import com.fku.merchant.app.strategy.TradingStrategy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Log4j2
@@ -26,11 +25,14 @@ public class StrategyRunnerScheduled implements StrategyRunner {
     }
 
     @Override
-    @Scheduled(fixedDelay = 1000)
+    // The delay in milliseconds. the period will be measured from the completion time of each preceding invocation
+    // If you do not provide a pool-size attribute, the default thread pool will only have a single thread.
+    @Scheduled(fixedDelay = 30000)
     public void run() {
         try {
             tradingStrategy.execute();
         } catch (StrategyException e) {
+            // TODO error handling
             log.fatal("A FATAL error has occurred in Trading Strategy!", e);
 //            keepAlive = false;
         }
