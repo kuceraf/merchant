@@ -31,6 +31,6 @@ public class MerchantApplication implements CommandLineRunner {
 	@Override
 	public void run(String... strings) throws Exception {
 		log.info("MerchantApplication is starting with active profile: {}", Arrays.toString(environment.getActiveProfiles()));
-		strategyRunner.run();
+		strategyRunner.runStrategy();
 	}
 }
