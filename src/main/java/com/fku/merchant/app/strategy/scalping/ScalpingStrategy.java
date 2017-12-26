@@ -37,7 +37,7 @@ public class ScalpingStrategy implements TradingStrategy {
     @Override
     public void execute() throws StrategyException {
         log.info("Strategy executed !!!");
-//        firstRun();
+        firstRun();
     }
 
     private void firstRun() {
@@ -61,11 +61,11 @@ public class ScalpingStrategy implements TradingStrategy {
                                 currentBuyPrice // In a BID this is the highest acceptable price
                         );
 
-                        try {
-                            exchange.getTradeService().placeLimitOrder(newBuyLimitOrder);
-                        } catch (IOException e) {
-                            log.error("Failed to place buy limit order", e);
-                        }
+//                        try {
+//                            exchange.getTradeService().placeLimitOrder(newBuyLimitOrder);
+//                        } catch (IOException e) {
+//                            log.error("Failed to place buy limit order", e);
+//                        }
                     });
 
 //            LimitOrder.Builder.from()

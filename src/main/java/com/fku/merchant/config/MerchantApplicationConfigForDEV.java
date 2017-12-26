@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
-@PropertySource("classpath:TST.properties")
-@Profile("TST")
-public class MerchantApplicationConfigForTST {
+@PropertySource("classpath:DEV.properties")
+@Profile("DEV")
+public class MerchantApplicationConfigForDEV {
 }

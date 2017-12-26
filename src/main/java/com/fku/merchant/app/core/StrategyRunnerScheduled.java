@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Log4j2
 @Service
 public class StrategyRunnerScheduled implements StrategyRunner {
-    Long strategyExecutionNo = 1L;
+    private Long strategyExecutionNo = 1L;
 
     // services
     private final TradingStrategy tradingStrategy;
@@ -30,6 +30,7 @@ public class StrategyRunnerScheduled implements StrategyRunner {
 
     // The delay in milliseconds. the period will be measured from the completion time of each preceding invocation
     // If you do not provide a pool-size attribute, the default thread pool will only have a single thread.
+    // Scheduler starts automatically, when bean is created by spring
     @Scheduled(fixedDelay = 30000)
     public void scheduledExecution() {
         try {
@@ -40,6 +41,7 @@ public class StrategyRunnerScheduled implements StrategyRunner {
             long elapsedTime = stopTime - startTime;
             log.info("Strategy execution number [{}] END", strategyExecutionNo);
             log.info("Strategy execution duration [{}] ms", elapsedTime);
+            strategyExecutionNo ++;
         } catch (StrategyException e) {
             log.fatal("A FATAL error has occurred in Trading Strategy!", e);
             shutdownManager.initiateShutdown(0);
