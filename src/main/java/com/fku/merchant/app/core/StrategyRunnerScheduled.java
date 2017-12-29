@@ -1,6 +1,6 @@
 package com.fku.merchant.app.core;
 
-import com.fku.merchant.app.strategy.StrategyException;
+import com.fku.merchant.app.strategy.MerchantStrategyException;
 import com.fku.merchant.app.strategy.TradingStrategy;
 import com.fku.merchant.app.util.ShutdownManager;
 import lombok.extern.log4j.Log4j2;
@@ -43,7 +43,7 @@ public class StrategyRunnerScheduled implements StrategyRunner {
             long elapsedTime = stopTime - startTime;
             log.info("END Strategy execution (number [{}], duration [{}] ms)", strategyExecutionNo, elapsedTime);
             strategyExecutionNo ++;
-        } catch (StrategyException e) {
+        } catch (MerchantException e) {
             log.fatal("A FATAL error has occurred in Trading Strategy!", e);
             shutdownManager.initiateShutdown(0);
         }

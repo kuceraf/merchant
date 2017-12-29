@@ -1,15 +1,12 @@
-package com.fku.merchant.app.strategy;
+package com.fku.merchant.app.core;
 
-public final class StrategyException extends Exception {
-
-    private static final long serialVersionUID = -5066890753686004758L;
-
+public class MerchantException extends Exception {
     /**
      * Constructor builds exception with error message.
      *
      * @param msg the error message.
      */
-    public StrategyException(String msg) {
+    public MerchantException(String msg) {
         super(msg);
     }
 
@@ -18,7 +15,7 @@ public final class StrategyException extends Exception {
      *
      * @param e the original exception.
      */
-    public StrategyException(Throwable e) {
+    public MerchantException(Throwable e) {
         super(e);
     }
 
@@ -28,7 +25,7 @@ public final class StrategyException extends Exception {
      * @param msg the error message.
      * @param e   the original exception.
      */
-    public StrategyException(String msg, Throwable e) {
+    public MerchantException(String msg, Throwable e) {
         super(msg, e);
     }
 }

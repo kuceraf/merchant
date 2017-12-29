@@ -1,6 +1,5 @@
-package com.fku.merchant.app.exchange;
+package com.fku.merchant.app.exchange.impl;
 
-import lombok.Setter;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.gdax.GDAXExchange;
@@ -8,11 +7,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.util.Assert;
 
-public class ExchangeFactory extends AbstractFactoryBean<Exchange> {
+public class XchangeFactory extends AbstractFactoryBean<Exchange> {
     private String apiKey;
     private String secret;
     private String passphrase;
-    private ExchangeType exchangeType;
+    private SupportedXchangeType supportedXchangeType;
 
     @Override
     public Class<?> getObjectType() {
@@ -21,7 +20,7 @@ public class ExchangeFactory extends AbstractFactoryBean<Exchange> {
 
     @Override
     protected Exchange createInstance() throws Exception { //by default factory crate singleton, this is called once
-        switch (exchangeType) {
+        switch (supportedXchangeType) {
             case GDAX:
                 Assert.notNull(apiKey, "ApiKey must be configured for GDAX exchange in property file");
                 Assert.notNull(secret, "Secret must be configured for GDAX exchange in property file");
@@ -52,8 +51,8 @@ public class ExchangeFactory extends AbstractFactoryBean<Exchange> {
     }
 
     @Value("${exchange.type}")
-    public void setExchangeType(String exchangeType) {
-        Assert.notNull(exchangeType, "ExchangeType must be configured in property file");
-        this.exchangeType = ExchangeType.valueOf(exchangeType.toUpperCase());
+    public void setSupportedXchangeType(String supportedXchangeType) {
+        Assert.notNull(supportedXchangeType, "ExchangeType must be configured in property file");
+        this.supportedXchangeType = SupportedXchangeType.valueOf(supportedXchangeType.toUpperCase());
     }
 }
