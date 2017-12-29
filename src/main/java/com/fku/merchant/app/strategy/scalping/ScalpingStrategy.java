@@ -26,7 +26,28 @@ import java.math.BigDecimal;
 public class ScalpingStrategy extends ATradingStrategy {
 
     // Constants
-    private final CurrencyPair CURRENCY_PAIR = CurrencyPair.BTC_EUR;
+    /**
+     * Pro maket BTC/EUR je to 10EUR (COUNTER_CURRENCY_BUY_ORDER_AMOUNT = 10)
+     *
+     * Napr:
+     * COUNTER_CURRENCY_BUY_ORDER_AMOUNT = 10
+     * Pri nakupu na marketu BTC/EUR definuji, ze chci nakupovat BTC za 10 EUR. Pro realizaci nakupu udelam vypocet:
+     * BTC buy order = 10 EUR / (kolik EUR stoji 1 BTC - tj cena BTC/EUR)
+     *
+     * Mam 10 EUR
+     * Chci X BTC
+     * Cena 7,599.99 EUR za 1 BTC (nakupni cena instrumentu BTC/EUR = 7,599.99 EUR)
+     * X = 10 / 7,599.99
+     * X = 0,00131579 BTC
+     * Za 10 EUR si mohu koupit 0,00131579 BTC pri cene BTC/EUR = 7,599.99.
+     */
+    public static final BigDecimal COUNTER_CURRENCY_BUY_ORDER_AMOUNT = BigDecimal.valueOf(700);
+
+    /**
+     * The minimum % gain was to achieve before placing a SELL oder.
+     */
+    public static final BigDecimal MINIMUM_PERCENTAGE_GAIN = BigDecimal.valueOf(0.02);
+
 
     public ScalpingStrategy(Exchange exchange) {
         super(exchange);
@@ -40,8 +61,8 @@ public class ScalpingStrategy extends ATradingStrategy {
     }
 
     @Override
-    public void execute() throws StrategyException {
-        log.info("Strategy executed !!!");
+    public void executeStrategySpecific() throws StrategyException {
+
         firstRun();
     }
 
