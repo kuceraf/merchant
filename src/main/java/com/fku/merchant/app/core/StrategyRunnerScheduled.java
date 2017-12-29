@@ -34,15 +34,14 @@ public class StrategyRunnerScheduled implements StrategyRunner {
     @Scheduled(fixedDelay = 30000)
     public void scheduledExecution() {
         try {
-            log.info("Strategy execution number [{}] BEGIN", strategyExecutionNo);
+            log.info("BEGIN Strategy execution number [{}]", strategyExecutionNo);
             long startTime = System.currentTimeMillis();
 
             tradingStrategy.execute();
 
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
-            log.info("Strategy execution number [{}] END", strategyExecutionNo);
-            log.info("Strategy execution duration [{}] ms", elapsedTime);
+            log.info("END Strategy execution number [{}] (duration [{}] ms)", strategyExecutionNo, elapsedTime);
             strategyExecutionNo ++;
         } catch (StrategyException e) {
             log.fatal("A FATAL error has occurred in Trading Strategy!", e);

@@ -1,6 +1,7 @@
 package com.fku.merchant.app.strategy.scalping;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fku.merchant.app.strategy.ATradingStrategy;
 import com.fku.merchant.app.strategy.StrategyException;
 import com.fku.merchant.app.strategy.TradingStrategy;
 import lombok.extern.log4j.Log4j2;
@@ -22,13 +23,13 @@ import java.math.BigDecimal;
 
 @Log4j2
 @Component
-public class ScalpingStrategy implements TradingStrategy {
+public class ScalpingStrategy extends ATradingStrategy {
 
+    // Constants
     private final CurrencyPair CURRENCY_PAIR = CurrencyPair.BTC_EUR;
-    private final Exchange exchange;
 
-    public ScalpingStrategy(@Qualifier("exchange") Exchange exchange) {
-        this.exchange = exchange;
+    public ScalpingStrategy(Exchange exchange) {
+        super(exchange);
     }
 
     @PostConstruct
