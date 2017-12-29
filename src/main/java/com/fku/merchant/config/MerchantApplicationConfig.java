@@ -1,6 +1,7 @@
 package com.fku.merchant.config;
 
-import com.fku.merchant.app.exchange.impl.GdaxExchange;
+import com.fku.merchant.app.exchange.ExchangeService;
+import com.fku.merchant.app.exchange.impl.GdaxExchangeService;
 import com.fku.merchant.app.exchange.impl.XchangeFactory;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
@@ -28,10 +29,10 @@ public class MerchantApplicationConfig {
     }
 
     /** local wrapping interface for org.knowm.xchange**/
-    @Bean("exchange")
-    public com.fku.merchant.app.exchange.Exchange exchange() throws Exception {
+    @Bean("exchangeService")
+    public ExchangeService exchangeService() throws Exception {
         // TODO the exchange impl could be configurable based on active spring profile
         CurrencyPair currencyPair = new CurrencyPair(this.currencyPairProp);
-        return new GdaxExchange(xchange(), currencyPair);
+        return new GdaxExchangeService(xchange(), currencyPair);
     }
 }

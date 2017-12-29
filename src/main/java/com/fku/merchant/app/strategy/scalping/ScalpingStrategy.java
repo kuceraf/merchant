@@ -1,11 +1,11 @@
 package com.fku.merchant.app.strategy.scalping;
 
 import com.fku.merchant.app.core.MerchantException;
-import com.fku.merchant.app.exchange.Exchange;
+import com.fku.merchant.app.exchange.ExchangeService;
 import com.fku.merchant.app.strategy.ATradingStrategy;
+import com.fku.merchant.app.strategy.dto.OrderState;
 import com.fku.merchant.app.strategy.dto.PricePair;
 import lombok.extern.log4j.Log4j2;
-import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -40,55 +40,40 @@ public class ScalpingStrategy extends ATradingStrategy {
 
     private OrderState lastOrder;
 
-    public ScalpingStrategy(Exchange exchange) {
-        super(exchange);
+    public ScalpingStrategy(ExchangeService exchangeService) {
+        super(exchangeService);
     }
 
     @PostConstruct
     private void init() {
         log.info("Strategy [{}] is initialized", this.getClass());
-        log.info("Strategy executes on [{}] exchange market", exchange.getExchangeName());
+        log.info("Strategy executes on [{}] exchange market", exchangeService.getExchangeName());
     }
 
     @Override
     public void executeStrategySpecific() throws MerchantException {
-        PricePair currentPrices = exchange.getCurrentPrices();
-        currentPrices.getAskPrice();
+        PricePair currentPrices = exchangeService.getCurrentPrices();
+        BigDecimal currentBidPrice = currentPrices.getBidPrice();
 
-        executeFirstTimeBuyOrder();
-    }
-
-    private void executeFirstTimeBuyOrder() throws MerchantException {
-
-//        try {
-//            // Grab the latest order book for the market.
-//
-//            // ASK = SELL
-//            orderBook.getBids().stream()
-//                    .findFirst()
-//                    .ifPresent((LimitOrder buyLimitOrder) -> {
-//                        // v orderBook najdu prvni bid limitOrder (obsahuje cenu za kterou se da prave nakoupit - nejvyssi cena)
-//                        BigDecimal currentBuyPrice = buyLimitOrder.getLimitPrice();
-//
-//                        LimitOrder newBuyLimitOrder = new LimitOrder(
-//                                (Order.OrderType.BID),
-//                                new BigDecimal(".01"), // The amount to trade
-//                                CurrencyPair.BTC_EUR,
-//                                null,
-//                                null,
-//                                currentBuyPrice // In a BID this is the highest acceptable price
-//                        );
-//
-////                        try {
-////                            exchange.getTradeService().placeLimitOrder(newBuyLimitOrder);
-////                        } catch (IOException e) {
-////                            log.error("Failed to place buy limit order", e);
-////                        }
-//                    });
-//
-////            LimitOrder.Builder.from()
-//        } catch (IOException e) {
-//            log.error("Failed to get Order book",e);
-//        }
+        // TODO look up in DB
+        if (lastOrder == null) {
+            // zaciname - musime nejdrive nakoupit
+            log.debug("First time strategy execution - placing new BUY order");
+            exchangeService.placeBuyOrder(currentBidPrice, COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
+//            executeFirstTimeBuyOrder(currentBidPrice);
+        } else {
+            switch (lastOrder.type) {
+                case BUY:
+                    // umistili jsme pozadavek na nakup - zkusime prodej se ziskem
+//                TODO tryPlaceSellOrder();
+                    break;
+                case SELL:
+                    // co jsme nakoupili je prodano - nakoupime znovu
+//               TODO tryPlaceBuyOrder(currentBidPrice, currentAskPrice);
+                    break;
+                default:
+                    throw new IllegalStateException("Unknown order type");
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.fku.merchant.app.strategy.scalping;
+package com.fku.merchant.app.strategy.dto;
 
 public enum OrderType {
 

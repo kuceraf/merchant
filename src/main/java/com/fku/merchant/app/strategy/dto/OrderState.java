@@ -1,6 +1,7 @@
-package com.fku.merchant.app.strategy.scalping;
+package com.fku.merchant.app.strategy.dto;
 
 import java.math.BigDecimal;
+
 import lombok.ToString;
 
 @ToString

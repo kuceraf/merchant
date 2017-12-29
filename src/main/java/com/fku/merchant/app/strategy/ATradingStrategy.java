@@ -1,10 +1,10 @@
 package com.fku.merchant.app.strategy;
 
 import com.fku.merchant.app.core.MerchantException;
-import com.fku.merchant.app.exchange.Exchange;
-import com.fku.merchant.app.strategy.scalping.OrderState;
+import com.fku.merchant.app.exchange.ExchangeService;
+import com.fku.merchant.app.strategy.dto.OrderState;
 import lombok.extern.log4j.Log4j2;
-import org.knowm.xchange.currency.CurrencyPair;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.math.BigDecimal;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Log4j2
 public abstract class ATradingStrategy implements TradingStrategy {
-    protected final Exchange exchange;
+    protected final ExchangeService exchangeService;
     //key = orderId
     protected Map<String, OrderState> buyOrderStates = new HashMap<>();
     protected Map<String, OrderState> sellOrderStates = new HashMap<>();
@@ -43,7 +43,8 @@ public abstract class ATradingStrategy implements TradingStrategy {
                 sellOrdersTotalCost);
     }
 
-    public ATradingStrategy(@Qualifier("exchange") Exchange exchange) {
-        this.exchange = exchange;
+    @Autowired
+    public ATradingStrategy(ExchangeService exchangeService) {
+        this.exchangeService = exchangeService;
     }
 }
