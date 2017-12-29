@@ -2,7 +2,7 @@ package com.fku.merchant.app.exchange;
 
 import com.fku.merchant.app.core.MerchantException;
 
-public class MerchantExchangeException extends MerchantException {
+public final class MerchantExchangeException extends MerchantException {
 
     /**
      * Constructor builds exception with error message.

@@ -2,7 +2,6 @@ package com.fku.merchant.app.core;
 
 import com.fku.merchant.app.strategy.MerchantStrategyException;
 import com.fku.merchant.app.strategy.TradingStrategy;
-import com.fku.merchant.app.util.ShutdownManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
