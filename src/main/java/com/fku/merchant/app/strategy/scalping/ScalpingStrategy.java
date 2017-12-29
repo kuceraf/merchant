@@ -1,5 +1,6 @@
 package com.fku.merchant.app.strategy.scalping;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fku.merchant.app.strategy.StrategyException;
 import com.fku.merchant.app.strategy.TradingStrategy;
 import lombok.extern.log4j.Log4j2;
@@ -13,7 +14,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 
 @Log4j2
@@ -42,8 +46,8 @@ public class ScalpingStrategy implements TradingStrategy {
 
     private void firstRun() {
         try {
-            OrderBook orderBook = exchange.getMarketDataService().getOrderBook(CURRENCY_PAIR);
-//            exchange.getMarketDataService().getOrderBook(CURRENCY_PAIR);
+            OrderBook orderBook = exchange.getMarketDataService().getOrderBook(CURRENCY_PAIR, 2);
+
             // BID = the price at which a market maker is willing to buy
             // ASK = SELL
             orderBook.getBids().stream()

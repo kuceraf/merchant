@@ -36,7 +36,9 @@ public class StrategyRunnerScheduled implements StrategyRunner {
         try {
             log.info("Strategy execution number [{}] BEGIN", strategyExecutionNo);
             long startTime = System.currentTimeMillis();
+
             tradingStrategy.execute();
+
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
             log.info("Strategy execution number [{}] END", strategyExecutionNo);

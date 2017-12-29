@@ -1,15 +1,22 @@
-# Profily:
+# Profiles
 
-
-# Prikazy
+# Commands
 
 ## AWS
 ##### Deploy eb
 `eb deploy bxbot-dev --staged`
-##### Zapnout cloud watch 
+##### Enable cloud watch 
 `eb logs -cw enable`
 
-# Ostatni
+# Code
+## Save exchange response for mocking
+`FileOutputStream f = new FileOutputStream(new File("e:\\orderBook.txt"));
+ ObjectOutputStream o = new ObjectOutputStream(f);
+ o.writeObject(orderBook);
+ o.close();
+ f.close();`
+
+# Others
 ##### https://github.com/timmolter/XChange
 XChange is a Java library providing a streamlined API 
 for interacting with 60+ Bitcoin and Altcoin exchanges providing a consistent interface 
