@@ -21,13 +21,13 @@ public abstract class ATradingStrategy implements TradingStrategy {
     @Override
     public void execute() throws StrategyException {
         log.info("Execution of [{}]", this.getClass().getSimpleName());
+        checkProfitability();
         executeStrategySpecific();
     }
 
     protected abstract void executeStrategySpecific() throws StrategyException;
 
     protected void checkProfitability() {
-
         BigDecimal buyOrdersTotalCost = buyOrderStates.values().stream()
                 .map(buyOrder -> buyOrder.price.multiply(buyOrder.amount))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

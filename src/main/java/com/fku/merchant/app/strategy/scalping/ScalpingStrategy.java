@@ -62,15 +62,14 @@ public class ScalpingStrategy extends ATradingStrategy {
 
     @Override
     public void executeStrategySpecific() throws StrategyException {
-
         firstRun();
     }
 
     private void firstRun() {
         try {
+            // Grab the latest order book for the market.
             OrderBook orderBook = exchange.getMarketDataService().getOrderBook(CURRENCY_PAIR, 2);
 
-            // BID = the price at which a market maker is willing to buy
             // ASK = SELL
             orderBook.getBids().stream()
                     .findFirst()
