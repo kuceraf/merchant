@@ -1,6 +1,6 @@
 package com.fku.merchant.app.core;
 
-import com.fku.merchant.app.strategy.MerchantStrategyException;
+import com.fku.merchant.app.core.error.MerchantStrategyException;
 import com.fku.merchant.app.strategy.TradingStrategy;
 import org.junit.Test;
 import org.junit.runner.RunWith;

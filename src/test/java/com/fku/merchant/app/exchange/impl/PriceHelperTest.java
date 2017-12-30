@@ -1,8 +1,7 @@
 package com.fku.merchant.app.exchange.impl;
 
 import com.fku.merchant.app.exchange.ExchangeTestDataFactory;
-import com.fku.merchant.app.exchange.MerchantExchangeException;
-import com.fku.merchant.app.exchange.impl.PriceHelper;
+import com.fku.merchant.app.core.error.MerchantFatalException;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +37,13 @@ public class PriceHelperTest {
     @Test
     public void getCurrentBidPrice_exceptionTest() throws Exception {
         orderBook.getBids().clear();
-        assertThatExceptionOfType(MerchantExchangeException.class)
+        assertThatExceptionOfType(MerchantFatalException.class)
                 .isThrownBy(() -> PriceHelper.getCurrentBidPrice(orderBook));
+    }
+
+    @Test
+    public void calculateAmountOfBaseCurrencyTest() {
+        assertThat(PriceHelper.calculateAmountOfBaseCurrency(BigDecimal.valueOf(10), BigDecimal.valueOf(7599.99)))
+                .isEqualTo(BigDecimal.valueOf(0.00131579));
     }
 }

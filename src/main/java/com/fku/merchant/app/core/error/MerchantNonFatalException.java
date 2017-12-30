@@ -1,15 +1,14 @@
-package com.fku.merchant.app.exchange;
+package com.fku.merchant.app.core.error;
 
-import com.fku.merchant.app.core.MerchantException;
+import com.fku.merchant.app.core.error.MerchantException;
 
-public final class MerchantExchangeException extends MerchantException {
-
+public final class MerchantNonFatalException extends MerchantException {
     /**
      * Constructor builds exception with error message.
      *
      * @param msg the error message.
      */
-    public MerchantExchangeException(String msg) {
+    public MerchantNonFatalException(String msg) {
         super(msg);
     }
 
@@ -18,7 +17,7 @@ public final class MerchantExchangeException extends MerchantException {
      *
      * @param e the original exception.
      */
-    public MerchantExchangeException(Throwable e) {
+    public MerchantNonFatalException(Throwable e) {
         super(e);
     }
 
@@ -28,7 +27,7 @@ public final class MerchantExchangeException extends MerchantException {
      * @param msg the error message.
      * @param e   the original exception.
      */
-    public MerchantExchangeException(String msg, Throwable e) {
+    public MerchantNonFatalException(String msg, Throwable e) {
         super(msg, e);
     }
 }

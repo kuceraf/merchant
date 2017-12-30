@@ -1,6 +1,6 @@
 package com.fku.merchant.app.strategy.scalping;
 
-import com.fku.merchant.app.core.MerchantException;
+import com.fku.merchant.app.core.error.MerchantException;
 import com.fku.merchant.app.exchange.ExchangeService;
 import com.fku.merchant.app.strategy.ATradingStrategy;
 import com.fku.merchant.app.strategy.dto.OrderState;

@@ -1,15 +1,18 @@
-package com.fku.merchant.app.strategy;
+package com.fku.merchant.app.core.error;
 
-import com.fku.merchant.app.core.MerchantException;
+import com.fku.merchant.app.core.error.MerchantException;
 
-public final class MerchantStrategyException extends MerchantException {
+/**
+ * When this exception is thrown is must cause the application shutdown
+ */
+public final class MerchantFatalException extends MerchantException {
 
     /**
      * Constructor builds exception with error message.
      *
      * @param msg the error message.
      */
-    public MerchantStrategyException(String msg) {
+    public MerchantFatalException(String msg) {
         super(msg);
     }
 
@@ -18,7 +21,7 @@ public final class MerchantStrategyException extends MerchantException {
      *
      * @param e the original exception.
      */
-    public MerchantStrategyException(Throwable e) {
+    public MerchantFatalException(Throwable e) {
         super(e);
     }
 
@@ -28,7 +31,7 @@ public final class MerchantStrategyException extends MerchantException {
      * @param msg the error message.
      * @param e   the original exception.
      */
-    public MerchantStrategyException(String msg, Throwable e) {
+    public MerchantFatalException(String msg, Throwable e) {
         super(msg, e);
     }
 }

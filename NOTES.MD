@@ -1,3 +1,7 @@
+# TODO
+Exeption handling tests
+Remove MerchantStrategyException
+
 # Profiles
 
 # Commands

@@ -1,6 +1,6 @@
-package com.fku.merchant.app.core;
+package com.fku.merchant.app.core.error;
 
-public class MerchantException extends Exception {
+public abstract class MerchantException extends Exception {
     /**
      * Constructor builds exception with error message.
      *

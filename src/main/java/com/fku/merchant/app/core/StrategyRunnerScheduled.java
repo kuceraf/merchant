@@ -1,5 +1,6 @@
 package com.fku.merchant.app.core;
 
+import com.fku.merchant.app.core.error.MerchantException;
 import com.fku.merchant.app.strategy.TradingStrategy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
