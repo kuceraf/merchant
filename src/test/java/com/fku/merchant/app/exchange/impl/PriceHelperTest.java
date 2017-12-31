@@ -1,7 +1,7 @@
 package com.fku.merchant.app.exchange.impl;
 
 import com.fku.merchant.app.exchange.ExchangeTestDataFactory;
-import com.fku.merchant.app.core.error.MerchantFatalException;
+import com.fku.merchant.app.core.exception.MerchantStrategyException;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class PriceHelperTest {
     @Test
     public void getCurrentBidPrice_exceptionTest() throws Exception {
         orderBook.getBids().clear();
-        assertThatExceptionOfType(MerchantFatalException.class)
+        assertThatExceptionOfType(MerchantStrategyException.class)
                 .isThrownBy(() -> PriceHelper.getCurrentBidPrice(orderBook));
     }
 

@@ -1,8 +1,9 @@
 package com.fku.merchant.app.strategy;
 
-import com.fku.merchant.app.core.error.MerchantException;
+import com.fku.merchant.app.core.exception.MerchantException;
+import com.fku.merchant.app.core.exception.MerchantNonFatalException;
+import com.fku.merchant.app.core.exception.MerchantStrategyException;
 import com.fku.merchant.app.exchange.ExchangeService;
-import com.fku.merchant.app.core.error.MerchantNonFatalException;
 import com.fku.merchant.app.strategy.dto.OrderState;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,6 @@ public abstract class ATradingStrategy implements TradingStrategy {
     public void execute() throws MerchantException {
         log.info("Execution of [{}]", this.getClass().getSimpleName());
         checkProfitability();
-        try {
-            executeStrategySpecific();
-        } catch (MerchantNonFatalException e) {
-            log.warn("Non-fatal network error has occurred during strategy execution", e);
-        }
     }
 
     protected abstract void executeStrategySpecific() throws MerchantException;

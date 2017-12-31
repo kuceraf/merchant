@@ -1,6 +1,4 @@
-package com.fku.merchant.app.core.error;
-
-import com.fku.merchant.app.core.error.MerchantException;
+package com.fku.merchant.app.core.exception;
 
 public final class MerchantNonFatalException extends MerchantException {
     /**

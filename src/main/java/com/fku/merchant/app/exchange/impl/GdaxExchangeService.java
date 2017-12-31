@@ -1,9 +1,9 @@
 package com.fku.merchant.app.exchange.impl;
 
-import com.fku.merchant.app.core.error.MerchantException;
+import com.fku.merchant.app.core.exception.MerchantException;
 import com.fku.merchant.app.exchange.ExchangeExceptionHandler;
 import com.fku.merchant.app.exchange.ExchangeService;
-import com.fku.merchant.app.core.error.MerchantFatalException;
+import com.fku.merchant.app.core.exception.MerchantStrategyException;
 import com.fku.merchant.app.strategy.dto.OrderState;
 import com.fku.merchant.app.strategy.dto.OrderType;
 import com.fku.merchant.app.strategy.dto.PricePair;
@@ -66,13 +66,13 @@ public class GdaxExchangeService implements ExchangeService {
     }
 
 
-    private OrderBook getOrderBook() throws MerchantFatalException {
+    private OrderBook getOrderBook() throws MerchantStrategyException {
         OrderBook orderBook = null;
         try {
             orderBook = xchange.getMarketDataService().getOrderBook(currencyPair, 2);
         } catch (IOException e) {
             log.error("Failed to get order book from xchange");
-            throw new MerchantFatalException("Failed to get order book from xchange");
+            throw new MerchantStrategyException("Failed to get order book from xchange");
         }
         return orderBook;
     }

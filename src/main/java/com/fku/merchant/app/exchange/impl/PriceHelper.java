@@ -1,6 +1,6 @@
 package com.fku.merchant.app.exchange.impl;
 
-import com.fku.merchant.app.core.error.MerchantFatalException;
+import com.fku.merchant.app.core.exception.MerchantStrategyException;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.springframework.util.Assert;
@@ -41,11 +41,11 @@ public class PriceHelper {
      * is willing to pay for a security.
      * @param orderBook (in bids price list should contain the highest price at first position)
      * @return Current BID price (the highest bid price)
-     * @throws MerchantFatalException if order book is null or empty
+     * @throws MerchantStrategyException if order book is null or empty
      */
-    static BigDecimal getCurrentBidPrice(OrderBook orderBook) throws MerchantFatalException {
+    static BigDecimal getCurrentBidPrice(OrderBook orderBook) throws MerchantStrategyException {
         if (orderBook == null || orderBook.getBids() == null || orderBook.getBids().size() == 0) {
-            throw new MerchantFatalException(ERR_BAD_ORDER_BOOK);
+            throw new MerchantStrategyException(ERR_BAD_ORDER_BOOK);
         }
         BigDecimal price = orderBook.getBids().get(0).getLimitPrice();
         log.info("Current highest BID price [{}]", price);
@@ -57,11 +57,11 @@ public class PriceHelper {
      * is willing to receive.
      * @param orderBook (in asks price list should contain the lowest price at first position)
      * @return Current ASK price (the lowest ask price)
-     * @throws MerchantFatalException if order book is null or empty
+     * @throws MerchantStrategyException if order book is null or empty
      */
-    static BigDecimal getCurrentAskPrice(OrderBook orderBook) throws MerchantFatalException {
+    static BigDecimal getCurrentAskPrice(OrderBook orderBook) throws MerchantStrategyException {
         if (orderBook == null || orderBook.getAsks() == null || orderBook.getAsks().size() == 0) {
-            throw new MerchantFatalException(ERR_BAD_ORDER_BOOK);
+            throw new MerchantStrategyException(ERR_BAD_ORDER_BOOK);
         }
         BigDecimal price = orderBook.getAsks().get(0).getLimitPrice();
         log.info("Current highest ASK price [{}]", price);

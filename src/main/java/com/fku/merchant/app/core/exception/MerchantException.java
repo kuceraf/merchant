@@ -1,4 +1,4 @@
-package com.fku.merchant.app.core.error;
+package com.fku.merchant.app.core.exception;
 
 public abstract class MerchantException extends Exception {
     /**

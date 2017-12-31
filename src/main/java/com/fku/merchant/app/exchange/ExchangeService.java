@@ -1,6 +1,6 @@
 package com.fku.merchant.app.exchange;
 
-import com.fku.merchant.app.core.error.MerchantException;
+import com.fku.merchant.app.core.exception.MerchantException;
 import com.fku.merchant.app.strategy.dto.OrderState;
 import com.fku.merchant.app.strategy.dto.PricePair;
 

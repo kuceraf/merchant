@@ -1,6 +1,7 @@
 package com.fku.merchant.app.core;
 
-import com.fku.merchant.app.core.error.MerchantException;
+import com.fku.merchant.app.core.exception.MerchantException;
+import com.fku.merchant.app.core.exception.MerchantNonFatalException;
 import com.fku.merchant.app.strategy.TradingStrategy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +43,16 @@ public class StrategyRunnerScheduled implements StrategyRunner {
             long elapsedTime = stopTime - startTime;
             log.info("END Strategy execution (number [{}], duration [{}] ms)", strategyExecutionNo, elapsedTime);
             strategyExecutionNo ++;
-        } catch (MerchantException e) {
+        }
+        // Order of catch block is important (always catch specific exeptions first!)
+        catch (MerchantNonFatalException e) {
+            log.warn("A NON-FATAL error has occurred in Trading Strategy, keeping strategy alive", e);
+            // TODO send warning mail and log to DB
+        }
+        catch (MerchantException e) {
             log.fatal("A FATAL error has occurred in Trading Strategy!", e);
             shutdownManager.initiateShutdown(0);
+            // TODO send error mail and log to DB
         }
-
     }
 }
