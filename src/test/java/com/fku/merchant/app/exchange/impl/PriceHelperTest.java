@@ -1,7 +1,9 @@
 package com.fku.merchant.app.exchange.impl;
 
+import com.fku.merchant.app.core.exception.MerchantExchangeException;
 import com.fku.merchant.app.exchange.ExchangeTestDataFactory;
 import com.fku.merchant.app.core.exception.MerchantStrategyException;
+import com.fku.merchant.app.exchange.PriceHelper;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +39,7 @@ public class PriceHelperTest {
     @Test
     public void getCurrentBidPrice_exceptionTest() throws Exception {
         orderBook.getBids().clear();
-        assertThatExceptionOfType(MerchantStrategyException.class)
+        assertThatExceptionOfType(MerchantExchangeException.class)
                 .isThrownBy(() -> PriceHelper.getCurrentBidPrice(orderBook));
     }
 

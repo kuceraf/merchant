@@ -1,9 +1,10 @@
-package com.fku.merchant.app.exchange.impl;
+package com.fku.merchant.app.exchange.gdax;
 
-import com.fku.merchant.app.core.exception.MerchantException;
+import com.fku.merchant.app.core.exception.MerchantExchangeException;
+import com.fku.merchant.app.core.exception.MerchantNonFatalException;
 import com.fku.merchant.app.exchange.ExchangeExceptionHandler;
 import com.fku.merchant.app.exchange.ExchangeService;
-import com.fku.merchant.app.core.exception.MerchantStrategyException;
+import com.fku.merchant.app.exchange.PriceHelper;
 import com.fku.merchant.app.strategy.dto.OrderState;
 import com.fku.merchant.app.strategy.dto.OrderType;
 import com.fku.merchant.app.strategy.dto.PricePair;
@@ -13,7 +14,6 @@ import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.trade.LimitOrder;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 
 
@@ -33,13 +33,15 @@ public class GdaxExchangeService implements ExchangeService {
     }
 
     @Override
-    public PricePair getCurrentPrices() throws MerchantException {
+    public PricePair getCurrentPrices()
+            throws MerchantExchangeException, MerchantNonFatalException {
         OrderBook orderBook = getOrderBook();
         return new PricePair(PriceHelper.getCurrentBidPrice(orderBook), PriceHelper.getCurrentAskPrice(orderBook));
     }
 
     @Override
-    public OrderState placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount) throws MerchantException {
+    public OrderState placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount)
+            throws MerchantExchangeException, MerchantNonFatalException {
         OrderState orderState = null;
         try {
 
@@ -66,13 +68,14 @@ public class GdaxExchangeService implements ExchangeService {
     }
 
 
-    private OrderBook getOrderBook() throws MerchantStrategyException {
+    private OrderBook getOrderBook()
+            throws MerchantExchangeException, MerchantNonFatalException {
         OrderBook orderBook = null;
         try {
             orderBook = xchange.getMarketDataService().getOrderBook(currencyPair, 2);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Failed to get order book from xchange");
-            throw new MerchantStrategyException("Failed to get order book from xchange");
+            ExchangeExceptionHandler.handleException(e);
         }
         return orderBook;
     }

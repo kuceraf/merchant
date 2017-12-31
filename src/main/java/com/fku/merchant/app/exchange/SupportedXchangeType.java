@@ -1,4 +1,4 @@
-package com.fku.merchant.app.exchange.impl;
+package com.fku.merchant.app.exchange;
 
 /**
  * Supported exchange names

@@ -1,4 +1,4 @@
-package com.fku.merchant.app.exchange;
+package com.fku.merchant.app.core.exception;
 
 import java.util.Arrays;
 

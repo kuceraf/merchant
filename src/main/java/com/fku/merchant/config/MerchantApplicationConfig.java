@@ -1,8 +1,8 @@
 package com.fku.merchant.config;
 
 import com.fku.merchant.app.exchange.ExchangeService;
-import com.fku.merchant.app.exchange.impl.GdaxExchangeService;
-import com.fku.merchant.app.exchange.impl.XchangeFactory;
+import com.fku.merchant.app.exchange.gdax.GdaxExchangeService;
+import com.fku.merchant.app.exchange.XchangeFactory;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.springframework.beans.factory.FactoryBean;
