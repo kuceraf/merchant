@@ -1,14 +1,13 @@
-package com.fku.merchant.app.strategy.dto;
+package com.fku.merchant.app.repository.order.domain;
 
 import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.ToString;
 
 @ToString
 @AllArgsConstructor
-public class OrderState {
+public class ExchangeOrder {
 
     /**
      * Id - default to null.

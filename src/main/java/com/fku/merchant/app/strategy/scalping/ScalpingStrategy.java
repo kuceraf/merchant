@@ -2,9 +2,10 @@ package com.fku.merchant.app.strategy.scalping;
 
 import com.fku.merchant.app.core.exception.MerchantException;
 import com.fku.merchant.app.exchange.ExchangeService;
+import com.fku.merchant.app.repository.order.OrderRepository;
 import com.fku.merchant.app.strategy.ATradingStrategy;
-import com.fku.merchant.app.strategy.dto.OrderState;
-import com.fku.merchant.app.strategy.dto.PricePair;
+import com.fku.merchant.app.repository.order.domain.ExchangeOrder;
+import com.fku.merchant.app.repository.order.domain.CurrencyPricePair;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 @Component
 public class ScalpingStrategy extends ATradingStrategy {
 
+    private final OrderRepository orderRepository;
     // Constants
     /**
      * Pro maket BTC/EUR je to 10EUR (COUNTER_CURRENCY_BUY_ORDER_AMOUNT = 10)
@@ -37,11 +39,9 @@ public class ScalpingStrategy extends ATradingStrategy {
      * The minimum % gain was to achieve before placing a SELL oder.
      */
     public static final BigDecimal MINIMUM_PERCENTAGE_GAIN = BigDecimal.valueOf(0.02);
-
-    private OrderState lastOrder;
-
-    public ScalpingStrategy(ExchangeService exchangeService) {
+    public ScalpingStrategy(ExchangeService exchangeService, OrderRepository orderRepository) {
         super(exchangeService);
+        this.orderRepository = orderRepository;
     }
 
     @PostConstruct
@@ -52,7 +52,8 @@ public class ScalpingStrategy extends ATradingStrategy {
 
     @Override
     public void executeStrategySpecific() throws MerchantException {
-        PricePair currentPrices = exchangeService.getCurrentPrices();
+        ExchangeOrder lastOrder = orderRepository.findLastOrder();
+        CurrencyPricePair currentPrices = exchangeService.getCurrentPrices();
         BigDecimal currentBidPrice = currentPrices.getBidPrice();
 
         // TODO look up in DB

@@ -1,14 +1,13 @@
-package com.fku.merchant.app.strategy.dto;
+package com.fku.merchant.app.repository.order.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 
 
 @AllArgsConstructor
-public class PricePair {
+public class CurrencyPricePair {
     @Getter
     private BigDecimal bidPrice;
     @Getter

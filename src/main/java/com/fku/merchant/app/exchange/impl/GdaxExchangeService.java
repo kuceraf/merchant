@@ -5,9 +5,9 @@ import com.fku.merchant.app.core.exception.MerchantNonFatalException;
 import com.fku.merchant.app.exchange.ExchangeExceptionHandler;
 import com.fku.merchant.app.exchange.ExchangeService;
 import com.fku.merchant.app.exchange.PriceHelper;
-import com.fku.merchant.app.strategy.dto.OrderState;
-import com.fku.merchant.app.strategy.dto.OrderType;
-import com.fku.merchant.app.strategy.dto.PricePair;
+import com.fku.merchant.app.repository.order.domain.ExchangeOrder;
+import com.fku.merchant.app.repository.order.domain.OrderType;
+import com.fku.merchant.app.repository.order.domain.CurrencyPricePair;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
@@ -33,16 +33,16 @@ public class GdaxExchangeService implements ExchangeService {
     }
 
     @Override
-    public PricePair getCurrentPrices()
+    public CurrencyPricePair getCurrentPrices()
             throws MerchantExchangeException, MerchantNonFatalException {
         OrderBook orderBook = getOrderBook();
-        return new PricePair(PriceHelper.getCurrentBidPrice(orderBook), PriceHelper.getCurrentAskPrice(orderBook));
+        return new CurrencyPricePair(PriceHelper.getCurrentBidPrice(orderBook), PriceHelper.getCurrentAskPrice(orderBook));
     }
 
     @Override
-    public OrderState placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount)
+    public ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount)
             throws MerchantExchangeException, MerchantNonFatalException {
-        OrderState orderState = null;
+        ExchangeOrder exchangeOrder = null;
         try {
 
             BigDecimal lastCurrencyPairMarketPrice = xchange.getMarketDataService().getTicker(this.currencyPair).getLast();
@@ -60,11 +60,11 @@ public class GdaxExchangeService implements ExchangeService {
             log.info(newBuyLimitOrder);
             String orderId = xchange.getTradeService().placeLimitOrder(newBuyLimitOrder);
 
-            orderState = new OrderState(orderId, OrderType.BUY, currentBidPrice, amountOfBaseCurrency);
+            exchangeOrder = new ExchangeOrder(orderId, OrderType.BUY, currentBidPrice, amountOfBaseCurrency);
         } catch (Exception e) {
             ExchangeExceptionHandler.handleException(e);
         }
-        return orderState;
+        return exchangeOrder;
     }
 
 

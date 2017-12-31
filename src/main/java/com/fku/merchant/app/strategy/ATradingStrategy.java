@@ -1,10 +1,8 @@
 package com.fku.merchant.app.strategy;
 
 import com.fku.merchant.app.core.exception.MerchantException;
-import com.fku.merchant.app.core.exception.MerchantNonFatalException;
-import com.fku.merchant.app.core.exception.MerchantStrategyException;
 import com.fku.merchant.app.exchange.ExchangeService;
-import com.fku.merchant.app.strategy.dto.OrderState;
+import com.fku.merchant.app.repository.order.domain.ExchangeOrder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,13 +14,14 @@ import java.util.Map;
 public abstract class ATradingStrategy implements TradingStrategy {
     protected final ExchangeService exchangeService;
     //key = orderId
-    protected Map<String, OrderState> buyOrderStates = new HashMap<>();
-    protected Map<String, OrderState> sellOrderStates = new HashMap<>();
+    protected Map<String, ExchangeOrder> buyOrderStates = new HashMap<>();
+    protected Map<String, ExchangeOrder> sellOrderStates = new HashMap<>();
 
     @Override
     public void execute() throws MerchantException {
         log.info("Execution of [{}]", this.getClass().getSimpleName());
         checkProfitability();
+        executeStrategySpecific();
     }
 
     protected abstract void executeStrategySpecific() throws MerchantException;

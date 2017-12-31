@@ -1,15 +1,14 @@
 package com.fku.merchant.app.exchange;
 
-import com.fku.merchant.app.core.exception.MerchantException;
 import com.fku.merchant.app.core.exception.MerchantExchangeException;
 import com.fku.merchant.app.core.exception.MerchantNonFatalException;
-import com.fku.merchant.app.strategy.dto.OrderState;
-import com.fku.merchant.app.strategy.dto.PricePair;
+import com.fku.merchant.app.repository.order.domain.ExchangeOrder;
+import com.fku.merchant.app.repository.order.domain.CurrencyPricePair;
 
 import java.math.BigDecimal;
 
 public interface ExchangeService {
     String getExchangeName();
-    PricePair getCurrentPrices() throws MerchantExchangeException, MerchantNonFatalException;
-    OrderState placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount) throws MerchantExchangeException, MerchantNonFatalException;
+    CurrencyPricePair getCurrentPrices() throws MerchantExchangeException, MerchantNonFatalException;
+    ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount) throws MerchantExchangeException, MerchantNonFatalException;
 }

@@ -1,4 +1,4 @@
-package com.fku.merchant.app.strategy.dto;
+package com.fku.merchant.app.repository.order.domain;
 
 public enum OrderType {
 
