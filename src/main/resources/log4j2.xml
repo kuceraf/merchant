@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-The log file is written to `logs/bxbot.log` and uses a rolling policy.
+The log file is written to `logs/merchant.log` and uses a rolling policy.
 It will create up to 7 archives on the same day (1-7) that are stored in a directory based on the current year and month,
 and will compress each archive using gzip.
 Once a file reaches 100 MB or a new day is started, it is archived, and a new log file is created.
@@ -38,6 +38,6 @@ See log4j2 guide for more options: http://logging.apache.org/log4j/2.x/manual/ap
             <AppenderRef ref="Merchant_RollingFile"/>
             <AppenderRef ref="STDOUT"/>
         </Root>
-        <logger name="com.fku.merchant.app.exchange.gdax.GdaxExchangeService" level="DEBUG"/>
+        <logger name="com.fku.merchant.app.exchange.impl.GdaxExchangeService" level="DEBUG"/>
     </Loggers>
 </Configuration>

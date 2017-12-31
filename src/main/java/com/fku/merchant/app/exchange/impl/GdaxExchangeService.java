@@ -1,4 +1,4 @@
-package com.fku.merchant.app.exchange.gdax;
+package com.fku.merchant.app.exchange.impl;
 
 import com.fku.merchant.app.core.exception.MerchantExchangeException;
 import com.fku.merchant.app.core.exception.MerchantNonFatalException;

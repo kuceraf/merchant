@@ -1,4 +1,4 @@
-package com.fku.merchant.app.exchange;
+package com.fku.merchant.app.exchange.xchange;
 
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeSpecification;
