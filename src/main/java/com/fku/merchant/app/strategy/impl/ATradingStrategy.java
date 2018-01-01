@@ -1,8 +1,9 @@
-package com.fku.merchant.app.strategy;
+package com.fku.merchant.app.strategy.impl;
 
 import com.fku.merchant.app.core.exception.MerchantException;
 import com.fku.merchant.app.exchange.ExchangeService;
 import com.fku.merchant.app.repository.order.domain.ExchangeOrder;
+import com.fku.merchant.app.strategy.TradingStrategy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -1,4 +1,4 @@
-package com.fku.merchant;
+package com.fku.merchant.app.IT;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

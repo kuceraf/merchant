@@ -1,11 +1,11 @@
-package com.fku.merchant.app.strategy.scalping;
+package com.fku.merchant.app.strategy.impl.scalping;
 
 import com.fku.merchant.app.core.exception.MerchantException;
 import com.fku.merchant.app.exchange.ExchangeService;
 import com.fku.merchant.app.repository.order.OrderRepository;
-import com.fku.merchant.app.strategy.ATradingStrategy;
+import com.fku.merchant.app.strategy.impl.ATradingStrategy;
 import com.fku.merchant.app.repository.order.domain.ExchangeOrder;
-import com.fku.merchant.app.repository.order.domain.CurrencyPricePair;
+import com.fku.merchant.app.repository.order.domain.InstrumentPrice;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +45,7 @@ public class ScalpingStrategy extends ATradingStrategy {
     }
 
     @PostConstruct
-    private void init() {
+    private void info() {
         log.info("Strategy [{}] is initialized", this.getClass());
         log.info("Strategy executes on [{}] exchange market", exchangeService.getExchangeName());
     }
@@ -53,15 +53,15 @@ public class ScalpingStrategy extends ATradingStrategy {
     @Override
     public void executeStrategySpecific() throws MerchantException {
         ExchangeOrder lastOrder = orderRepository.findLastOrder();
-        CurrencyPricePair currentPrices = exchangeService.getCurrentPrices();
+        InstrumentPrice currentPrices = exchangeService.getCurrentPrices();
         BigDecimal currentBidPrice = currentPrices.getBidPrice();
 
         // TODO look up in DB
         if (lastOrder == null) {
             // zaciname - musime nejdrive nakoupit
             log.debug("First time strategy execution - placing new BUY order");
-            exchangeService.placeBuyOrder(currentBidPrice, COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
-//            executeFirstTimeBuyOrder(currentBidPrice);
+            ExchangeOrder newExchangeOrder = exchangeService.placeBuyOrder(currentBidPrice, COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
+            orderRepository.saveOrder(newExchangeOrder);
         } else {
             switch (lastOrder.type) {
                 case BUY:

@@ -7,22 +7,20 @@ import com.fku.merchant.app.exchange.ExchangeService;
 import com.fku.merchant.app.exchange.PriceHelper;
 import com.fku.merchant.app.repository.order.domain.ExchangeOrder;
 import com.fku.merchant.app.repository.order.domain.OrderType;
-import com.fku.merchant.app.repository.order.domain.CurrencyPricePair;
 import lombok.extern.log4j.Log4j2;
+import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
-import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.trade.LimitOrder;
 
 import java.math.BigDecimal;
 
-
 @Log4j2
-public class GdaxExchangeService implements ExchangeService {
-    private final CurrencyPair currencyPair;
-    private final org.knowm.xchange.Exchange xchange;
+public abstract class AExchangeService implements ExchangeService {
+    protected final org.knowm.xchange.Exchange xchange;
+    protected final CurrencyPair currencyPair;
 
-    public GdaxExchangeService(org.knowm.xchange.Exchange xchange, CurrencyPair currencyPair) {
+    protected AExchangeService(Exchange xchange, CurrencyPair currencyPair) {
         this.xchange = xchange;
         this.currencyPair = currencyPair;
     }
@@ -33,20 +31,13 @@ public class GdaxExchangeService implements ExchangeService {
     }
 
     @Override
-    public CurrencyPricePair getCurrentPrices()
-            throws MerchantExchangeException, MerchantNonFatalException {
-        OrderBook orderBook = getOrderBook();
-        return new CurrencyPricePair(PriceHelper.getCurrentBidPrice(orderBook), PriceHelper.getCurrentAskPrice(orderBook));
-    }
-
-    @Override
     public ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount)
             throws MerchantExchangeException, MerchantNonFatalException {
         ExchangeOrder exchangeOrder = null;
         try {
 
-            BigDecimal lastCurrencyPairMarketPrice = xchange.getMarketDataService().getTicker(this.currencyPair).getLast();
-            BigDecimal amountOfBaseCurrency = PriceHelper.calculateAmountOfBaseCurrency(counterCurrencyAmount, lastCurrencyPairMarketPrice);
+            BigDecimal lastInstrumentMarketPrice = xchange.getMarketDataService().getTicker(this.currencyPair).getLast();
+            BigDecimal amountOfBaseCurrency = PriceHelper.calculateBaseCurrencyAmount(counterCurrencyAmount, lastInstrumentMarketPrice);
             LimitOrder newBuyLimitOrder = new LimitOrder(
                     Order.OrderType.BID,
                     amountOfBaseCurrency, // The amount of base currency to trade
@@ -65,18 +56,5 @@ public class GdaxExchangeService implements ExchangeService {
             ExchangeExceptionHandler.handleException(e);
         }
         return exchangeOrder;
-    }
-
-
-    private OrderBook getOrderBook()
-            throws MerchantExchangeException, MerchantNonFatalException {
-        OrderBook orderBook = null;
-        try {
-            orderBook = xchange.getMarketDataService().getOrderBook(currencyPair, 2);
-        } catch (Exception e) {
-            log.error("Failed to get order book from xchange");
-            ExchangeExceptionHandler.handleException(e);
-        }
-        return orderBook;
     }
 }

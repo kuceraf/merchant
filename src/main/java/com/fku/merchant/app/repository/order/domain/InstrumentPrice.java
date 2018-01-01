@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 
 @AllArgsConstructor
-public class CurrencyPricePair {
+public class InstrumentPrice {
     @Getter
     private BigDecimal bidPrice;
     @Getter

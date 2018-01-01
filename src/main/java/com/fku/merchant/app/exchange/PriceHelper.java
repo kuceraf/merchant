@@ -19,22 +19,22 @@ public class PriceHelper {
      * Example:
      * I have 10 EUR (=counterCurrencyAmount)
      * Want to buy X BTC
-     * Current pair price is 7,599.99 EUR for 1 BTC (instrument price BTC/EUR = 7,599.99 EUR) (=currencyPairPrice)
+     * Current pair price is 7,599.99 EUR for 1 BTC (instrument price BTC/EUR = 7,599.99 EUR) (=instrumentPrice)
      * X = 10 / 7,599.99
      * X = 0,00131579 BTC
      * I will buy 0,00131579 BTC for 10 EUR at price BTC/EUR = 7,599.99.
      * @param counterCurrencyAmount in BTC/EUR it is amount of EUR
-     * @param currencyPairPrice actual price of BTC/EUR instrument
+     * @param instrumentPrice actual price of BTC/EUR instrument
      * @return amount of base currency
      */
-    public static BigDecimal calculateAmountOfBaseCurrency(BigDecimal counterCurrencyAmount, BigDecimal currencyPairPrice) {
+    public static BigDecimal calculateBaseCurrencyAmount(BigDecimal counterCurrencyAmount, BigDecimal instrumentPrice) {
         Assert.notNull(counterCurrencyAmount, ERR_MISSING_PARAM);
-        Assert.notNull(currencyPairPrice, ERR_MISSING_PARAM);
+        Assert.notNull(instrumentPrice, ERR_MISSING_PARAM);
         /*
          * Most exchanges (if not all) use 8 decimal places and typically round in favour of the exchange.
          * It's usually safest to round down the order quantity in your calculations.
          */
-        return counterCurrencyAmount.divide(currencyPairPrice, 8, RoundingMode.HALF_DOWN);
+        return counterCurrencyAmount.divide(instrumentPrice, 8, RoundingMode.HALF_DOWN);
     }
 
     /**
@@ -55,7 +55,7 @@ public class PriceHelper {
 
     /**
      * The ask price represents the minimum price that a seller (=the one who places sell order)
-     * is willing to receive.
+     * is willing to receive for a security.
      * @param orderBook (in asks price list should contain the lowest price at first position)
      * @return Current ASK price (the lowest ask price)
      * @throws MerchantExchangeException if order book is null or empty

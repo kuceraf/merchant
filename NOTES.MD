@@ -33,3 +33,4 @@ Ta4j is an open source Java library for technical analysis
 ### Articles
 ##### Mocking
 https://monkeyisland.pl/2008/04/26/asking-and-telling/
+https://dzone.com/articles/a-guide-to-mocking-with-mockito

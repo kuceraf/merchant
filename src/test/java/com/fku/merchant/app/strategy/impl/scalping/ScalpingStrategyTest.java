@@ -1,9 +1,9 @@
-package com.fku.merchant.app.strategy.scalping;
+package com.fku.merchant.app.strategy.impl.scalping;
 
 import com.fku.merchant.app.exchange.ExchangeService;
-import com.fku.merchant.app.exchange.ExchangeTestDataFactory;
+import com.fku.merchant.app.exchange.impl.dummy.DummyExchangeDataFactory;
 import com.fku.merchant.app.repository.order.OrderRepository;
-import com.fku.merchant.app.repository.order.domain.CurrencyPricePair;
+import com.fku.merchant.app.repository.order.domain.InstrumentPrice;
 import org.junit.Test;
 
 import static org.mockito.Mockito.*;
@@ -18,7 +18,7 @@ public class ScalpingStrategyTest {
         // Given
         ScalpingStrategy scalpingStrategyTested = new ScalpingStrategy(exchangeServiceMocked, orderRepository);
         when(exchangeServiceMocked.getCurrentPrices())
-            .thenReturn(new CurrencyPricePair(ExchangeTestDataFactory.CURRENT_BID_PRICE, ExchangeTestDataFactory.CURRENT_ASK_PRICE));
+            .thenReturn(DummyExchangeDataFactory.createInstrumentPrice());
         when(orderRepository.findLastOrder())
                 .thenReturn(null);
 
@@ -27,6 +27,6 @@ public class ScalpingStrategyTest {
 
         // Then
         verify(exchangeServiceMocked, times(1)).getCurrentPrices();
-        verify(exchangeServiceMocked, times(1)).placeBuyOrder(ExchangeTestDataFactory.CURRENT_BID_PRICE, ScalpingStrategy.COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
+        verify(exchangeServiceMocked, times(1)).placeBuyOrder(DummyExchangeDataFactory.CURRENT_BID_PRICE, ScalpingStrategy.COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
     }
 }

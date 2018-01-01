@@ -1,16 +1,15 @@
 package com.fku.merchant.app.exchange.impl;
 
 import com.fku.merchant.app.core.exception.MerchantExchangeException;
-import com.fku.merchant.app.exchange.ExchangeTestDataFactory;
-import com.fku.merchant.app.core.exception.MerchantStrategyException;
+import com.fku.merchant.app.exchange.impl.dummy.DummyExchangeDataFactory;
 import com.fku.merchant.app.exchange.PriceHelper;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 
-import java.math.BigDecimal;
-
+import static com.fku.merchant.app.exchange.impl.dummy.DummyExchangeDataFactory.BASE_CURRENCY_AMOUNT;
+import static com.fku.merchant.app.exchange.impl.dummy.DummyExchangeDataFactory.COUNTER_CURRENCY_AMOUNT;
+import static com.fku.merchant.app.exchange.impl.dummy.DummyExchangeDataFactory.INSTRUMENT_LAST_PRICE;
 import static org.assertj.core.api.Assertions.*;
 
 public class PriceHelperTest {
@@ -21,19 +20,19 @@ public class PriceHelperTest {
 
     @Before
     public void setUpBeforeEachTest() throws Exception {
-        orderBook = ExchangeTestDataFactory.createOrderBook();
+        orderBook = DummyExchangeDataFactory.createOrderBook();
     }
 
     @Test
     public void getCurrentBidPriceTest() throws Exception {
-        Assertions.assertThat(PriceHelper.getCurrentBidPrice(orderBook))
-                .isEqualTo(ExchangeTestDataFactory.CURRENT_BID_PRICE);
+        assertThat(PriceHelper.getCurrentBidPrice(orderBook))
+                .isEqualTo(DummyExchangeDataFactory.CURRENT_BID_PRICE);
     }
 
     @Test
     public void getCurrentAskPriceTest() throws  Exception {
         assertThat(PriceHelper.getCurrentAskPrice(orderBook))
-                .isEqualTo(ExchangeTestDataFactory.CURRENT_ASK_PRICE);
+                .isEqualTo(DummyExchangeDataFactory.CURRENT_ASK_PRICE);
     }
 
     @Test
@@ -45,7 +44,7 @@ public class PriceHelperTest {
 
     @Test
     public void calculateAmountOfBaseCurrencyTest() {
-        assertThat(PriceHelper.calculateAmountOfBaseCurrency(BigDecimal.valueOf(10), BigDecimal.valueOf(7599.99)))
-                .isEqualTo(BigDecimal.valueOf(0.00131579));
+        assertThat(PriceHelper.calculateBaseCurrencyAmount(COUNTER_CURRENCY_AMOUNT, INSTRUMENT_LAST_PRICE))
+                .isEqualTo(BASE_CURRENCY_AMOUNT);
     }
 }
