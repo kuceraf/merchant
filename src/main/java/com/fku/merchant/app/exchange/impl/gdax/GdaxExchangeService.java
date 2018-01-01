@@ -13,8 +13,8 @@ import org.knowm.xchange.dto.marketdata.OrderBook;
 
 @Log4j2
 public class GdaxExchangeService extends AExchangeService {
-    public GdaxExchangeService(org.knowm.xchange.Exchange xchange, CurrencyPair currencyPair) {
-        super(xchange, currencyPair);
+    public GdaxExchangeService(org.knowm.xchange.Exchange xchangeAdapter, CurrencyPair currencyPair) {
+        super(xchangeAdapter, currencyPair);
     }
 
     @Override
@@ -29,9 +29,9 @@ public class GdaxExchangeService extends AExchangeService {
         OrderBook orderBook = null;
         try {
             // !!! GDAX need extra arg for order book size
-            orderBook = xchange.getMarketDataService().getOrderBook(currencyPair, 2);
+            orderBook = xchangeAdapter.getMarketDataService().getOrderBook(currencyPair, 2);
         } catch (Exception e) {
-            log.error("Failed to get order book from xchange");
+            log.error("Failed to get order book from xchangeAdapter");
             ExchangeExceptionHandler.handleException(e);
         }
         return orderBook;

@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("classpath:DEV.properties")
+@PropertySource("classpath:DEV/merchant.properties")
 @Profile("DEV")
 public class MerchantApplicationConfigForDEV {
 }

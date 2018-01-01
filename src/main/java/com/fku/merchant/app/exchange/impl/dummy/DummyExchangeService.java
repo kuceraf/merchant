@@ -19,6 +19,11 @@ public class DummyExchangeService extends AExchangeService {
     }
 
     @Override
+    public String getExchangeName() {
+        return "DUMMY";
+    }
+
+    @Override
     public InstrumentPrice getCurrentPrices() throws MerchantExchangeException, MerchantNonFatalException {
         return DummyExchangeDataFactory.createInstrumentPrice();
     }

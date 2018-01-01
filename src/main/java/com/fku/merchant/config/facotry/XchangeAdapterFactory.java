@@ -1,5 +1,6 @@
-package com.fku.merchant.app.exchange.xchange;
+package com.fku.merchant.config.facotry;
 
+import com.fku.merchant.app.exchange.SupportedExchangeType;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.gdax.GDAXExchange;
@@ -7,11 +8,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.util.Assert;
 
-public class XchangeFactory extends AbstractFactoryBean<Exchange> {
+public class XchangeAdapterFactory extends AbstractFactoryBean<Exchange> {
+    @Value("${exchange.apiKey}")
     private String apiKey;
+    @Value("${exchange.secret}")
     private String secret;
+    @Value("${exchange.passphrase}")
     private String passphrase;
-    private SupportedXchangeType supportedXchangeType;
+
+    private SupportedExchangeType exchangeType;
+
+    public XchangeAdapterFactory(SupportedExchangeType exchangeType) {
+        this.exchangeType = exchangeType;
+    }
 
     @Override
     public Class<?> getObjectType() {
@@ -20,7 +29,7 @@ public class XchangeFactory extends AbstractFactoryBean<Exchange> {
 
     @Override
     protected Exchange createInstance() throws Exception { //by default factory crate singleton, this is called once
-        switch (supportedXchangeType) {
+        switch (exchangeType) {
             case GDAX:
                 Assert.notNull(apiKey, "ApiKey must be configured for GDAX exchange in property file");
                 Assert.notNull(secret, "Secret must be configured for GDAX exchange in property file");
@@ -30,29 +39,10 @@ public class XchangeFactory extends AbstractFactoryBean<Exchange> {
                 exSpec.setSecretKey(secret);
                 exSpec.setExchangeSpecificParametersItem("passphrase", passphrase);
                 return org.knowm.xchange.ExchangeFactory.INSTANCE.createExchange(exSpec);
+            case DUMMY:
+                return null;
             default:
                 throw new IllegalStateException();
         }
-    }
-
-    @Value("${exchange.apiKey}")
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    @Value("${exchange.secret}")
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-    @Value("${exchange.passphrase}")
-    public void setPassphrase(String passphrase) {
-        this.passphrase = passphrase;
-    }
-
-    @Value("${exchange.type}")
-    public void setSupportedXchangeType(String supportedXchangeType) {
-        Assert.notNull(supportedXchangeType, "ExchangeType must be configured in property file");
-        this.supportedXchangeType = SupportedXchangeType.valueOf(supportedXchangeType.toUpperCase());
     }
 }

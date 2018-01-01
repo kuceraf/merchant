@@ -17,17 +17,17 @@ import java.math.BigDecimal;
 
 @Log4j2
 public abstract class AExchangeService implements ExchangeService {
-    protected final org.knowm.xchange.Exchange xchange;
+    protected final org.knowm.xchange.Exchange xchangeAdapter;
     protected final CurrencyPair currencyPair;
 
-    protected AExchangeService(Exchange xchange, CurrencyPair currencyPair) {
-        this.xchange = xchange;
+    protected AExchangeService(Exchange xchangeAdapter, CurrencyPair currencyPair) {
+        this.xchangeAdapter = xchangeAdapter;
         this.currencyPair = currencyPair;
     }
 
     @Override
     public String getExchangeName() {
-        return xchange.getExchangeSpecification().getExchangeName();
+        return xchangeAdapter.getExchangeSpecification().getExchangeName();
     }
 
     @Override
@@ -36,7 +36,7 @@ public abstract class AExchangeService implements ExchangeService {
         ExchangeOrder exchangeOrder = null;
         try {
 
-            BigDecimal lastInstrumentMarketPrice = xchange.getMarketDataService().getTicker(this.currencyPair).getLast();
+            BigDecimal lastInstrumentMarketPrice = xchangeAdapter.getMarketDataService().getTicker(this.currencyPair).getLast();
             BigDecimal amountOfBaseCurrency = PriceHelper.calculateBaseCurrencyAmount(counterCurrencyAmount, lastInstrumentMarketPrice);
             LimitOrder newBuyLimitOrder = new LimitOrder(
                     Order.OrderType.BID,
@@ -49,7 +49,7 @@ public abstract class AExchangeService implements ExchangeService {
 
             log.info("Sending BUY order to exchange --->");
             log.info(newBuyLimitOrder);
-            String orderId = xchange.getTradeService().placeLimitOrder(newBuyLimitOrder);
+            String orderId = xchangeAdapter.getTradeService().placeLimitOrder(newBuyLimitOrder);
 
             exchangeOrder = new ExchangeOrder(orderId, OrderType.BUY, currentBidPrice, amountOfBaseCurrency);
         } catch (Exception e) {
