@@ -3,13 +3,14 @@ package com.fku.merchant.app.exchange.impl.gdax;
 import com.fku.merchant.app.core.exception.MerchantExchangeException;
 import com.fku.merchant.app.core.exception.MerchantNonFatalException;
 import com.fku.merchant.app.exchange.ExchangeExceptionHandler;
-import com.fku.merchant.app.exchange.PriceHelper;
+import com.fku.merchant.app.exchange.ExchangeHelper;
 import com.fku.merchant.app.exchange.impl.AExchangeService;
 import com.fku.merchant.app.repository.order.domain.InstrumentPrice;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.marketdata.OrderBook;
-
+import org.knowm.xchange.dto.trade.OpenOrders;
+import org.knowm.xchange.service.trade.params.orders.OpenOrdersParams;
 
 @Log4j2
 public class GdaxExchangeService extends AExchangeService {
@@ -21,7 +22,20 @@ public class GdaxExchangeService extends AExchangeService {
     public InstrumentPrice getCurrentPrices()
             throws MerchantExchangeException, MerchantNonFatalException {
         OrderBook orderBook = getOrderBook();
-        return new InstrumentPrice(PriceHelper.getCurrentBidPrice(orderBook), PriceHelper.getCurrentAskPrice(orderBook));
+        return new InstrumentPrice(ExchangeHelper.getCurrentBidPrice(orderBook), ExchangeHelper.getCurrentAskPrice(orderBook));
+    }
+
+    @Override
+    public OpenOrders getOpenOrders()
+            throws MerchantExchangeException, MerchantNonFatalException {
+        OpenOrders openOrders = null;
+        try {
+            OpenOrdersParams openOrdersParams = xchangeAdapter.getTradeService().createOpenOrdersParams();
+            openOrders = xchangeAdapter.getTradeService().getOpenOrders(openOrdersParams);
+        } catch (Exception e) {
+            ExchangeExceptionHandler.handleException(e);
+        }
+        return openOrders;
     }
 
     private OrderBook getOrderBook()

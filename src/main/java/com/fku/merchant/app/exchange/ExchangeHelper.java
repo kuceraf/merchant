@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Log4j2
-public class PriceHelper {
+public class ExchangeHelper {
 
     private static final String ERR_BAD_ORDER_BOOK = "Can't get current price from empty/null order book";
     private static final String ERR_MISSING_PARAM = "Can't calculate amount with missing parameter";

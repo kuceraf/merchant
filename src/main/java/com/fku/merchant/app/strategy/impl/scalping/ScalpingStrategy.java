@@ -1,12 +1,17 @@
 package com.fku.merchant.app.strategy.impl.scalping;
 
 import com.fku.merchant.app.core.exception.MerchantException;
+import com.fku.merchant.app.core.exception.MerchantStrategyException;
 import com.fku.merchant.app.exchange.ExchangeService;
 import com.fku.merchant.app.repository.order.OrderRepository;
+import com.fku.merchant.app.repository.order.domain.OrderType;
 import com.fku.merchant.app.strategy.impl.ATradingStrategy;
 import com.fku.merchant.app.repository.order.domain.ExchangeOrder;
 import com.fku.merchant.app.repository.order.domain.InstrumentPrice;
+import com.fku.merchant.app.strategy.impl.StrategyHelper;
 import lombok.extern.log4j.Log4j2;
+import org.knowm.xchange.dto.Order;
+import org.knowm.xchange.dto.trade.OpenOrders;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -38,7 +43,7 @@ public class ScalpingStrategy extends ATradingStrategy {
     /**
      * The minimum % gain was to achieve before placing a SELL oder.
      */
-    public static final BigDecimal MINIMUM_PERCENTAGE_GAIN = BigDecimal.valueOf(0.02);
+    public static final BigDecimal MINIMUM_PERCENTAGE_PROFIT = BigDecimal.valueOf(0.02);
     public ScalpingStrategy(ExchangeService exchangeService, OrderRepository orderRepository) {
         super(exchangeService);
         this.orderRepository = orderRepository;
@@ -58,7 +63,7 @@ public class ScalpingStrategy extends ATradingStrategy {
 
         // TODO look up in DB
         if (lastOrder == null) {
-            // zaciname - musime nejdrive nakoupit
+            // first time execution
             log.debug("First time strategy execution - placing new BUY order");
             ExchangeOrder newExchangeOrder = exchangeService.placeBuyOrder(currentBidPrice, COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
             orderRepository.saveOrder(newExchangeOrder);
@@ -66,7 +71,7 @@ public class ScalpingStrategy extends ATradingStrategy {
             switch (lastOrder.type) {
                 case BUY:
                     // umistili jsme pozadavek na nakup - zkusime prodej se ziskem
-//                TODO tryPlaceSellOrder();
+                trySellWithProfit(lastOrder);
                     break;
                 case SELL:
                     // co jsme nakoupili je prodano - nakoupime znovu
@@ -77,4 +82,21 @@ public class ScalpingStrategy extends ATradingStrategy {
             }
         }
     }
+
+    void trySellWithProfit(ExchangeOrder lastOrder) throws MerchantException {
+        if(lastOrder.type == OrderType.SELL){
+            throw new MerchantStrategyException("Wrong strategy execution flow - two successive SELL orders");
+        }
+        OpenOrders openOrders = exchangeService.getOpenOrders();
+        if (StrategyHelper.isOrderFilled(openOrders, lastOrder)) {
+        // The last buy order was filled - we can create SELL order now
+            log.info("^^^ Yay!!! Last BUY order (Id:{}) filled at {}",
+                    lastOrder.id,
+                    lastOrder.price);
+        }
+
+        BigDecimal newAskPrice = StrategyHelper.calculateSellPriceWithRequiredProfit(lastOrder.price, MINIMUM_PERCENTAGE_PROFIT);
+        exchangeService.placeOrder(Order.OrderType.ASK, lastOrder.amount, newAskPrice);
+        // TODO dodelat
+    };
 }

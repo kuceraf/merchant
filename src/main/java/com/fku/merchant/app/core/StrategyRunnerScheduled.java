@@ -19,6 +19,7 @@ public class StrategyRunnerScheduled implements StrategyRunner {
 
     @Autowired
     public StrategyRunnerScheduled(TradingStrategy tradingStrategy, ShutdownManager shutdownManager) {
+        // TODO v pripade vice instanci TradingStrategy vybirat na zaklade konfigurace
         this.tradingStrategy = tradingStrategy;
         this.shutdownManager = shutdownManager;
     }
@@ -49,7 +50,7 @@ public class StrategyRunnerScheduled implements StrategyRunner {
             log.warn("A NON-FATAL error has occurred in Trading Strategy, keeping strategy alive", e);
             // TODO send warning mail and log to DB
         }
-        catch (MerchantException e) {
+        catch (Exception e) {
             log.fatal("A FATAL error has occurred in Trading Strategy!", e);
             shutdownManager.initiateShutdown(0);
             // TODO send error mail and log to DB
