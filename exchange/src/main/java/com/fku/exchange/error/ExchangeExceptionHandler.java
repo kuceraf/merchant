@@ -11,13 +11,13 @@ public class ExchangeExceptionHandler {
         if (e instanceof HttpStatusException) {
             HttpStatusException httpException = (HttpStatusException) e;
             if (NonFatalHttpErrorCodeType.containsHttpCode(httpException.getHttpStatusCode())) {
-                final String errorMsg = "Non-fatal network exception, code ["+httpException.getHttpStatusCode()+"]";
-                log.error(errorMsg);
-                throw new MerchantExchangeNonFatalException(errorMsg);
+//                final String errorMsg = "Non-fatal network exception, code ["+httpException.getHttpStatusCode()+"]";
+                log.error(e.getMessage(), e);
+                throw new MerchantExchangeNonFatalException(e.getMessage(), e);
             } else {
-                final String errorMsg = "Fatal network exception, code ["+httpException.getHttpStatusCode()+"]";
-                log.error(errorMsg + " {}", httpException);
-                throw new MerchantExchangeException(errorMsg);
+//                final String errorMsg = "Fatal network exception, code ["+httpException.getHttpStatusCode()+"]";
+                log.error(e.getMessage(), e);
+                throw new MerchantExchangeException(e.getMessage(), e);
             }
         } else if (e instanceof IOException) {
             // TODO
