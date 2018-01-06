@@ -1,6 +1,6 @@
 package com.fku.strategy.service.impl.scalping;
 
-import com.fku.exchange.repository.OrderRepository;
+import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory;
 import org.junit.Test;
@@ -10,15 +10,15 @@ import static org.mockito.Mockito.*;
 
 public class ScalpingStrategyTest {
     private ExchangeService exchangeServiceMocked = mock(ExchangeService.class);
-    private OrderRepository orderRepository = mock(OrderRepository.class);
+    private ExchangeOrderRepository exchangeOrderRepository = mock(ExchangeOrderRepository.class);
 
     @Test
     public void execute_firstTimeOrder() throws Exception {
         // Given
-        ScalpingStrategy scalpingStrategyTested = new ScalpingStrategy(exchangeServiceMocked, orderRepository);
+        ScalpingStrategy scalpingStrategyTested = new ScalpingStrategy(exchangeServiceMocked, exchangeOrderRepository);
         when(exchangeServiceMocked.getCurrentPrices())
             .thenReturn(DummyExchangeDataFactory.createInstrumentPrice());
-        when(orderRepository.findLastOrder())
+        when(exchangeOrderRepository.findLastOrder())
                 .thenReturn(null);
 
         // When

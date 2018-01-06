@@ -1,11 +1,11 @@
 package com.fku.exchange.repository.impl;
 
 import com.fku.exchange.domain.ExchangeOrder;
-import com.fku.exchange.repository.OrderRepository;
+import com.fku.exchange.repository.ExchangeOrderRepository;
 import org.springframework.stereotype.Component;
 
 @Component // TODO predelat na JPA
-public class OrderRepositoryImpl implements OrderRepository {
+public class OrderRepositoryImpl implements ExchangeOrderRepository {
     private ExchangeOrder lastOrder = null;
 
     @Override

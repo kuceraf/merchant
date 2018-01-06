@@ -1,6 +1,6 @@
 package com.fku.strategy.service.impl.scalping;
 
-import com.fku.exchange.repository.OrderRepository;
+import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.domain.InstrumentPrice;
@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 @Component
 public class ScalpingStrategy extends ATradingStrategy {
 
-    private final OrderRepository orderRepository;
+    private final ExchangeOrderRepository exchangeOrderRepository;
     // Constants
     /**
      * Pro maket BTC/EUR je to 10EUR (COUNTER_CURRENCY_BUY_ORDER_AMOUNT = 10)
@@ -43,9 +43,9 @@ public class ScalpingStrategy extends ATradingStrategy {
      * The minimum % gain was to achieve before placing a SELL oder.
      */
     public static final BigDecimal MINIMUM_PERCENTAGE_PROFIT = BigDecimal.valueOf(0.02);
-    public ScalpingStrategy(ExchangeService exchangeService, OrderRepository orderRepository) {
+    public ScalpingStrategy(ExchangeService exchangeService, ExchangeOrderRepository exchangeOrderRepository) {
         super(exchangeService);
-        this.orderRepository = orderRepository;
+        this.exchangeOrderRepository = exchangeOrderRepository;
     }
 
     @PostConstruct
@@ -56,7 +56,7 @@ public class ScalpingStrategy extends ATradingStrategy {
 
     @Override
     public void executeStrategySpecific() throws Exception {
-        ExchangeOrder lastOrder = orderRepository.findLastOrder();
+        ExchangeOrder lastOrder = exchangeOrderRepository.findLastOrder();
         InstrumentPrice currentPrices = exchangeService.getCurrentPrices();
         BigDecimal currentBidPrice = currentPrices.getBidPrice();
 
@@ -65,7 +65,7 @@ public class ScalpingStrategy extends ATradingStrategy {
             // first time execution
             log.debug("First time strategy execution - placing new BUY order");
             ExchangeOrder newExchangeOrder = exchangeService.placeBuyOrder(currentBidPrice, COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
-            orderRepository.saveOrder(newExchangeOrder);
+            exchangeOrderRepository.saveOrder(newExchangeOrder);
         } else {
             switch (lastOrder.type) {
                 case BUY:
