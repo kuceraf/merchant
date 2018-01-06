@@ -1,9 +1,9 @@
 package com.fku.merchant.config.facotry;
 
-import com.fku.exchange.ExchangeService;
+import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.SupportedExchangeType;
-import com.fku.exchange.impl.dummy.DummyExchangeService;
-import com.fku.exchange.impl.gdax.GdaxExchangeService;
+import com.fku.exchange.service.impl.dummy.DummyExchangeService;
+import com.fku.exchange.service.impl.gdax.GdaxExchangeService;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.springframework.beans.factory.annotation.Value;

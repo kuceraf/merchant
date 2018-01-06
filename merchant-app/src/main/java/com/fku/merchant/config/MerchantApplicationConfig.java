@@ -1,6 +1,6 @@
 package com.fku.merchant.config;
 
-import com.fku.exchange.ExchangeService;
+import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.SupportedExchangeType;
 import com.fku.merchant.config.facotry.ExchangeServiceFactory;
 import com.fku.merchant.config.facotry.XchangeAdapterFactory;

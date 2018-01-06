@@ -38,6 +38,6 @@ See log4j2 guide for more options: http://logging.apache.org/log4j/2.x/manual/ap
             <AppenderRef ref="Merchant_RollingFile"/>
             <AppenderRef ref="STDOUT"/>
         </Root>
-        <logger name="com.fku.exchange.impl.gdax.GdaxExchangeService" level="DEBUG"/>
+        <logger name="com.fku.exchange.service.impl.gdax.GdaxExchangeService" level="DEBUG"/>
     </Loggers>
 </Configuration>
