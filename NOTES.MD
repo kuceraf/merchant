@@ -14,8 +14,7 @@ Remove MerchantStrategyException
 
 # Code
 ## Save exchange response for mocking
-`FileOutputStream f = new FileOutputSt
-ream(new File("e:\\orderBook.txt"));
+`FileOutputStream f = new FileOutputStream(new File("e:\\orderBook.ser"));
  ObjectOutputStream o = new ObjectOutputStream(f);
  o.writeObject(orderBook);
  o.close();

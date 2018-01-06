@@ -8,7 +8,6 @@ import org.springframework.util.Assert;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-// TODO test this!!!
 public class StrategyHelper {
     /**
      * Search order in open orders list. If order is found it was'nt filled
@@ -33,7 +32,7 @@ public class StrategyHelper {
     /**
      *
      * @param buyOrderPrice the base order for calculation
-     * @param requiredPercentageProfit percentage points
+     * @param requiredPercentageProfit in percentage points
      * @return new sell order price to reach required gain
      */
     public static BigDecimal calculateSellPriceWithRequiredProfit(BigDecimal buyOrderPrice, BigDecimal requiredPercentageProfit) {
