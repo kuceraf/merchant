@@ -3,8 +3,7 @@ jdk:
     - oraclejdk8
 
 install: true
-
-script: mvn clean install -Dmaven.javadoc.skip=true -Pall
+script: mvn clean install -Dmaven.javadoc.skip=true
 
 
 
