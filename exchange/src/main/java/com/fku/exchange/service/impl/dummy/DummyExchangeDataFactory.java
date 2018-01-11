@@ -6,14 +6,10 @@ import com.fku.exchange.domain.OrderType;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.trade.OpenOrders;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Objects;
 
 // Provide locally stored testing data
 @Log4j2
@@ -26,18 +22,16 @@ public class DummyExchangeDataFactory {
     public static final BigDecimal BASE_CURRENCY_AMOUNT = BigDecimal.valueOf(0.00728425);
     public static final String EXISTING_OPEN_ORDER_ID = "ee0c87b1-fd65-4961-b317-7c0852b7f37e";
 
-    private static final String ORDER_BOOK_RESOURCE = "orderBook.ser";
-    private static final String OPEN_ORDERS_RESOURCE = "openOrders.ser";
+    private static final String ORDER_BOOK_RESOURCE = "dummy/orderBook.ser";
+    private static final String OPEN_ORDERS_RESOURCE = "dummy/openOrders.ser";
     // Provide order book of BTC/EUR from 27/12/2017
     public static OrderBook createOrderBook() { // FIXME refactor to parametric method
         OrderBook orderBook = null;
         try {
-            Path path = Paths.get(Objects.requireNonNull(Thread.currentThread().getContextClassLoader()
-                    .getResource(ORDER_BOOK_RESOURCE)).toURI());
-            InputStream  fi = Files.newInputStream(path);
+            InputStream  fi = new ClassPathResource(ORDER_BOOK_RESOURCE).getInputStream();
             ObjectInputStream oi = new ObjectInputStream(fi);
             orderBook = (OrderBook) oi.readObject();
-        } catch (URISyntaxException | IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             log.error(e);
         }
         if (orderBook == null) {
@@ -51,12 +45,11 @@ public class DummyExchangeDataFactory {
     public static OpenOrders createOpenOrders() {
         OpenOrders openOrders = null;
         try {
-            Path path = Paths.get(Objects.requireNonNull(Thread.currentThread().getContextClassLoader()
-                    .getResource(OPEN_ORDERS_RESOURCE)).toURI());
-            InputStream  fi = Files.newInputStream(path);
+            Class clazz = DummyExchangeDataFactory.class;
+            InputStream  fi = new ClassPathResource(OPEN_ORDERS_RESOURCE).getInputStream();
             ObjectInputStream oi = new ObjectInputStream(fi);
             openOrders = (OpenOrders) oi.readObject();
-        } catch (URISyntaxException | IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             log.error(e);
         }
         if (openOrders == null) {
