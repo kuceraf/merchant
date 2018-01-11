@@ -28,11 +28,11 @@ public abstract class ATradingStrategy implements TradingStrategy {
 
     protected void checkProfitability() {
         BigDecimal buyOrdersTotalCost = buyOrderStates.values().stream()
-                .map(buyOrder -> buyOrder.price.multiply(buyOrder.amount))
+                .map(buyOrder -> buyOrder.getPrice().multiply(buyOrder.getAmount()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal sellOrdersTotalCost = sellOrderStates.values().stream()
-                .map(buyOrder -> buyOrder.price.multiply(buyOrder.amount))
+                .map(buyOrder -> buyOrder.getPrice().multiply(buyOrder.getAmount()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         log.info("Buy orders ({}) total cost {} EUR, sell orders ({}) total cost {} EUR",

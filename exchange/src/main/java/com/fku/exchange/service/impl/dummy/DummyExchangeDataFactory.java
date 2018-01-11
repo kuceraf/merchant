@@ -4,6 +4,7 @@ import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.exchange.domain.OrderType;
 import lombok.extern.log4j.Log4j2;
+import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.springframework.core.io.ClassPathResource;
@@ -45,7 +46,6 @@ public class DummyExchangeDataFactory {
     public static OpenOrders createOpenOrders() {
         OpenOrders openOrders = null;
         try {
-            Class clazz = DummyExchangeDataFactory.class;
             InputStream  fi = new ClassPathResource(OPEN_ORDERS_RESOURCE).getInputStream();
             ObjectInputStream oi = new ObjectInputStream(fi);
             openOrders = (OpenOrders) oi.readObject();
@@ -66,7 +66,7 @@ public class DummyExchangeDataFactory {
     public static ExchangeOrder createExchangeOrder() {
         return new ExchangeOrder(
                 EXISTING_OPEN_ORDER_ID,
-                OrderType.SELL,
+                Order.OrderType.ASK,
                 CURRENT_ASK_PRICE,
                 BASE_CURRENCY_AMOUNT
                 );

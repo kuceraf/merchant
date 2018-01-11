@@ -5,6 +5,7 @@ import org.knowm.xchange.dto.trade.LimitOrder;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.springframework.util.Assert;
 
+import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -15,12 +16,10 @@ public class StrategyHelper {
      * @param order examined order (filled/unfilled)
      * @return true, if order is filled
      */
-    public static boolean isOrderFilled(OpenOrders openOrders, ExchangeOrder order) {
-        Assert.notNull(openOrders, "OpenOrders mustn't be null");
-        Assert.notNull(order, "Order mustn't be null");
+    public static boolean isOrderFilled(@Nonnull OpenOrders openOrders, @Nonnull ExchangeOrder order) {
         boolean lastOrderFound = false;
         for (final LimitOrder openOrder : openOrders.getOpenOrders()) {
-            if (openOrder.getId().equals(order.id)) {
+            if (openOrder.getId().equals(order.getId())) {
                 lastOrderFound = true;
                 break;
             }
@@ -35,9 +34,7 @@ public class StrategyHelper {
      * @param requiredPercentageProfit in percentage points
      * @return new sell order price to reach required gain
      */
-    public static BigDecimal calculateSellPriceWithRequiredProfit(BigDecimal buyOrderPrice, BigDecimal requiredPercentageProfit) {
-        Assert.notNull(buyOrderPrice, "buyOrderPrice mustn't be null");
-        Assert.notNull(requiredPercentageProfit, "requiredPercentageProfit mustn't be null");
+    public static BigDecimal calculateSellPriceWithRequiredProfit(@Nonnull  BigDecimal buyOrderPrice, @Nonnull BigDecimal requiredPercentageProfit) {
         BigDecimal requiredAmountGain = buyOrderPrice.multiply(requiredPercentageProfit);
         BigDecimal sellPriceWithRequiredGain = requiredAmountGain.add(buyOrderPrice);
         return sellPriceWithRequiredGain.setScale(8, RoundingMode.HALF_UP);

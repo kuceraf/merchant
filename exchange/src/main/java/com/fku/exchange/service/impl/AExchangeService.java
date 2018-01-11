@@ -34,7 +34,7 @@ public abstract class AExchangeService implements ExchangeService {
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
         ExchangeOrder exchangeOrder = null;
         LimitOrder newBuyLimitOrder = new LimitOrder(
-                Order.OrderType.BID,
+                orderType,
                 baseCurrencyAmount,
                 this.currencyPair,
                 null,
@@ -46,8 +46,12 @@ public abstract class AExchangeService implements ExchangeService {
 
         try {
             String orderId = xchangeAdapter.getTradeService().placeLimitOrder(newBuyLimitOrder);
-            exchangeOrder = new ExchangeOrder(orderId, OrderType.BUY, limitPrice, baseCurrencyAmount);
-
+            exchangeOrder = new ExchangeOrder(
+                    orderId,
+                    orderType,
+                    limitPrice,
+                    baseCurrencyAmount
+            );
         } catch (Exception e) {
             ExchangeExceptionHandler.handleException(e);
         }

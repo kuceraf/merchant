@@ -1,33 +1,31 @@
 package com.fku.exchange.domain;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalTime;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
+import org.knowm.xchange.dto.Order;
 
 @ToString
-@AllArgsConstructor
+@Getter @Setter
 public class ExchangeOrder {
+    private String id;
+    private Timestamp timestamp;
+    private Order.OrderType type;
+    private BigDecimal price;
+    private BigDecimal amount;
 
-    /**
-     * Id - default to null.
-     */
-    public String id = null;
-
-    /**
-     * Type: buy/sell. We default to null which means no order has been placed yet, i.e. we've just started!
-     */
-    public OrderType type = null;
-
-    /**
-     * Price to buy/sell at - default to zero.
-     */
-    public BigDecimal price = BigDecimal.ZERO;
-
-    /**
-     * Number of units to buy/sell - default to zero.
-     */
-    public BigDecimal amount = BigDecimal.ZERO;
-
+    public ExchangeOrder(String id, Order.OrderType type, BigDecimal price, BigDecimal amount) {
+        this.id = id;
+        this.timestamp = new Timestamp(System.currentTimeMillis());
+        this.type = type;
+        this.price = price;
+        this.amount = amount;
+    }
 }
 

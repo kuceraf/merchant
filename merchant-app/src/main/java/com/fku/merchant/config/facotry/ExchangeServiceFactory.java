@@ -40,7 +40,7 @@ public class ExchangeServiceFactory extends AbstractFactoryBean<ExchangeService>
             case GDAX:
                 return new GdaxExchangeService(xchangeAdapter, currencyPair);
             case DUMMY:
-                return new DummyExchangeService(xchangeAdapter, currencyPair);
+                return new DummyExchangeService();
             default:
                 throw new IllegalStateException();
         }

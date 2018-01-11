@@ -29,7 +29,7 @@ public class StrategyHelperTest {
     @Test
     public void isOrderFilled_true() {
         ExchangeOrder filledExchangeOrder = createExchangeOrder();
-        filledExchangeOrder.id = "notFromOrderBook";
+        filledExchangeOrder.setId("notFromOrderBook");
         assertThat(StrategyHelper.isOrderFilled(createOpenOrders(), filledExchangeOrder))
                 .isTrue();
     }

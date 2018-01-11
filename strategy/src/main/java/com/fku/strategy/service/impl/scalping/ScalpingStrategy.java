@@ -13,6 +13,7 @@ import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 
@@ -63,16 +64,16 @@ public class ScalpingStrategy extends ATradingStrategy {
         // TODO look up in DB
         if (lastOrder == null) {
             // first time execution
-            log.debug("First time strategy execution - placing new BUY order");
+            log.info("First time strategy execution - placing new BUY order");
             ExchangeOrder newExchangeOrder = exchangeService.placeBuyOrder(currentBidPrice, COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
             exchangeOrderRepository.saveOrder(newExchangeOrder);
         } else {
-            switch (lastOrder.type) {
-                case BUY:
-                    // umistili jsme pozadavek na nakup - zkusime prodej se ziskem
+            switch (lastOrder.getType()) {
+                case BID: //= buying order
+                    // naposled jsme umistili pozadavek na nakup - zkusime prodej se ziskem
                 trySellWithProfit(lastOrder);
                     break;
-                case SELL:
+                case ASK: //= selling order
                     // co jsme nakoupili je prodano - nakoupime znovu
 //               TODO tryPlaceBuyOrder(currentBidPrice, currentAskPrice);
                     break;
@@ -82,20 +83,25 @@ public class ScalpingStrategy extends ATradingStrategy {
         }
     }
 
+    // TODO otestovat
     void trySellWithProfit(ExchangeOrder lastOrder) throws Exception {
-        if(lastOrder.type == OrderType.SELL){
+        if(lastOrder.getType() == Order.OrderType.ASK){
             throw new MerchantStrategyException("Wrong strategy execution flow - two successive SELL orders");
         }
         OpenOrders openOrders = exchangeService.getOpenOrders();
         if (StrategyHelper.isOrderFilled(openOrders, lastOrder)) {
         // The last buy order was filled - we can create SELL order now
             log.info("^^^ Yay!!! Last BUY order (Id:{}) filled at {}",
-                    lastOrder.id,
-                    lastOrder.price);
-        }
+                    lastOrder.getId(),
+                    lastOrder.getPrice());
 
-        BigDecimal newAskPrice = StrategyHelper.calculateSellPriceWithRequiredProfit(lastOrder.price, MINIMUM_PERCENTAGE_PROFIT);
-        exchangeService.placeOrder(Order.OrderType.ASK, lastOrder.amount, newAskPrice);
-        // TODO dodelat
+            BigDecimal newAskPrice = StrategyHelper.calculateSellPriceWithRequiredProfit(lastOrder.getPrice(), MINIMUM_PERCENTAGE_PROFIT);
+            ExchangeOrder newExchangeOrder = exchangeService.placeOrder(Order.OrderType.ASK, lastOrder.getAmount(), newAskPrice);
+            exchangeOrderRepository.saveOrder(newExchangeOrder);
+        } else {
+            log.info("!!! Still have BUY Order {} waiting to fill at {} holding last BUY order...",
+                    lastOrder.getId(),
+                    lastOrder.getPrice());
+        }
     };
 }
