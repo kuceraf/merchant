@@ -12,6 +12,8 @@ import org.knowm.xchange.dto.trade.OpenOrders;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import static com.fku.exchange.service.impl.dummy.Constants.*;
+
 public class DummyExchangeService implements ExchangeService {
     @Override
     public String getExchangeName() {
@@ -20,7 +22,7 @@ public class DummyExchangeService implements ExchangeService {
 
     @Override
     public InstrumentPrice getCurrentPrices() throws MerchantExchangeException, MerchantExchangeNonFatalException {
-        return DummyExchangeDataFactory.createInstrumentPrice();
+        return new InstrumentPrice(LIMIT_BID_PRICE, LIMIT_ASK_PRICE);
     }
 
     @Override
@@ -34,7 +36,7 @@ public class DummyExchangeService implements ExchangeService {
 
     @Override
     public ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount) throws MerchantExchangeException, MerchantExchangeNonFatalException {
-        BigDecimal baseCurrencyAmount = ExchangeHelper.calculateBaseCurrencyAmount(counterCurrencyAmount, DummyExchangeDataFactory.INSTRUMENT_LAST_PRICE);
+        BigDecimal baseCurrencyAmount = ExchangeHelper.calculateBaseCurrencyAmount(counterCurrencyAmount, INSTRUMENT_LAST_PRICE);
         return new ExchangeOrder(
                 UUID.randomUUID().toString(),
                 Order.OrderType.BID,
@@ -44,6 +46,6 @@ public class DummyExchangeService implements ExchangeService {
 
     @Override
     public OpenOrders getOpenOrders() throws MerchantExchangeException, MerchantExchangeNonFatalException {
-        return DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder();
+        return DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder(EXISTING_OPEN_ORDER_ID);
     }
 }

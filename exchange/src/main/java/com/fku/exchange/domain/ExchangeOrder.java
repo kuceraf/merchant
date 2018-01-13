@@ -18,7 +18,7 @@ public class ExchangeOrder {
     private Timestamp timestamp;
     private Order.OrderType type;
     private BigDecimal price;
-    private BigDecimal amount;
+    private BigDecimal amount; // base currency amount
 
     public ExchangeOrder(String id, Order.OrderType type, BigDecimal price, BigDecimal amount) {
         this.id = id;

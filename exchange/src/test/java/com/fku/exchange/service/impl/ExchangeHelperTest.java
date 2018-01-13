@@ -2,14 +2,17 @@ package com.fku.exchange.service.impl;
 
 
 import com.fku.exchange.error.MerchantExchangeException;
+import com.fku.exchange.service.impl.dummy.Constants;
 import com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 
-import static com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory.BASE_CURRENCY_AMOUNT;
-import static com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory.COUNTER_CURRENCY_AMOUNT;
-import static com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory.INSTRUMENT_LAST_PRICE;
+import static com.fku.exchange.service.impl.dummy.Constants.BASE_CURRENCY_AMOUNT;
+import static com.fku.exchange.service.impl.dummy.Constants.COUNTER_CURRENCY_AMOUNT;
+import static com.fku.exchange.service.impl.dummy.Constants.INSTRUMENT_LAST_PRICE;
+import static com.fku.exchange.service.impl.dummy.Constants.LIMIT_ASK_PRICE;
+import static com.fku.exchange.service.impl.dummy.Constants.LIMIT_BID_PRICE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -21,19 +24,19 @@ public class ExchangeHelperTest {
 
     @Before
     public void setUpBeforeEachTest() throws Exception {
-        orderBook = DummyExchangeDataFactory.getOrderBook();
+        orderBook = DummyExchangeDataFactory.getOrderBook(LIMIT_ASK_PRICE, LIMIT_BID_PRICE);
     }
 
     @Test
     public void getCurrentBidPriceTest() throws Exception {
         assertThat(ExchangeHelper.getCurrentBidPrice(orderBook))
-                .isEqualTo(DummyExchangeDataFactory.LIMIT_BID_PRICE);
+                .isEqualTo(LIMIT_BID_PRICE);
     }
 
     @Test
     public void getCurrentAskPriceTest() throws  Exception {
         assertThat(ExchangeHelper.getCurrentAskPrice(orderBook))
-                .isEqualTo(DummyExchangeDataFactory.LIMIT_ASK_PRICE);
+                .isEqualTo(LIMIT_ASK_PRICE);
     }
 
     @Test

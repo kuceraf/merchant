@@ -1,11 +1,15 @@
 package com.fku.strategy.service.impl;
 
 import com.fku.exchange.domain.ExchangeOrder;
+import com.fku.exchange.service.impl.dummy.Constants;
 import org.junit.Test;
+import org.knowm.xchange.dto.Order;
 
 import java.math.BigDecimal;
 
-import static com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory.getExchangeOrder;
+import static com.fku.exchange.service.impl.dummy.Constants.BASE_CURRENCY_AMOUNT;
+import static com.fku.exchange.service.impl.dummy.Constants.EXISTING_OPEN_ORDER_ID;
+import static com.fku.exchange.service.impl.dummy.Constants.LIMIT_ASK_PRICE;
 import static com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +26,7 @@ public class StrategyHelperTest {
 
     @Test
     public void isOrderFilled_false() {
-        assertThat(StrategyHelper.isOrderFilled(getOpenOrdersWithAskOpenOrder(), getExchangeOrder()))
+        assertThat(StrategyHelper.isOrderFilled(getOpenOrdersWithAskOpenOrder(EXISTING_OPEN_ORDER_ID), getExchangeOrder()))
         .isFalse();
     }
 
@@ -30,7 +34,16 @@ public class StrategyHelperTest {
     public void isOrderFilled_true() {
         ExchangeOrder filledExchangeOrder = getExchangeOrder();
         filledExchangeOrder.setId("notFromOpenOrdes");
-        assertThat(StrategyHelper.isOrderFilled(getOpenOrdersWithAskOpenOrder(), filledExchangeOrder))
+        assertThat(StrategyHelper.isOrderFilled(getOpenOrdersWithAskOpenOrder(EXISTING_OPEN_ORDER_ID), filledExchangeOrder))
                 .isTrue();
+    }
+
+    private static ExchangeOrder getExchangeOrder() {
+        return new ExchangeOrder(
+                EXISTING_OPEN_ORDER_ID,
+                Order.OrderType.ASK,
+                LIMIT_ASK_PRICE,
+                BASE_CURRENCY_AMOUNT
+        );
     }
 }

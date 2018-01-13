@@ -30,9 +30,9 @@ public class StrategyHelper {
 
     /**
      *
-     * @param buyOrderPrice the base order for calculation
+     * @param buyOrderPrice the base price for calculation
      * @param requiredPercentageProfit in percentage points
-     * @return new sell order price to reach required gain
+     * @return new price to reach required gain
      */
     public static BigDecimal calculateSellPriceWithRequiredProfit(@Nonnull  BigDecimal buyOrderPrice, @Nonnull BigDecimal requiredPercentageProfit) {
         BigDecimal requiredAmountGain = buyOrderPrice.multiply(requiredPercentageProfit);

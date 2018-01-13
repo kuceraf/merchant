@@ -6,16 +6,17 @@ import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.strategy.error.MerchantStrategyException;
 import com.fku.strategy.service.impl.ATradingStrategy;
-import com.fku.strategy.service.impl.StrategyHelper;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.indicators.MACDIndicator;
 
-import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+
+import static com.fku.strategy.service.impl.StrategyHelper.calculateSellPriceWithRequiredProfit;
+import static com.fku.strategy.service.impl.StrategyHelper.isOrderFilled;
 
 @Log4j2
 @Component
@@ -61,15 +62,14 @@ public class ScalpingStrategy extends ATradingStrategy {
 
     @Override
     public void executeStrategySpecific() throws Exception {
-        ExchangeOrder lastOrder = exchangeOrderRepository.findLastOrder();
+        ExchangeOrder lastOrder = exchangeOrderRepository.findLast();
         InstrumentPrice currentPrices = exchangeService.getCurrentPrices();
-        BigDecimal currentBidPrice = currentPrices.getBidPrice();
 
         if (lastOrder == null) {
-            // first time execution
             log.info("First time strategy execution - placing new BUY order");
+            BigDecimal currentBidPrice = currentPrices.getBidPrice();
             ExchangeOrder newExchangeOrder = exchangeService.placeBuyOrder(currentBidPrice, COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
-            exchangeOrderRepository.saveOrder(newExchangeOrder);
+            exchangeOrderRepository.save(newExchangeOrder);
         } else {
             switch (lastOrder.getType()) {
                 case BID: //= buying order
@@ -88,19 +88,19 @@ public class ScalpingStrategy extends ATradingStrategy {
 
     // TODO otestovat
     void trySellWithProfit(ExchangeOrder lastOrder) throws Exception {
-        if(lastOrder.getType() == Order.OrderType.ASK){
+        if(lastOrder.getType() == Order.OrderType.ASK) {
             throw new MerchantStrategyException("Wrong strategy execution flow - two successive SELL orders");
         }
         OpenOrders openOrders = exchangeService.getOpenOrders();
-        if (StrategyHelper.isOrderFilled(openOrders, lastOrder)) {
+        if (isOrderFilled(openOrders, lastOrder)) {
         // The last buy order was filled - we can create SELL order now
             log.info("^^^ Yay!!! Last BUY order (Id:{}) filled at {}",
                     lastOrder.getId(),
                     lastOrder.getPrice());
 
-            BigDecimal newAskPrice = StrategyHelper.calculateSellPriceWithRequiredProfit(lastOrder.getPrice(), MINIMUM_PERCENTAGE_PROFIT);
+            BigDecimal newAskPrice = calculateSellPriceWithRequiredProfit(lastOrder.getPrice(), MINIMUM_PERCENTAGE_PROFIT);
             ExchangeOrder newExchangeOrder = exchangeService.placeOrder(Order.OrderType.ASK, lastOrder.getAmount(), newAskPrice);
-            exchangeOrderRepository.saveOrder(newExchangeOrder);
+            exchangeOrderRepository.save(newExchangeOrder);
         } else {
             log.info("!!! Still have BUY Order {} waiting to fill at {} holding last BUY order...",
                     lastOrder.getId(),

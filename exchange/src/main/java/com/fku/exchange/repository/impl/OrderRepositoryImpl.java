@@ -9,12 +9,12 @@ public class OrderRepositoryImpl implements ExchangeOrderRepository {
     private ExchangeOrder lastOrder = null;
 
     @Override
-    public ExchangeOrder findLastOrder() {
+    public ExchangeOrder findLast() {
         return lastOrder;
     }
 
     @Override
-    public ExchangeOrder saveOrder(ExchangeOrder exchangeOrder) {
+    public ExchangeOrder save(ExchangeOrder exchangeOrder) {
         this.lastOrder = exchangeOrder;
         return exchangeOrder;
     }
