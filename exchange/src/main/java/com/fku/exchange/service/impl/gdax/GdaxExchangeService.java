@@ -19,26 +19,7 @@ public class GdaxExchangeService extends AExchangeService {
     }
 
     @Override
-    public InstrumentPrice getCurrentPrices()
-            throws MerchantExchangeException, MerchantExchangeNonFatalException {
-        OrderBook orderBook = getOrderBook();
-        return new InstrumentPrice(ExchangeHelper.getCurrentBidPrice(orderBook), ExchangeHelper.getCurrentAskPrice(orderBook));
-    }
-
-    @Override
-    public OpenOrders getOpenOrders()
-            throws MerchantExchangeException, MerchantExchangeNonFatalException {
-        OpenOrders openOrders = null;
-        try {
-            OpenOrdersParams openOrdersParams = xchangeAdapter.getTradeService().createOpenOrdersParams();
-            openOrders = xchangeAdapter.getTradeService().getOpenOrders(openOrdersParams);
-        } catch (Exception e) {
-            ExchangeExceptionHandler.handleException(e);
-        }
-        return openOrders;
-    }
-
-    private OrderBook getOrderBook()
+    protected OrderBook getOrderBook()
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
         OrderBook orderBook = null;
         try {

@@ -4,7 +4,6 @@ import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.domain.InstrumentPrice;
-import com.fku.exchange.domain.OrderType;
 import com.fku.strategy.error.MerchantStrategyException;
 import com.fku.strategy.service.impl.ATradingStrategy;
 import com.fku.strategy.service.impl.StrategyHelper;

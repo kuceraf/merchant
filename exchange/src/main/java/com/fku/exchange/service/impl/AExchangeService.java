@@ -1,17 +1,20 @@
 package com.fku.exchange.service.impl;
 
 
+import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.exchange.error.ExchangeExceptionHandler;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.domain.ExchangeOrder;
-import com.fku.exchange.domain.OrderType;
 import com.fku.exchange.error.MerchantExchangeException;
 import com.fku.exchange.error.MerchantExchangeNonFatalException;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
+import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.trade.LimitOrder;
+import org.knowm.xchange.dto.trade.OpenOrders;
+import org.knowm.xchange.service.trade.params.orders.OpenOrdersParams;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
@@ -26,11 +29,14 @@ public abstract class AExchangeService implements ExchangeService {
         this.currencyPair = currencyPair;
     }
 
+    protected abstract OrderBook getOrderBook() throws MerchantExchangeException, MerchantExchangeNonFatalException;
+
     @Override
     public String getExchangeName() {
         return xchangeAdapter.getExchangeSpecification().getExchangeName();
     }
 
+    @Override
     public ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice)
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
         ExchangeOrder exchangeOrder = null;
@@ -60,7 +66,7 @@ public abstract class AExchangeService implements ExchangeService {
         return exchangeOrder;
     }
 
-    @Override // Fasada pro get lastInstrumentMarketPrice a placeOrder
+    @Override
     public ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount)
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
         BigDecimal baseCurrencyAmount = null;
@@ -71,5 +77,25 @@ public abstract class AExchangeService implements ExchangeService {
             ExchangeExceptionHandler.handleException(e);
         }
         return placeOrder(Order.OrderType.BID, baseCurrencyAmount, currentBidPrice);
+    }
+
+    @Override
+    public OpenOrders getOpenOrders()
+            throws MerchantExchangeException, MerchantExchangeNonFatalException {
+        OpenOrders openOrders = null;
+        try {
+            OpenOrdersParams openOrdersParams = xchangeAdapter.getTradeService().createOpenOrdersParams();
+            openOrders = xchangeAdapter.getTradeService().getOpenOrders(openOrdersParams);
+        } catch (Exception e) {
+            ExchangeExceptionHandler.handleException(e);
+        }
+        return openOrders;
+    }
+
+    @Override
+    public InstrumentPrice getCurrentPrices()
+            throws MerchantExchangeException, MerchantExchangeNonFatalException {
+        OrderBook orderBook = getOrderBook();
+        return new InstrumentPrice(ExchangeHelper.getCurrentBidPrice(orderBook), ExchangeHelper.getCurrentAskPrice(orderBook));
     }
 }
