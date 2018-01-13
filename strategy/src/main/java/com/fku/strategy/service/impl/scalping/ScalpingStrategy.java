@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.springframework.stereotype.Component;
+import org.ta4j.core.indicators.MACDIndicator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
@@ -20,6 +21,7 @@ import java.math.BigDecimal;
 @Component
 public class ScalpingStrategy extends ATradingStrategy {
 
+    private MACDIndicator macdIndicator;
     private final ExchangeOrderRepository exchangeOrderRepository;
     // Constants
     /**
@@ -52,6 +54,9 @@ public class ScalpingStrategy extends ATradingStrategy {
     private void info() {
         log.info("Strategy [{}] is initialized", this.getClass());
         log.info("Strategy executes on [{}] exchange market", exchangeService.getExchangeName());
+
+        // TODO
+//        macdIndicator = new MACDIndicator();
     }
 
     @Override
@@ -60,7 +65,6 @@ public class ScalpingStrategy extends ATradingStrategy {
         InstrumentPrice currentPrices = exchangeService.getCurrentPrices();
         BigDecimal currentBidPrice = currentPrices.getBidPrice();
 
-        // TODO look up in DB
         if (lastOrder == null) {
             // first time execution
             log.info("First time strategy execution - placing new BUY order");
