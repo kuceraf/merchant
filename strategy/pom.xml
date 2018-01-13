@@ -42,9 +42,10 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>N
+            <optional>true</optional>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.ta4j</groupId>
             <artifactId>ta4j-core</artifactId>
