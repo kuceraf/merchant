@@ -10,7 +10,6 @@ import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.UUID;
 
 public class DummyExchangeService implements ExchangeService {
@@ -45,6 +44,6 @@ public class DummyExchangeService implements ExchangeService {
 
     @Override
     public OpenOrders getOpenOrders() throws MerchantExchangeException, MerchantExchangeNonFatalException {
-        return DummyExchangeDataFactory.createOpenOrders();
+        return DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder();
     }
 }

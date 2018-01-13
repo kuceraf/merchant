@@ -21,19 +21,19 @@ public class ExchangeHelperTest {
 
     @Before
     public void setUpBeforeEachTest() throws Exception {
-        orderBook = DummyExchangeDataFactory.createOrderBook();
+        orderBook = DummyExchangeDataFactory.getOrderBook();
     }
 
     @Test
     public void getCurrentBidPriceTest() throws Exception {
         assertThat(ExchangeHelper.getCurrentBidPrice(orderBook))
-                .isEqualTo(DummyExchangeDataFactory.CURRENT_BID_PRICE);
+                .isEqualTo(DummyExchangeDataFactory.LIMIT_BID_PRICE);
     }
 
     @Test
     public void getCurrentAskPriceTest() throws  Exception {
         assertThat(ExchangeHelper.getCurrentAskPrice(orderBook))
-                .isEqualTo(DummyExchangeDataFactory.CURRENT_ASK_PRICE);
+                .isEqualTo(DummyExchangeDataFactory.LIMIT_ASK_PRICE);
     }
 
     @Test

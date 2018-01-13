@@ -26,6 +26,6 @@ public class ScalpingStrategyTest {
 
         // Then
         verify(exchangeServiceMocked, times(1)).getCurrentPrices();
-        verify(exchangeServiceMocked, times(1)).placeBuyOrder(DummyExchangeDataFactory.CURRENT_BID_PRICE, ScalpingStrategy.COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
+        verify(exchangeServiceMocked, times(1)).placeBuyOrder(DummyExchangeDataFactory.LIMIT_BID_PRICE, ScalpingStrategy.COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
     }
 }

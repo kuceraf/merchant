@@ -13,6 +13,7 @@ import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.LimitOrder;
 
+import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 
 @Log4j2
@@ -20,7 +21,7 @@ public abstract class AExchangeService implements ExchangeService {
     protected final org.knowm.xchange.Exchange xchangeAdapter;
     protected final CurrencyPair currencyPair;
 
-    protected AExchangeService(Exchange xchangeAdapter, CurrencyPair currencyPair) {
+    protected AExchangeService(@Nonnull Exchange xchangeAdapter, @Nonnull CurrencyPair currencyPair) {
         this.xchangeAdapter = xchangeAdapter;
         this.currencyPair = currencyPair;
     }

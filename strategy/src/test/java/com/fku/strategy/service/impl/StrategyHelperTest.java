@@ -5,8 +5,8 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import static com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory.createExchangeOrder;
-import static com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory.createOpenOrders;
+import static com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory.getExchangeOrder;
+import static com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -22,15 +22,15 @@ public class StrategyHelperTest {
 
     @Test
     public void isOrderFilled_false() {
-        assertThat(StrategyHelper.isOrderFilled(createOpenOrders(), createExchangeOrder()))
+        assertThat(StrategyHelper.isOrderFilled(getOpenOrdersWithAskOpenOrder(), getExchangeOrder()))
         .isFalse();
     }
 
     @Test
     public void isOrderFilled_true() {
-        ExchangeOrder filledExchangeOrder = createExchangeOrder();
-        filledExchangeOrder.setId("notFromOrderBook");
-        assertThat(StrategyHelper.isOrderFilled(createOpenOrders(), filledExchangeOrder))
+        ExchangeOrder filledExchangeOrder = getExchangeOrder();
+        filledExchangeOrder.setId("notFromOpenOrdes");
+        assertThat(StrategyHelper.isOrderFilled(getOpenOrdersWithAskOpenOrder(), filledExchangeOrder))
                 .isTrue();
     }
 }
