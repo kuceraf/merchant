@@ -8,7 +8,6 @@ import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.strategy.error.MerchantStrategyException;
 import com.fku.strategy.service.impl.ATradingStrategy;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.dto.Order;
@@ -78,10 +77,10 @@ public class ScalpingStrategy extends ATradingStrategy {
             switch (lastOrder.getType()) {
                 case BID: //= buying order
                     // last time we place buy order - now we sell it with profit
-                    sellWithProfitWhenLastBuyOrderIsFilled(lastOrder);
+                    sellWithProfitIfLastBuyOrderIsFilled(lastOrder);
                     break;
                 case ASK: //= selling order
-                    buyWhenLastSellOrderIsFilled(lastOrder);
+                    buyIfLastSellOrderIsFilled(lastOrder);
                     break;
                 default:
                     throw new IllegalStateException("Unknown order type");
@@ -95,7 +94,7 @@ public class ScalpingStrategy extends ATradingStrategy {
      * @param lastAskOrder last exchange order
      * @throws Exception from exchange
      */
-    private void buyWhenLastSellOrderIsFilled(ExchangeOrder lastAskOrder) throws Exception {
+    private void buyIfLastSellOrderIsFilled(ExchangeOrder lastAskOrder) throws Exception {
         if(lastAskOrder.getType() == Order.OrderType.BID) {
             throw new MerchantStrategyException("Wrong strategy execution flow - two successive BUY orders");
         }
@@ -133,7 +132,7 @@ public class ScalpingStrategy extends ATradingStrategy {
      * @param lastBuyOrder last exchange order
      * @throws Exception from the exchange
      */
-    private void sellWithProfitWhenLastBuyOrderIsFilled(ExchangeOrder lastBuyOrder) throws Exception {
+    private void sellWithProfitIfLastBuyOrderIsFilled(ExchangeOrder lastBuyOrder) throws Exception {
         if(lastBuyOrder.getType() == Order.OrderType.ASK) {
             throw new MerchantStrategyException("Wrong strategy execution flow - two successive SELL orders");
         }
