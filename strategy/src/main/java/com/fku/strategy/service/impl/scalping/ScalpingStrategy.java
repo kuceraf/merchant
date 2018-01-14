@@ -1,5 +1,7 @@
 package com.fku.strategy.service.impl.scalping;
 
+import com.fku.exchange.error.MerchantExchangeException;
+import com.fku.exchange.error.MerchantExchangeNonFatalException;
 import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.domain.ExchangeOrder;
@@ -63,22 +65,18 @@ public class ScalpingStrategy extends ATradingStrategy {
     @Override
     public void executeStrategySpecific() throws Exception {
         ExchangeOrder lastOrder = exchangeOrderRepository.findLast();
-        InstrumentPrice currentPrices = exchangeService.getCurrentPrices();
 
         if (lastOrder == null) {
             log.info("First time strategy execution - placing new BUY order");
-            BigDecimal currentBidPrice = currentPrices.getBidPrice();
-            ExchangeOrder newExchangeOrder = exchangeService.placeBuyOrder(currentBidPrice, COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
-            exchangeOrderRepository.save(newExchangeOrder);
+            placeBuyOrderAtCurrentPrice();
         } else {
             switch (lastOrder.getType()) {
                 case BID: //= buying order
-                    // naposled jsme umistili pozadavek na nakup - zkusime prodej se ziskem
-                trySellWithProfit(lastOrder);
+                    // last time we place buy order - now we sell it with profit
+                    sellWithProfitWhenLastBuyOrderIsFilled(lastOrder);
                     break;
                 case ASK: //= selling order
-                    // co jsme nakoupili je prodano - nakoupime znovu
-//               TODO tryPlaceBuyOrder(currentBidPrice, currentAskPrice);
+                    buyWhenLastSellOrderIsFilled(lastOrder);
                     break;
                 default:
                     throw new IllegalStateException("Unknown order type");
@@ -86,25 +84,61 @@ public class ScalpingStrategy extends ATradingStrategy {
         }
     }
 
-    // TODO otestovat
-    void trySellWithProfit(ExchangeOrder lastOrder) throws Exception {
+    /**
+     * Check if the last SELL order has been filled
+     * If it has been filled place new BUY order.
+     * @param lastOrder last exchange order
+     * @throws Exception from exchange
+     */
+    private void buyWhenLastSellOrderIsFilled(ExchangeOrder lastOrder) throws Exception {
+        if(lastOrder.getType() == Order.OrderType.BID) {
+            throw new MerchantStrategyException("Wrong strategy execution flow - two successive BUY orders");
+        }
+        OpenOrders openOrders = exchangeService.getOpenOrders();
+        if (isOrderFilled(openOrders, lastOrder)) {
+            // The last sell order is filled - we can create BUY order now
+            log.info("^^^ Yay!!! Last SELL order (Id:{}) filled at {}",
+                    lastOrder.getId(),
+                    lastOrder.getPrice());
+            placeBuyOrderAtCurrentPrice();
+        } else {
+        // SELL order not filled yet.
+
+        }
+    }
+
+    /**
+     * Check if the last BUY order has been filled.
+     * If it has been filled place new SELL order with increased price to gain required profit
+     * @param lastOrder last exchange order
+     * @throws Exception from the exchange
+     */
+    private void sellWithProfitWhenLastBuyOrderIsFilled(ExchangeOrder lastOrder) throws Exception {
         if(lastOrder.getType() == Order.OrderType.ASK) {
             throw new MerchantStrategyException("Wrong strategy execution flow - two successive SELL orders");
         }
         OpenOrders openOrders = exchangeService.getOpenOrders();
         if (isOrderFilled(openOrders, lastOrder)) {
-        // The last buy order was filled - we can create SELL order now
+        // The last buy order is filled - we can create SELL order now
             log.info("^^^ Yay!!! Last BUY order (Id:{}) filled at {}",
                     lastOrder.getId(),
                     lastOrder.getPrice());
 
             BigDecimal newAskPrice = calculateSellPriceWithRequiredProfit(lastOrder.getPrice(), MINIMUM_PERCENTAGE_PROFIT);
-            ExchangeOrder newExchangeOrder = exchangeService.placeOrder(Order.OrderType.ASK, lastOrder.getAmount(), newAskPrice);
-            exchangeOrderRepository.save(newExchangeOrder);
+            ExchangeOrder newExchangeSellOrder = exchangeService.placeOrder(Order.OrderType.ASK, lastOrder.getAmount(), newAskPrice);
+            exchangeOrderRepository.save(newExchangeSellOrder);
         } else {
+            // BUY order not filled yet.
             log.info("!!! Still have BUY Order {} waiting to fill at {} holding last BUY order...",
                     lastOrder.getId(),
                     lastOrder.getPrice());
         }
-    };
+    }
+
+    private void placeBuyOrderAtCurrentPrice() throws MerchantExchangeException, MerchantExchangeNonFatalException {
+        InstrumentPrice currentPrices = exchangeService.getCurrentPrices();
+        BigDecimal currentBidPrice = currentPrices.getBidPrice();
+        ExchangeOrder newExchangeOrder = exchangeService.placeBuyOrder(currentBidPrice, COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
+        exchangeOrderRepository.save(newExchangeOrder);
+    }
 }
