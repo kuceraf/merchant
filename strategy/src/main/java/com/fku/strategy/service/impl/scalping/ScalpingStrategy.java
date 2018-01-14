@@ -8,9 +8,12 @@ import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.strategy.error.MerchantStrategyException;
 import com.fku.strategy.service.impl.ATradingStrategy;
+import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.indicators.MACDIndicator;
 
@@ -26,12 +29,11 @@ public class ScalpingStrategy extends ATradingStrategy {
 
     private MACDIndicator macdIndicator;
     private final ExchangeOrderRepository exchangeOrderRepository;
-    // Constants
     /**
-     * Pro maket BTC/EUR je to 10EUR (COUNTER_CURRENCY_BUY_ORDER_AMOUNT = 10)
+     * Pro maket BTC/EUR je to 10EUR (counterCurrencyBuyOrderAmount = 10)
      *
      * Napr:
-     * COUNTER_CURRENCY_BUY_ORDER_AMOUNT = 10
+     * counterCurrencyBuyOrderAmount = 10
      * Pri nakupu na marketu BTC/EUR definuji, ze chci nakupovat BTC za 10 EUR. Pro realizaci nakupu udelam vypocet:
      * BTC buy order = 10 EUR / (kolik EUR stoji 1 BTC - tj cena BTC/EUR)
      *
@@ -42,12 +44,15 @@ public class ScalpingStrategy extends ATradingStrategy {
      * X = 0,00131579 BTC
      * Za 10 EUR si mohu koupit 0,00131579 BTC pri cene BTC/EUR = 7,599.99.
      */
-    public static final BigDecimal COUNTER_CURRENCY_BUY_ORDER_AMOUNT = BigDecimal.valueOf(700);
+    @Setter
+    @Value("${strategy.counterCurrencyBuyOrderAmount}")
+    public BigDecimal counterCurrencyBuyOrderAmount;
 
-    /**
-     * The minimum % gain was to achieve before placing a SELL oder.
-     */
-    public static final BigDecimal MINIMUM_PERCENTAGE_PROFIT = BigDecimal.valueOf(0.02);
+    @Setter
+    @Value("${strategy.minimumPercentageProfit}")
+    private BigDecimal minimumPercentageProfit; // The minimum % gain was to achieve before placing a SELL order.
+
+
     public ScalpingStrategy(ExchangeService exchangeService, ExchangeOrderRepository exchangeOrderRepository) {
         super(exchangeService);
         this.exchangeOrderRepository = exchangeOrderRepository;
@@ -139,7 +144,7 @@ public class ScalpingStrategy extends ATradingStrategy {
                     lastBuyOrder.getId(),
                     lastBuyOrder.getPrice());
 
-            BigDecimal newAskPrice = calculateSellPriceWithRequiredProfit(lastBuyOrder.getPrice(), MINIMUM_PERCENTAGE_PROFIT);
+            BigDecimal newAskPrice = calculateSellPriceWithRequiredProfit(lastBuyOrder.getPrice(), minimumPercentageProfit);
             ExchangeOrder newExchangeSellOrder = exchangeService.placeOrder(Order.OrderType.ASK, lastBuyOrder.getAmount(), newAskPrice);
             exchangeOrderRepository.save(newExchangeSellOrder);
         } else {
@@ -153,7 +158,7 @@ public class ScalpingStrategy extends ATradingStrategy {
     private void placeBuyOrderAtCurrentPrice() throws MerchantExchangeException, MerchantExchangeNonFatalException {
         InstrumentPrice currentPrices = exchangeService.getCurrentPrices();
         BigDecimal currentBidPrice = currentPrices.getBidPrice();
-        ExchangeOrder newExchangeOrder = exchangeService.placeBuyOrder(currentBidPrice, COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
+        ExchangeOrder newExchangeOrder = exchangeService.placeBuyOrder(currentBidPrice, counterCurrencyBuyOrderAmount);
         exchangeOrderRepository.save(newExchangeOrder);
     }
 }
