@@ -37,6 +37,11 @@ public abstract class AExchangeService implements ExchangeService {
     }
 
     @Override
+    public CurrencyPair getCurrencyPair() {
+        return currencyPair;
+    }
+
+    @Override
     public ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice)
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
         ExchangeOrder exchangeOrder = null;

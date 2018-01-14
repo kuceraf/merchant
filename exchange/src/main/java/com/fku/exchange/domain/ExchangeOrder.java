@@ -27,5 +27,14 @@ public class ExchangeOrder {
         this.price = price;
         this.amount = amount;
     }
+
+    // helpers
+    public boolean isBid() {
+        return Order.OrderType.BID.equals(type);
+    }
+
+    public boolean isAsk() {
+        return Order.OrderType.ASK.equals(type);
+    }
 }
 

@@ -6,6 +6,7 @@ import com.fku.exchange.error.MerchantExchangeException;
 import com.fku.exchange.error.MerchantExchangeNonFatalException;
 import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.exchange.domain.ExchangeOrder;
+import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
 
@@ -18,6 +19,11 @@ public class DummyExchangeService implements ExchangeService {
     @Override
     public String getExchangeName() {
         return "DUMMY";
+    }
+
+    @Override
+    public CurrencyPair getCurrencyPair() {
+        return CurrencyPair.BTC_EUR;
     }
 
     @Override
