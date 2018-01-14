@@ -87,51 +87,66 @@ public class ScalpingStrategy extends ATradingStrategy {
     /**
      * Check if the last SELL order has been filled
      * If it has been filled place new BUY order.
-     * @param lastOrder last exchange order
+     * @param lastAskOrder last exchange order
      * @throws Exception from exchange
      */
-    private void buyWhenLastSellOrderIsFilled(ExchangeOrder lastOrder) throws Exception {
-        if(lastOrder.getType() == Order.OrderType.BID) {
+    private void buyWhenLastSellOrderIsFilled(ExchangeOrder lastAskOrder) throws Exception {
+        if(lastAskOrder.getType() == Order.OrderType.BID) {
             throw new MerchantStrategyException("Wrong strategy execution flow - two successive BUY orders");
         }
         OpenOrders openOrders = exchangeService.getOpenOrders();
-        if (isOrderFilled(openOrders, lastOrder)) {
+        if (isOrderFilled(openOrders, lastAskOrder)) {
             // The last sell order is filled - we can create BUY order now
             log.info("^^^ Yay!!! Last SELL order (Id:{}) filled at {}",
-                    lastOrder.getId(),
-                    lastOrder.getPrice());
+                    lastAskOrder.getId(),
+                    lastAskOrder.getPrice());
             placeBuyOrderAtCurrentPrice();
         } else {
-        // SELL order not filled yet.
+        // SELL order not filled yet - log why
+            BigDecimal currentAskPrice = exchangeService.getCurrentPrices().getAskPrice();
+            BigDecimal lastOrderAksPrice = lastAskOrder.getPrice();
+            if (currentAskPrice.compareTo(lastOrderAksPrice) < 0) {
+                log.info("<<< Current ask price {} is LOWER then last SELL order price {} - holding last SELL order...",
+                        currentAskPrice,
+                        lastOrderAksPrice);
+            } else if (currentAskPrice.compareTo(lastOrderAksPrice) > 0) {
+                log.error( ">>> Current ask price {} is HIGHER than last SELL order price {} - IMPOSSIBLE! Merchant must have sold?????",
+                        currentAskPrice,
+                        lastOrderAksPrice);
 
+            } else if (currentAskPrice.compareTo(lastOrderAksPrice) == 0) {
+                log.info("=== Current ask price {} is EQUAL to last order price {} - holding last SELL order...",
+                        currentAskPrice,
+                        lastOrderAksPrice);
+            }
         }
     }
 
     /**
      * Check if the last BUY order has been filled.
      * If it has been filled place new SELL order with increased price to gain required profit
-     * @param lastOrder last exchange order
+     * @param lastBuyOrder last exchange order
      * @throws Exception from the exchange
      */
-    private void sellWithProfitWhenLastBuyOrderIsFilled(ExchangeOrder lastOrder) throws Exception {
-        if(lastOrder.getType() == Order.OrderType.ASK) {
+    private void sellWithProfitWhenLastBuyOrderIsFilled(ExchangeOrder lastBuyOrder) throws Exception {
+        if(lastBuyOrder.getType() == Order.OrderType.ASK) {
             throw new MerchantStrategyException("Wrong strategy execution flow - two successive SELL orders");
         }
         OpenOrders openOrders = exchangeService.getOpenOrders();
-        if (isOrderFilled(openOrders, lastOrder)) {
+        if (isOrderFilled(openOrders, lastBuyOrder)) {
         // The last buy order is filled - we can create SELL order now
             log.info("^^^ Yay!!! Last BUY order (Id:{}) filled at {}",
-                    lastOrder.getId(),
-                    lastOrder.getPrice());
+                    lastBuyOrder.getId(),
+                    lastBuyOrder.getPrice());
 
-            BigDecimal newAskPrice = calculateSellPriceWithRequiredProfit(lastOrder.getPrice(), MINIMUM_PERCENTAGE_PROFIT);
-            ExchangeOrder newExchangeSellOrder = exchangeService.placeOrder(Order.OrderType.ASK, lastOrder.getAmount(), newAskPrice);
+            BigDecimal newAskPrice = calculateSellPriceWithRequiredProfit(lastBuyOrder.getPrice(), MINIMUM_PERCENTAGE_PROFIT);
+            ExchangeOrder newExchangeSellOrder = exchangeService.placeOrder(Order.OrderType.ASK, lastBuyOrder.getAmount(), newAskPrice);
             exchangeOrderRepository.save(newExchangeSellOrder);
         } else {
             // BUY order not filled yet.
             log.info("!!! Still have BUY Order {} waiting to fill at {} holding last BUY order...",
-                    lastOrder.getId(),
-                    lastOrder.getPrice());
+                    lastBuyOrder.getId(),
+                    lastBuyOrder.getPrice());
         }
     }
 
