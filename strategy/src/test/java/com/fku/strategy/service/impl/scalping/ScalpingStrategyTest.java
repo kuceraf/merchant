@@ -39,7 +39,7 @@ public class ScalpingStrategyTest {
         when(exchangeServiceMocked.getCurrentPrices())
             .thenReturn(new InstrumentPrice(LIMIT_BID_PRICE, LIMIT_ASK_PRICE));
         when(exchangeOrderRepository.findLast())
-                .thenReturn(null);
+                .thenReturn(null); // no previous orders
 
         // When
         scalpingStrategyTested.execute();
@@ -53,9 +53,9 @@ public class ScalpingStrategyTest {
     public void execute_sellWithProfitIfLastBuyOrderIsFilled_lastOrderFilled() throws Exception {
         // Given
         when(exchangeOrderRepository.findLast())
-                .thenReturn(new ExchangeOrder("someId", Order.OrderType.BID, LIMIT_BID_PRICE, BASE_CURRENCY_AMOUNT));
+                .thenReturn(new ExchangeOrder("someId", Order.OrderType.BID, LIMIT_BID_PRICE, BASE_CURRENCY_AMOUNT)); // last buy order
         when(exchangeServiceMocked.getOpenOrders())
-                .thenReturn(DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder("someDifferentId"));
+                .thenReturn(DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder("someDifferentId")); // last buy order's id is not in open orders
         // When
         scalpingStrategyTested.execute();
 
@@ -68,9 +68,9 @@ public class ScalpingStrategyTest {
     public void execute_sellWithProfitIfLastBuyOrderIsFilled_lastOrderNotFilled() throws Exception {
         // Given
         when(exchangeOrderRepository.findLast())
-                .thenReturn(new ExchangeOrder("sameId", Order.OrderType.BID, LIMIT_BID_PRICE, BASE_CURRENCY_AMOUNT));
+                .thenReturn(new ExchangeOrder("theSameId", Order.OrderType.BID, LIMIT_BID_PRICE, BASE_CURRENCY_AMOUNT)); // last buy order
         when(exchangeServiceMocked.getOpenOrders())
-                .thenReturn(DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder("sameId"));
+                .thenReturn(DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder("theSameId")); // last buy order's id is in open orders
         // When
         scalpingStrategyTested.execute();
 
@@ -87,7 +87,7 @@ public class ScalpingStrategyTest {
         when(exchangeServiceMocked.getCurrentPrices())
                 .thenReturn(new InstrumentPrice(LIMIT_BID_PRICE, LIMIT_ASK_PRICE.add(BigDecimal.ONE))); // last sell order has been filled because the price rise
         when(exchangeServiceMocked.getOpenOrders())
-                .thenReturn(DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder("sameDifferentId")); // last sell order id does not exists in open orders
+                .thenReturn(DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder("sameDifferentId")); // last sell order's id is not in open orders
 
         // When
         scalpingStrategyTested.execute();
@@ -105,7 +105,7 @@ public class ScalpingStrategyTest {
         when(exchangeServiceMocked.getCurrentPrices())
                 .thenReturn(new InstrumentPrice(LIMIT_BID_PRICE, LIMIT_ASK_PRICE.subtract(BigDecimal.ONE))); // last sell order has not been filled because the price fall
         when(exchangeServiceMocked.getOpenOrders())
-                .thenReturn(DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder("theSameId")); // last sell order id still exists in open orders
+                .thenReturn(DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder("theSameId")); // last sell order's id still exists in open orders
 
         // When
         scalpingStrategyTested.execute();
