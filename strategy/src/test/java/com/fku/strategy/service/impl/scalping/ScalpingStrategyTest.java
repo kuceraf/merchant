@@ -8,6 +8,7 @@ import com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 
 import java.math.BigDecimal;
@@ -31,6 +32,8 @@ public class ScalpingStrategyTest {
         scalpingStrategyTested = new ScalpingStrategy(exchangeServiceMocked, exchangeOrderRepository);
         scalpingStrategyTested.setCounterCurrencyBuyOrderAmount(COUNTER_CURRENCY_BUY_ORDER_AMOUNT);
         scalpingStrategyTested.setMinimumPercentageProfit(MINIMUM_PERCENTAGE_PROFIT);
+        when(exchangeServiceMocked.getCurrencyPair())
+                .thenReturn(CurrencyPair.BTC_EUR);
     }
 
     @Test

@@ -10,6 +10,7 @@ import com.fku.strategy.error.MerchantStrategyException;
 import com.fku.strategy.service.impl.ATradingStrategy;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ import org.ta4j.core.indicators.MACDIndicator;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.util.List;
 
 import static com.fku.strategy.service.impl.StrategyHelper.calculateSellPriceWithRequiredProfit;
 import static com.fku.strategy.service.impl.StrategyHelper.isOrderFilled;
@@ -82,6 +84,19 @@ public class ScalpingStrategy extends ATradingStrategy {
                     break;
                 default:
                     throw new IllegalStateException("Unknown order type");
+            }
+        }
+    }
+
+    @Override
+    protected void checkProfitability() throws MerchantStrategyException {
+        ExchangeOrder lastOrder = exchangeOrderRepository.findLast();
+        if(lastOrder != null && lastOrder.isAsk()) {
+            List<ExchangeOrder> buyOrders = exchangeOrderRepository.findBids();
+            List<ExchangeOrder> sellOrders = exchangeOrderRepository.findAsks();
+            CurrencyPair currencyPair = exchangeService.getCurrencyPair();
+            if(!ProfitabilityChecker.isProfitable(buyOrders, sellOrders, currencyPair)) {
+                throw new MerchantStrategyException("Strategy is lossy - stopping execution");
             }
         }
     }
