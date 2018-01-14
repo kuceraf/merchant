@@ -28,7 +28,6 @@ import static com.fku.strategy.service.impl.StrategyHelper.isOrderFilled;
 @Component
 public class ScalpingStrategy extends ATradingStrategy {
 
-    private MACDIndicator macdIndicator;
     /**
      * Pro maket BTC/EUR je to 10EUR (counterCurrencyBuyOrderAmount = 10)
      *

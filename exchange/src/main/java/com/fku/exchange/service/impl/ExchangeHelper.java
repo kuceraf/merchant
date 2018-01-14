@@ -6,10 +6,13 @@ import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 
 @Log4j2
 public class ExchangeHelper {
+
+    public static final MathContext EXCHANGE_MATH_CONTEXT = new MathContext(8, RoundingMode.HALF_DOWN);
 
     private static final String ERR_BAD_ORDER_BOOK = "Can't get current price from empty/null order book";
     private static final String ERR_MISSING_PARAM = "Can't calculate amount with missing parameter";
@@ -33,7 +36,7 @@ public class ExchangeHelper {
          * Most exchanges (if not all) use 8 decimal places and typically round in favour of the exchange.
          * It's usually safest to round down the order quantity in your calculations.
          */
-        return counterCurrencyAmount.divide(instrumentPrice, 8, RoundingMode.HALF_DOWN);
+        return counterCurrencyAmount.divide(instrumentPrice, EXCHANGE_MATH_CONTEXT);
     }
 
     /**
