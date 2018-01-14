@@ -1,5 +1,6 @@
 package com.fku.strategy.service.impl;
 
+import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.strategy.service.TradingStrategy;
@@ -13,6 +14,13 @@ import java.util.Map;
 @Log4j2
 public abstract class ATradingStrategy implements TradingStrategy {
     protected final ExchangeService exchangeService;
+    protected final ExchangeOrderRepository exchangeOrderRepository;
+
+    @Autowired
+    public ATradingStrategy(ExchangeService exchangeService, ExchangeOrderRepository exchangeOrderRepository) {
+        this.exchangeService = exchangeService;
+        this.exchangeOrderRepository = exchangeOrderRepository;
+    }
     //key = orderId
     protected Map<String, ExchangeOrder> buyOrderStates = new HashMap<>();
     protected Map<String, ExchangeOrder> sellOrderStates = new HashMap<>();
@@ -40,10 +48,5 @@ public abstract class ATradingStrategy implements TradingStrategy {
                 buyOrdersTotalCost,
                 sellOrderStates.size(),
                 sellOrdersTotalCost);
-    }
-
-    @Autowired
-    public ATradingStrategy(ExchangeService exchangeService) {
-        this.exchangeService = exchangeService;
     }
 }
