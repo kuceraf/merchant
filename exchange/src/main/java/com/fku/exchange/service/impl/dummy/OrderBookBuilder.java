@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @Log4j2
+@Deprecated
 public final class OrderBookBuilder {
     private static final String ORDER_BOOK_RESOURCE = "dummy/orderBook.ser";
     private List<LimitOrder> asks = new ArrayList<>();

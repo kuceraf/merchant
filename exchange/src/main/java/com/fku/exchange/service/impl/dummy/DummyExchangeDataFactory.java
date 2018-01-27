@@ -12,6 +12,8 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Date;
 
 // Provide locally stored testing data
 @Log4j2
@@ -21,30 +23,23 @@ public class DummyExchangeDataFactory {
 
     // ORDER BOOK
     public static OrderBook getOrderBook(BigDecimal limitAskPrice, BigDecimal limitBidPrice) {
-        LimitOrder ask = LimitOrderBuilder.anLimitOrderBuilder(Order.OrderType.ASK)
-                .withCurrencyPair(CURRENCY_PAIR)
-                .withLimitPrice(limitAskPrice)
+        LimitOrder ask = new LimitOrder.Builder(Order.OrderType.ASK, CURRENCY_PAIR)
+                .limitPrice(limitAskPrice)
                 .build();
 
-        LimitOrder bid = LimitOrderBuilder.anLimitOrderBuilder(Order.OrderType.BID)
-                .withCurrencyPair(CURRENCY_PAIR)
-                .withLimitPrice(limitBidPrice)
+        LimitOrder bid = new LimitOrder.Builder(Order.OrderType.BID, CURRENCY_PAIR)
+                .limitPrice(limitBidPrice)
                 .build();
 
-        return OrderBookBuilder.anOrderBookBuilder()
-                .withAsk(ask)
-                .withBid(bid)
-                .build();
+        return new OrderBook(new Date(), Collections.singletonList(ask), Collections.singletonList(bid));
     }
 
     // OPEN ORDERS
     public static OpenOrders getOpenOrdersWithAskOpenOrder(String openOrderId) {
-        LimitOrder existingOpenOrder = LimitOrderBuilder.anLimitOrderBuilder(Order.OrderType.ASK)
-                .withId(openOrderId)
+        LimitOrder existingOpenOrder = new LimitOrder.Builder(Order.OrderType.ASK, CURRENCY_PAIR)
+                .id(openOrderId)
                 .build();
 
-        return OpenOrdersBuilder.anOpenOrdersBuilder()
-                .withOpenOrder(existingOpenOrder)
-                .build();
+        return new OpenOrders(Collections.singletonList(existingOpenOrder));
     }
 }

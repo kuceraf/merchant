@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 @Log4j2
 public final class OpenOrdersBuilder {
     private static final String OPEN_ORDERS_RESOURCE = "dummy/openOrders.ser";

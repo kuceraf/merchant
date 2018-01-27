@@ -45,14 +45,10 @@ public abstract class AExchangeService implements ExchangeService {
     public ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice)
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
         ExchangeOrder exchangeOrder = null;
-        LimitOrder newBuyLimitOrder = new LimitOrder(
-                orderType,
-                baseCurrencyAmount,
-                this.currencyPair,
-                null,
-                null,
-                limitPrice
-        );
+        LimitOrder newBuyLimitOrder = new LimitOrder.Builder(orderType, this.currencyPair)
+                .originalAmount(baseCurrencyAmount)
+                .limitPrice(limitPrice)
+                .build();
 
         log.info("Sending {} order to exchange (price:{}, amount:{})--->", orderType.toString(), limitPrice, baseCurrencyAmount);
 
