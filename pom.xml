@@ -12,5 +12,6 @@
         <module>merchant-app</module>
         <module>exchange</module>
         <module>strategy</module>
+        <module>technical-analyst</module>
     </modules>
 </project>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.fku</groupId>
-    <artifactId>strategy</artifactId>
+    <artifactId>technical-analyst</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -18,6 +18,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <ta4j.version>0.10</ta4j.version>
     </properties>
 
     <dependencies>
@@ -27,11 +28,7 @@
             <artifactId>exchange</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.fku</groupId>
-            <artifactId>technical-analyst</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+
         <!--Spring-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -42,12 +39,24 @@
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
 
-        <!--Other-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
             <scope>provided</scope>
+        </dependency>
+
+        <!--Analyst-->
+        <dependency>
+            <groupId>org.ta4j</groupId>
+            <artifactId>ta4j-core</artifactId>
+            <version>${ta4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>3.9</version>
         </dependency>
 
         <!--TETS-->
