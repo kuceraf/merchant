@@ -2,10 +2,13 @@ package com.fku.analyst.sma;
 
 import com.fku.analyst.CsvTradesLoader;
 import lombok.extern.log4j.Log4j2;
-import org.ta4j.core.Decimal;
-import org.ta4j.core.TimeSeries;
+import org.ta4j.core.*;
 import org.ta4j.core.indicators.SMAIndicator;
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator;
+import org.ta4j.core.trading.rules.CrossedDownIndicatorRule;
+import org.ta4j.core.trading.rules.CrossedUpIndicatorRule;
+import org.ta4j.core.trading.rules.StopGainRule;
+import org.ta4j.core.trading.rules.StopLossRule;
 
 @Log4j2
 public class SmaIndicatorProvider {
@@ -33,5 +36,30 @@ public class SmaIndicatorProvider {
         Decimal smaValue = shortSma.getValue(5); // vypocet zacne od indexu 5 -> do vypoctu budou zahrnuty hodnoty close price z time series na indexech: 2,3,4,5
         log.info("4-ticks-SMA value at the 5th index: {}", smaValue);
         log.info("Are calculation equals?: {}",myResult.isEqual(smaValue));
+
+        // Trading rules
+        // Buying rules
+        // We want to buy:
+        //  - if the price goes below a defined price (e.g $805.00)
+        Rule buyingRule = (new CrossedDownIndicatorRule(closePrice, Decimal.valueOf("805")));
+        // close price na indexu 2 je 800.80999999999994543031789362431 (predtim je vyssi) - rule je splnano pro index 2
+        log.info("Buying rule is satisfied at index 0:", buyingRule.isSatisfied(2));
+
+        // Selling rules
+        // We want to sell:
+        //  - if the price goes above a defined price (e.g $805.82)
+        Rule sellingRule = new CrossedUpIndicatorRule(closePrice, Decimal.valueOf("805.82"));
+        // close price na indexu 3 je 805.86000000000001364242052659392 (predtim je nizsi) - rule je splnena pro index 3
+        log.info("Buying rule is satisfied at index 1:", sellingRule.isSatisfied(3));
+
+        BaseStrategy strategy = new BaseStrategy(buyingRule, sellingRule);
+        // strategie zalozena na predem definovaych pravidlech doporuci kdy nakoupit a kdy prodat
+        strategy.shouldEnter(2); // buyingRule je splneno na indexu 2
+        strategy.shouldExit(3); // selling rule je splneno na inxexu 3
+
+        //Run trading strategy
+        TimeSeriesManager seriesManager = new TimeSeriesManager(series);
+        TradingRecord tradingRecord = seriesManager.run(new BaseStrategy(buyingRule, sellingRule));
+
     }
 }
