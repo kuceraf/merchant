@@ -59,9 +59,6 @@ public class ScalpingStrategy extends ATradingStrategy {
     private void info() {
         log.info("Strategy [{}] is initialized", this.getClass());
         log.info("Strategy executes on [{}] exchange market", exchangeService.getExchangeName());
-
-        // TODO
-//        macdIndicator = new MACDIndicator();
     }
 
     @Override
