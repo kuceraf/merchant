@@ -1,4 +1,4 @@
-package com.fku.strategy.service.impl.scalping;
+package com.fku.strategy.impl.scalping;
 
 import com.fku.exchange.domain.ExchangeOrder;
 import org.junit.Test;

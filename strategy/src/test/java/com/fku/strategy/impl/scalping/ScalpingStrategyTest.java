@@ -1,4 +1,4 @@
-package com.fku.strategy.service.impl.scalping;
+package com.fku.strategy.impl.scalping;
 
 import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.domain.InstrumentPrice;
@@ -6,7 +6,6 @@ import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;

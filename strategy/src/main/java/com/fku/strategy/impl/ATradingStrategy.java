@@ -1,9 +1,9 @@
-package com.fku.strategy.service.impl;
+package com.fku.strategy.impl;
 
 import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.strategy.error.MerchantStrategyException;
-import com.fku.strategy.service.TradingStrategy;
+import com.fku.strategy.TradingStrategy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 

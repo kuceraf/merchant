@@ -1,4 +1,4 @@
-package com.fku.strategy.service.impl.scalping;
+package com.fku.strategy.impl.scalping;
 
 import com.fku.exchange.domain.ExchangeOrder;
 import lombok.extern.log4j.Log4j2;

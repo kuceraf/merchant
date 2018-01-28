@@ -1,10 +1,9 @@
-package com.fku.strategy.service.impl.scalping;
+package com.fku.strategy.impl.scalping;
 
 import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
-import com.fku.strategy.service.TradingStrategy;
-import com.fku.strategy.service.impl.ATradingStrategy;
+import com.fku.strategy.impl.ATradingStrategy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.fku.strategy.service.impl.scalping;
+package com.fku.strategy.impl.scalping;
 
 import com.fku.exchange.error.MerchantExchangeException;
 import com.fku.exchange.error.MerchantExchangeNonFatalException;
@@ -7,7 +7,7 @@ import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.strategy.error.MerchantStrategyException;
-import com.fku.strategy.service.impl.ATradingStrategy;
+import com.fku.strategy.impl.ATradingStrategy;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.currency.CurrencyPair;
@@ -19,9 +19,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.List;
-
-import static com.fku.strategy.service.impl.StrategyHelper.calculateSellPriceWithRequiredProfit;
-import static com.fku.strategy.service.impl.StrategyHelper.isOrderFilled;
+import static com.fku.strategy.impl.StrategyHelper.calculateSellPriceWithRequiredProfit;
+import static com.fku.strategy.impl.StrategyHelper.isOrderFilled;
 
 @Log4j2
 @Component

@@ -1,7 +1,6 @@
-package com.fku.strategy.service.impl;
+package com.fku.strategy.impl;
 
 import com.fku.exchange.domain.ExchangeOrder;
-import com.fku.exchange.service.impl.dummy.Constants;
 import org.junit.Test;
 import org.knowm.xchange.dto.Order;
 

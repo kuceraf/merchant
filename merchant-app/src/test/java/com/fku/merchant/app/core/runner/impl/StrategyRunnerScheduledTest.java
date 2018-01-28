@@ -2,9 +2,8 @@ package com.fku.merchant.app.core.runner.impl;
 
 import com.fku.exchange.error.MerchantExchangeNonFatalException;
 import com.fku.merchant.app.core.ShutdownManager;
-import com.fku.merchant.app.core.runner.impl.StrategyRunnerScheduled;
 import com.fku.strategy.error.MerchantStrategyException;
-import com.fku.strategy.service.TradingStrategy;
+import com.fku.strategy.TradingStrategy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

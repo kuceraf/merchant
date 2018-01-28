@@ -1,9 +1,8 @@
-package com.fku.strategy.service.impl;
+package com.fku.strategy.impl;
 
 import com.fku.exchange.domain.ExchangeOrder;
 import org.knowm.xchange.dto.trade.LimitOrder;
 import org.knowm.xchange.dto.trade.OpenOrders;
-import org.springframework.util.Assert;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;

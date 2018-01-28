@@ -3,7 +3,7 @@ package com.fku.merchant.app.core.runner.impl;
 import com.fku.exchange.error.MerchantExchangeNonFatalException;
 import com.fku.merchant.app.core.ShutdownManager;
 import com.fku.merchant.app.core.runner.StrategyRunner;
-import com.fku.strategy.service.TradingStrategy;
+import com.fku.strategy.TradingStrategy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
