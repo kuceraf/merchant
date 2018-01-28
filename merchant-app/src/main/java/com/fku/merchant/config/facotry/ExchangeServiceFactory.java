@@ -42,7 +42,7 @@ public class ExchangeServiceFactory extends AbstractFactoryBean<ExchangeService>
             case DUMMY:
                 return new DummyExchangeService();
             default:
-                throw new IllegalStateException();
+                throw new IllegalStateException("Unsupported exchange: " + exchangeType.name());
         }
     }
 }

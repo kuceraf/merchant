@@ -1,9 +1,14 @@
 package com.fku.merchant.config;
 
+import com.fku.exchange.repository.ExchangeOrderRepository;
+import com.fku.exchange.repository.impl.OrderRepositoryImpl;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.SupportedExchangeType;
 import com.fku.merchant.config.facotry.ExchangeServiceFactory;
+import com.fku.merchant.config.facotry.TradingStrategyFactory;
 import com.fku.merchant.config.facotry.XchangeAdapterFactory;
+import com.fku.strategy.SupportedStrategyType;
+import com.fku.strategy.TradingStrategy;
 import org.knowm.xchange.Exchange;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,17 +21,21 @@ import javax.annotation.PostConstruct;
 @Configuration
 @EnableScheduling
 public class MerchantApplicationConfig {
-    // *** EXCHANGE CONFIG ***
     @Value("${exchange.type}")
     private String exchangeTypeProperty;
-
     private SupportedExchangeType exchangeType;
+
+    @Value("${strategy.type}")
+    private String strategyTypeProperty;
+    private SupportedStrategyType strategyType;
 
     @PostConstruct
     private void setUp() {
         exchangeType = SupportedExchangeType.valueOf(exchangeTypeProperty.toUpperCase());
+        strategyType = SupportedStrategyType.valueOf(strategyTypeProperty.toUpperCase());
     }
 
+    // *** EXCHANGE CONFIG ***
     /** org.knowm.xchange config (3th party library to access cryptocurrency exchanges)**/
     @Bean("xchangeAdapterFactory")
     public FactoryBean<Exchange> xchangeAdapterFactory() {
@@ -38,9 +47,20 @@ public class MerchantApplicationConfig {
         return new ExchangeServiceFactory(exchangeType, xchangeAdapterFactory().getObject());
     }
 
-    /** local wrapping interface for org.knowm.xchange**/
-    @Bean("exchangeService")
-    public ExchangeService exchangeService() throws Exception {
-        return exchangeServiceFactory().getObject();
+    // *** REPOSITORY ***
+    @Bean
+    public ExchangeOrderRepository exchangeOrderRepository() {
+        return new OrderRepositoryImpl();
+    }
+
+    // *** STRATEGY CONFIG ***
+    @Bean("tradingStrategyFactory")
+    public FactoryBean<TradingStrategy> tradingStrategyFactory() throws Exception {
+        return new TradingStrategyFactory(strategyType, exchangeOrderRepository(), exchangeServiceFactory().getObject());
+    }
+
+    @Bean("tradingStrategy")
+    public TradingStrategy tradingStrategy() throws Exception {
+        return tradingStrategyFactory().getObject();
     }
 }

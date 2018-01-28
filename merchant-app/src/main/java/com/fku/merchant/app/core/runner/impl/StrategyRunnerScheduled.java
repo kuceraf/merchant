@@ -19,7 +19,6 @@ public class StrategyRunnerScheduled implements StrategyRunner {
 
     @Autowired
     public StrategyRunnerScheduled(TradingStrategy tradingStrategy, ShutdownManager shutdownManager) {
-        // TODO v pripade vice instanci TradingStrategy vybirat na zaklade konfigurace
         this.tradingStrategy = tradingStrategy;
         this.shutdownManager = shutdownManager;
     }

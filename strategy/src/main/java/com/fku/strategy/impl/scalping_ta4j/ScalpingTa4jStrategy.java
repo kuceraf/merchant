@@ -16,7 +16,6 @@ import org.ta4j.core.trading.rules.UnderIndicatorRule;
 import javax.annotation.PostConstruct;
 
 @Log4j2
-@Component
 public class ScalpingTa4jStrategy extends ATradingStrategy {
 
     /** Close price of the last tick */

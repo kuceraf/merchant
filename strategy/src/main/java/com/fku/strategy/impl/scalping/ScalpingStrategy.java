@@ -23,7 +23,6 @@ import static com.fku.strategy.impl.StrategyHelper.calculateSellPriceWithRequire
 import static com.fku.strategy.impl.StrategyHelper.isOrderFilled;
 
 @Log4j2
-//@Component
 public class ScalpingStrategy extends ATradingStrategy {
 
     /**
