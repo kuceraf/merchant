@@ -10,6 +10,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class StrategyHelper {
+
+    private StrategyHelper() {
+        throw new AssertionError("This class is'nt designed for instantiation");
+    }
+
     /**
      * Search order in open orders list. If order is found it was'nt filled
      * @param openOrders open orders from xchange

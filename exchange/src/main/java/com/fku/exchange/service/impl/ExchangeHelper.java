@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.springframework.util.Assert;
 
+import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -12,10 +13,17 @@ import java.math.RoundingMode;
 @Log4j2
 public class ExchangeHelper {
 
-    public static final MathContext EXCHANGE_MATH_CONTEXT = new MathContext(8, RoundingMode.HALF_DOWN);
+    /*
+     * Most exchanges (if not all) use 8 decimal places and typically round in favour of the exchange.
+     * It's usually safest to round down the order quantity in your calculations.
+     */
+//    private static final MathContext EXCHANGE_MATH_CONTEXT = new MathContext(8, RoundingMode.HALF_DOWN);
 
     private static final String ERR_BAD_ORDER_BOOK = "Can't get current price from empty/null order book";
-    private static final String ERR_MISSING_PARAM = "Can't calculate amount with missing parameter";
+
+    private ExchangeHelper() {
+        throw new AssertionError("This class is'nt designed for instantiation");
+    }
 
     /**
      * Example:
@@ -29,14 +37,8 @@ public class ExchangeHelper {
      * @param instrumentPrice actual price of BTC/EUR instrument
      * @return amount of base currency
      */
-    public static BigDecimal calculateBaseCurrencyAmount(BigDecimal counterCurrencyAmount, BigDecimal instrumentPrice) {
-        Assert.notNull(counterCurrencyAmount, ERR_MISSING_PARAM);
-        Assert.notNull(instrumentPrice, ERR_MISSING_PARAM);
-        /*
-         * Most exchanges (if not all) use 8 decimal places and typically round in favour of the exchange.
-         * It's usually safest to round down the order quantity in your calculations.
-         */
-        return counterCurrencyAmount.divide(instrumentPrice, EXCHANGE_MATH_CONTEXT);
+    public static BigDecimal calculateBaseCurrencyAmount(@Nonnull BigDecimal counterCurrencyAmount, @Nonnull BigDecimal instrumentPrice) {
+        return counterCurrencyAmount.divide(instrumentPrice, 8, RoundingMode.HALF_DOWN);
     }
 
     /**

@@ -1,19 +1,15 @@
 package com.fku.exchange.service.impl.dummy;
 
-import com.fku.exchange.domain.ExchangeOrder;
-import com.fku.exchange.domain.InstrumentPrice;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.trade.LimitOrder;
 import org.knowm.xchange.dto.trade.OpenOrders;
-import org.springframework.core.io.ClassPathResource;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 // Provide locally stored testing data
 @Log4j2
@@ -31,7 +27,11 @@ public class DummyExchangeDataFactory {
                 .limitPrice(limitBidPrice)
                 .build();
 
-        return new OrderBook(new Date(), Collections.singletonList(ask), Collections.singletonList(bid));
+        List<LimitOrder> asks = new ArrayList<>();
+        asks.add(ask);
+        List<LimitOrder> bids = new ArrayList<>();
+        bids.add(bid);
+        return new OrderBook(new Date(), asks, bids);
     }
 
     // OPEN ORDERS
@@ -40,6 +40,8 @@ public class DummyExchangeDataFactory {
                 .id(openOrderId)
                 .build();
 
-        return new OpenOrders(Collections.singletonList(existingOpenOrder));
+        List<LimitOrder> existingOpenOrders = new ArrayList<>();
+        existingOpenOrders.add(existingOpenOrder);
+        return new OpenOrders(existingOpenOrders);
     }
 }

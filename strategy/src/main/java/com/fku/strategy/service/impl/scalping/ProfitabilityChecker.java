@@ -35,7 +35,8 @@ public class ProfitabilityChecker {
                 totalRevenue,
                 currencyPair.counter
         );
-        // if totalRevenue < 0 => false
-        return BigDecimal.ZERO.compareTo(totalRevenue) < 0;
+        // strategy is not profitable if totalRevenue is negative (totalRevenue >= 0 is profitable)
+        return (BigDecimal.ZERO.compareTo(totalRevenue) <= 0);  // if totalRevenue < 0 than false
+
     }
 }
