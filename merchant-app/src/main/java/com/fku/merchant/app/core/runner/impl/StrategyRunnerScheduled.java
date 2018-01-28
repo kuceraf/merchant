@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Log4j2
 @Service
 public class StrategyRunnerScheduled implements StrategyRunner {
-    private Long strategyExecutionNo = 1L;
 
     // services
     private final TradingStrategy tradingStrategy;
@@ -36,15 +35,14 @@ public class StrategyRunnerScheduled implements StrategyRunner {
     @Scheduled(fixedDelay = 30000)
     public void scheduledExecution() {
         try {
-            log.info("BEGIN Strategy execution (number [{}])", strategyExecutionNo);
+            log.info("BEGIN Strategy execution (number [{}])", tradingStrategy.getExecutionNo());
             long startTime = System.currentTimeMillis();
 
             tradingStrategy.execute();
 
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
-            log.info("END Strategy execution (number [{}], duration [{}] ms)", strategyExecutionNo, elapsedTime);
-            strategyExecutionNo ++;
+            log.info("END Strategy execution (number [{}], duration [{}] ms)", tradingStrategy.getExecutionNo(), elapsedTime);
         }
         // Order of catch block is important (always catch specific exeptions first!)
         catch (MerchantExchangeNonFatalException e) {

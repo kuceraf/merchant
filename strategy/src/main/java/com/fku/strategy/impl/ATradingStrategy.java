@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class ATradingStrategy implements TradingStrategy {
     protected final ExchangeService exchangeService;
     protected final ExchangeOrderRepository exchangeOrderRepository;
+    private Long executionNo = 1L;
 
     @Autowired
     public ATradingStrategy(ExchangeService exchangeService, ExchangeOrderRepository exchangeOrderRepository) {
@@ -19,8 +20,14 @@ public abstract class ATradingStrategy implements TradingStrategy {
     }
 
     @Override
+    public Long getExecutionNo() {
+        return executionNo;
+    }
+
+    @Override
     public void execute() throws Exception {
         log.info("Execution of [{}]", this.getClass().getSimpleName());
+        executionNo++;
         checkProfitability();
         executeStrategySpecific();
     }
