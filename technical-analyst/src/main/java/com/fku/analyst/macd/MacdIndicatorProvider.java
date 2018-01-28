@@ -13,7 +13,7 @@ import org.ta4j.core.trading.rules.CrossedUpIndicatorRule;
 import org.ta4j.core.trading.rules.OverIndicatorRule;
 import org.ta4j.core.trading.rules.UnderIndicatorRule;
 
-public class MacdIndicator {
+public class MacdIndicatorProvider {
 //    private Indicator macdIndicator = new MACDIndicator();
 //    public void test() {
 //        // TODO:
@@ -30,7 +30,7 @@ public class MacdIndicator {
 
     public static void main(String[] args) {
 
-        // Getting the time series
+        // Getting the time series (= sequence of ticks).  A tick is any change in price, whether that movement is up or down.
         TimeSeries series = CsvTradesLoader.loadBitstampSeries();
 
         // Building the trading strategy

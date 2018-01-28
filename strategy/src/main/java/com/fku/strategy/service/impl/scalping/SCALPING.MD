@@ -15,5 +15,5 @@ Technical analysis indicators:
 
 
 **More at:**
-https://www.investopedia.com/terms/forex/f/forex-scalping-and-scalper-system-strategy.asp
-https://www.investopedia.com/articles/active-trading/012815/top-technical-indicators-scalping-trading-strategy.asp
+- https://www.investopedia.com/terms/forex/f/forex-scalping-and-scalper-system-strategy.asp
+- https://www.investopedia.com/articles/active-trading/012815/top-technical-indicators-scalping-trading-strategy.asp
