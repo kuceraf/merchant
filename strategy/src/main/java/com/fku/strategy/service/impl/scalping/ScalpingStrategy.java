@@ -90,10 +90,11 @@ public class ScalpingStrategy extends ATradingStrategy {
     protected void checkProfitability() throws MerchantStrategyException {
         ExchangeOrder lastOrder = exchangeOrderRepository.findLast();
         if(lastOrder != null && lastOrder.isAsk()) {
+            // last order is SELL order - the calculated profit will be achieved after the sell order fills
             List<ExchangeOrder> buyOrders = exchangeOrderRepository.findBids();
             List<ExchangeOrder> sellOrders = exchangeOrderRepository.findAsks();
             CurrencyPair currencyPair = exchangeService.getCurrencyPair();
-            if(!ProfitabilityChecker.isProfitable(buyOrders, sellOrders, currencyPair)) {
+            if(!ProfitabilityHelper.isProfitable(buyOrders, sellOrders, currencyPair)) {
                 throw new MerchantStrategyException("Strategy is lossy - stopping execution");
             }
         }

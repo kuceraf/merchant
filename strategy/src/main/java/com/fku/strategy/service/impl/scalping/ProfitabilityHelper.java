@@ -9,7 +9,12 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Log4j2
-public class ProfitabilityChecker {
+public class ProfitabilityHelper {
+
+    private ProfitabilityHelper() {
+        throw new AssertionError("This class isn't designed for instantiation");
+    }
+
     public static boolean isProfitable(@Nonnull List<ExchangeOrder> buyOrders,
                                        @Nonnull List<ExchangeOrder> sellOrders,
                                        @Nonnull CurrencyPair currencyPair) {

@@ -22,7 +22,7 @@ public class ExchangeHelper {
     private static final String ERR_BAD_ORDER_BOOK = "Can't get current price from empty/null order book";
 
     private ExchangeHelper() {
-        throw new AssertionError("This class is'nt designed for instantiation");
+        throw new AssertionError("This class isn't designed for instantiation");
     }
 
     /**

@@ -12,7 +12,7 @@ import java.math.RoundingMode;
 public class StrategyHelper {
 
     private StrategyHelper() {
-        throw new AssertionError("This class is'nt designed for instantiation");
+        throw new AssertionError("This class isn't designed for instantiation");
     }
 
     /**

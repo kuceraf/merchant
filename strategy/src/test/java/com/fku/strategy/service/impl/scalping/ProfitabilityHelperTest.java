@@ -1,7 +1,6 @@
 package com.fku.strategy.service.impl.scalping;
 
 import com.fku.exchange.domain.ExchangeOrder;
-import com.fku.exchange.service.impl.dummy.DummyExchangeDataFactory;
 import org.junit.Test;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
@@ -12,7 +11,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ProfitabilityCheckerTest {
+public class ProfitabilityHelperTest {
     @Test
     public void isProfitable_true() {
         List<ExchangeOrder> buyOrders = new ArrayList<>();
@@ -20,7 +19,7 @@ public class ProfitabilityCheckerTest {
         List<ExchangeOrder> sellOrders = new ArrayList<>();
         sellOrders.add(new ExchangeOrder("2", Order.OrderType.ASK, BigDecimal.TEN, BigDecimal.TEN)); // sell for 10
 
-        assertThat(ProfitabilityChecker.isProfitable(buyOrders, sellOrders, CurrencyPair.BTC_EUR))
+        assertThat(ProfitabilityHelper.isProfitable(buyOrders, sellOrders, CurrencyPair.BTC_EUR))
             .isTrue();
     }
 
@@ -31,7 +30,7 @@ public class ProfitabilityCheckerTest {
         List<ExchangeOrder> sellOrders = new ArrayList<>();
         sellOrders.add(new ExchangeOrder("2", Order.OrderType.ASK, BigDecimal.ONE, BigDecimal.TEN)); // sell for 1
 
-        assertThat(ProfitabilityChecker.isProfitable(buyOrders, sellOrders, CurrencyPair.BTC_EUR))
+        assertThat(ProfitabilityHelper.isProfitable(buyOrders, sellOrders, CurrencyPair.BTC_EUR))
                 .isFalse();
     }
 }
