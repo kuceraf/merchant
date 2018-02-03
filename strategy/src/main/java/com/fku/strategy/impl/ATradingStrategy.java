@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class ATradingStrategy implements TradingStrategy {
     protected final ExchangeService exchangeService;
     protected final ExchangeOrderRepository exchangeOrderRepository;
-    private Long executionNo = 1L;
+    private Long executionNo = 0L;
 
     @Autowired
     public ATradingStrategy(ExchangeService exchangeService, ExchangeOrderRepository exchangeOrderRepository) {

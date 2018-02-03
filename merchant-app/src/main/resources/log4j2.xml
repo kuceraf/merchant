@@ -39,5 +39,7 @@ See log4j2 guide for more options: http://logging.apache.org/log4j/2.x/manual/ap
             <AppenderRef ref="STDOUT"/>
         </Root>
         <logger name="com.fku.exchange.service.impl.gdax.GdaxExchangeService" level="DEBUG"/>
+        <!--To get the raw JSON returned from an API endpoint through XChange - nefunguje -->
+        <!--<logger name="si.mazi.rescu" level="TRACE" />-->
     </Loggers>
 </Configuration>

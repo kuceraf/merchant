@@ -32,7 +32,7 @@ public class ScalpingTa4jStrategy extends ATradingStrategy {
     public void init() {
         log.info("Strategy [{}] initialization", this.getClass());
         // init data
-        series = CsvTradesLoader.loadBitstampSeries();
+        series = CsvTradesLoader.loadBitstampSeries(); // TODO tick from exchange end convert them to time series
         LAST_TICK_CLOSE_PRICE = series.getTick(series.getEndIndex()).getClosePrice();
 
         // init strategy
@@ -53,6 +53,8 @@ public class ScalpingTa4jStrategy extends ATradingStrategy {
     @Override
     protected void executeStrategySpecific() throws Exception {
         Tick newTick = DummyTickFactory.generateRandomTick(LAST_TICK_CLOSE_PRICE);
+        log.info("------------------------------------------------------\n"
+                + "Tick "+getExecutionNo()+" added, close price = " + newTick.getClosePrice().toDouble());
         series.addTick(newTick);
 
         int endIndex = series.getEndIndex();

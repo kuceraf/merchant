@@ -32,6 +32,11 @@ public class DummyExchangeService implements ExchangeService {
     }
 
     @Override
+    public void getHistoricalDataSeries(String startTime, String endTime, String granularityInSec) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+        throw new UnsupportedOperationException("Not implemented!"); // TODO
+    }
+
+    @Override
     public ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice) throws MerchantExchangeException, MerchantExchangeNonFatalException {
         return new ExchangeOrder(
                 UUID.randomUUID().toString(),

@@ -19,4 +19,6 @@ public interface ExchangeService {
     OpenOrders getOpenOrders() throws MerchantExchangeException, MerchantExchangeNonFatalException;
     ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice)
             throws MerchantExchangeException, MerchantExchangeNonFatalException;
+     void getHistoricalDataSeries(String startTime, String endTime, String granularityInSec)
+            throws MerchantExchangeException, MerchantExchangeNonFatalException;
 }

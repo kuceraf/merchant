@@ -12,11 +12,13 @@ import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.marketdata.OrderBook;
+import org.knowm.xchange.dto.marketdata.Ticker;
 import org.knowm.xchange.dto.trade.LimitOrder;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.knowm.xchange.service.trade.params.orders.OpenOrdersParams;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 @Log4j2
@@ -34,6 +36,22 @@ public abstract class AExchangeService implements ExchangeService {
     @Override
     public String getExchangeName() {
         return xchangeAdapter.getExchangeSpecification().getExchangeName();
+    }
+
+//    TODO WebSocket streaming https://github.com/bitrich-info/xchange-stream
+
+    public void getHistoricRates() {
+        // TODO - https://docs.gdax.com/#get-historic-rates
+//        https://docs.gdax.com/#get-historic-rates
+    }
+    public Ticker getTicker() throws MerchantExchangeException, MerchantExchangeNonFatalException {
+        Ticker ticker = null;
+        try {
+            ticker = xchangeAdapter.getMarketDataService().getTicker(currencyPair);
+        } catch (Exception e) {
+            ExchangeExceptionHandler.handleException(e);
+        }
+        return ticker; // TODO - convert to time series
     }
 
     @Override
