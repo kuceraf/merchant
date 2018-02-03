@@ -3,7 +3,7 @@ package com.fku.merchant.config.facotry;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.SupportedExchangeType;
 import com.fku.exchange.service.impl.dummy.DummyExchangeService;
-import com.fku.exchange.service.impl.gdax.GdaxExchangeService;
+import com.fku.exchange.service.impl.gdax.GDAXExchangeService;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +38,7 @@ public class ExchangeServiceFactory extends AbstractFactoryBean<ExchangeService>
     protected ExchangeService createInstance() throws Exception {
         switch (exchangeType) {
             case GDAX:
-                return new GdaxExchangeService(xchangeAdapter, currencyPair);
+                return new GDAXExchangeService(xchangeAdapter, currencyPair);
             case DUMMY:
                 return new DummyExchangeService();
             default:

@@ -15,18 +15,18 @@ import si.mazi.rescu.RestProxyFactory;
 import java.io.IOException;
 
 @Log4j2
-public class GdaxExchangeService extends AExchangeService {
-    private final GDAXCustom gdaxCustom;
-    public GdaxExchangeService(org.knowm.xchange.Exchange xchangeAdapter, CurrencyPair currencyPair) {
+public class GDAXExchangeService extends AExchangeService {
+    private final GDAXInterface gdaxInterface;
+    public GDAXExchangeService(org.knowm.xchange.Exchange xchangeAdapter, CurrencyPair currencyPair) {
         super(xchangeAdapter, currencyPair);
-        this.gdaxCustom = RestProxyFactory.createProxy(GDAXCustom.class, xchangeAdapter.getExchangeSpecification().getSslUri(), this.getClientConfig());
+        this.gdaxInterface = RestProxyFactory.createProxy(GDAXInterface.class, xchangeAdapter.getExchangeSpecification().getSslUri(), this.getClientConfig());
     }
 
     @Override
     public void getHistoricalDataSeries(String startTime, String endTime, String granularityInSec)
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
         try {
-            GDAXHistoricRates[] historicRates = gdaxCustom.getHistoricRates(
+            GDAXHistoricRates[] historicRates = gdaxInterface.getHistoricRates(
                     currencyPair.base.getCurrencyCode(),
                     currencyPair.counter.getCurrencyCode(),
                     startTime,

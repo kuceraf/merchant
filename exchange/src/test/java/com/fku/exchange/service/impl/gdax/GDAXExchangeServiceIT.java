@@ -9,10 +9,10 @@ import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.gdax.GDAXExchange;
 
-public class GdaxExchangeServiceIT {
+public class GDAXExchangeServiceIT {
     private static Exchange xchangeReal;
     private static final CurrencyPair CURRENCY_PAIR = CurrencyPair.BTC_EUR;
-    private GdaxExchangeService gdaxExchangeServiceTested;
+    private GDAXExchangeService gdaxExchangeServiceTested;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -22,7 +22,7 @@ public class GdaxExchangeServiceIT {
 
     @Before
     public void setUp() throws Exception {
-        gdaxExchangeServiceTested = new GdaxExchangeService(xchangeReal, CURRENCY_PAIR);
+        gdaxExchangeServiceTested = new GDAXExchangeService(xchangeReal, CURRENCY_PAIR);
     }
 
     @Test
