@@ -7,21 +7,21 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 
 @JsonDeserialize(using = GDAXHistoricRates.GDAXOrderDeserializer.class)
 public class GDAXHistoricRates {
-    private final Long time;        // bucket start time
-    private final BigDecimal low;   // lowest price during the bucket interval
-    private final BigDecimal high;  // highest price during the bucket interval
-    private final BigDecimal open;  // opening price (first trade) in the bucket interval
-    private final BigDecimal close; // closing price (last trade) in the bucket interval
-    private final BigDecimal volume; // volume of trading activity during the bucket interval
+    // API doc https://docs.gdax.com/#get-historic-rates
+    private final long time;     // bucket start time (seconds-based epoch value)
+    private final double low;    // lowest price during the bucket interval
+    private final double high;   // highest price during the bucket interval
+    private final double open;   // opening price (first trade) in the bucket interval
+    private final double close;  // closing price (last trade) in the bucket interval
+    private final double volume; // volume of trading activity during the bucket interval
 
-    public GDAXHistoricRates(Long time, BigDecimal low, BigDecimal high, BigDecimal open, BigDecimal close, BigDecimal volume) {
+    public GDAXHistoricRates(Long time, double low, double high, double open, double close, double volume) {
         this.time = time;
         this.low = low;
         this.high = high;
@@ -30,27 +30,27 @@ public class GDAXHistoricRates {
         this.volume = volume;
     }
 
-    public Long getTime() {
+    public long getTime() {
         return time;
     }
 
-    public BigDecimal getLow() {
+    public double getLow() {
         return low;
     }
 
-    public BigDecimal getHigh() {
+    public double getHigh() {
         return high;
     }
 
-    public BigDecimal getOpen() {
+    public double getOpen() {
         return open;
     }
 
-    public BigDecimal getClose() {
+    public double getClose() {
         return close;
     }
 
-    public BigDecimal getVolume() {
+    public double getVolume() {
         return volume;
     }
 
@@ -66,11 +66,11 @@ public class GDAXHistoricRates {
             JsonNode node = oc.readTree(jsonParser);
             if (node.isArray()) {
                 long time = node.path(0).asLong();
-                BigDecimal low = new BigDecimal(node.path(1).asText());
-                BigDecimal high = new BigDecimal(node.path(2).asText());
-                BigDecimal open = new BigDecimal(node.path(3).asText());
-                BigDecimal close = new BigDecimal(node.path(4).asText());
-                BigDecimal volume = new BigDecimal(node.path(5).asText());
+                double low = node.path(1).asDouble();
+                double high = node.path(2).asDouble();
+                double open = node.path(3).asDouble();
+                double close = node.path(4).asDouble();
+                double volume = node.path(5).asDouble();
                 return new GDAXHistoricRates(time,low,high,open,close,volume);
             }
             return null;

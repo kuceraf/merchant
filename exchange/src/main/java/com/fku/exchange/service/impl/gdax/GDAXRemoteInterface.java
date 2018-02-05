@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
-public interface GDAXInterface {
+public interface GDAXRemoteInterface {
 // https://github.com/timmolter/XChange/issues/1580
     @GET
     @Path("products/{baseCurrency}-{targetCurrency}/candles?start={startTime}&end={endTime}&granularity={granularityInSecs}")

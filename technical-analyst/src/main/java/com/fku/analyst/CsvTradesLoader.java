@@ -1,9 +1,9 @@
 package com.fku.analyst;
 
 import com.opencsv.CSVReader;
-import org.ta4j.core.BaseTick;
+import org.ta4j.core.Bar;
+import org.ta4j.core.BaseBar;
 import org.ta4j.core.BaseTimeSeries;
-import org.ta4j.core.Tick;
 import org.ta4j.core.TimeSeries;
 
 import java.io.IOException;
@@ -45,11 +45,12 @@ public class CsvTradesLoader {
                 try {
                     csvReader.close();
                 } catch (IOException ioe) {
+                    ioe.printStackTrace();
                 }
             }
         }
 
-        List<Tick> ticks = null;
+        List<Bar> bars = null;
         if ((lines != null) && !lines.isEmpty()) {
 
             // Getting the first and last trades timestamps
@@ -60,70 +61,71 @@ public class CsvTradesLoader {
                 Instant endInstant = endTime.toInstant();
                 beginTime = ZonedDateTime.ofInstant(endInstant, ZoneId.systemDefault());
                 endTime = ZonedDateTime.ofInstant(beginInstant, ZoneId.systemDefault());
-                // Since the CSV file has the most recent trades at the top of the file, we'll reverse the list to feed the List<Tick> correctly.
+                // Since the CSV file has the most recent trades at the top of the file, we'll reverse the list to feed the List<Bar> correctly.
                 Collections.reverse(lines);
             }
-            // Building the empty ticks (every 300 seconds, yeah welcome in Bitcoin world)
-            ticks = buildEmptyTicks(beginTime, endTime, 300);
-            // Filling the ticks with trades
-            for (String[] tradeLine : lines) {
-                ZonedDateTime tradeTimestamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(tradeLine[0]) * 1000), ZoneId.systemDefault());
-                for (Tick tick : ticks) {
-                    if (tick.inPeriod(tradeTimestamp)) {
-                        double tradePrice = Double.parseDouble(tradeLine[1]);
-                        double tradeAmount = Double.parseDouble(tradeLine[2]);
-                        tick.addTrade(tradeAmount, tradePrice);
-                    }
-                }
-            }
-            // Removing still empty ticks
-            removeEmptyTicks(ticks);
+            // build the list of populated bars
+            bars = buildBars(beginTime, endTime, 300, lines);
         }
 
-        return new BaseTimeSeries("bitstamp_trades", ticks);
+        return new BaseTimeSeries("bitstamp_trades", bars);
     }
 
     /**
-     * Builds a list of empty ticks.
+     * Builds a list of populated bars from csv data.
      * @param beginTime the begin time of the whole period
      * @param endTime the end time of the whole period
-     * @param duration the tick duration (in seconds)
-     * @return the list of empty ticks
+     * @param duration the bar duration (in seconds)
+     * @param lines the csv data returned by CSVReader.readAll()
+     * @return the list of populated bars
      */
-    private static List<Tick> buildEmptyTicks(ZonedDateTime beginTime, ZonedDateTime endTime, int duration) {
+    private static List<Bar> buildBars(ZonedDateTime beginTime, ZonedDateTime endTime, int duration, List<String[]> lines) {
 
-        List<Tick> emptyTicks = new ArrayList<>();
+        List<Bar> bars = new ArrayList<>();
 
-        Duration tickDuration = Duration.ofSeconds(duration);
-        ZonedDateTime tickEndTime = beginTime;
+        Duration barDuration = Duration.ofSeconds(duration);
+        ZonedDateTime barEndTime = beginTime;
+        // line number of trade data
+        int i = 0;
         do {
-            tickEndTime = tickEndTime.plus(tickDuration);
-            emptyTicks.add(new BaseTick(tickDuration, tickEndTime));
-        } while (tickEndTime.isBefore(endTime));
-
-        return emptyTicks;
-    }
-
-    /**
-     * Removes all empty (i.e. with no trade) ticks of the list.
-     * @param ticks a list of ticks
-     */
-    private static void removeEmptyTicks(List<Tick> ticks) {
-        for (int i = ticks.size() - 1; i >= 0; i--) {
-            if (ticks.get(i).getTrades() == 0) {
-                ticks.remove(i);
+            // build a bar
+            barEndTime = barEndTime.plus(barDuration);
+            Bar bar = new BaseBar(barDuration, barEndTime);
+            do {
+                // get a trade
+                String[] tradeLine = lines.get(i);
+                ZonedDateTime tradeTimeStamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(tradeLine[0]) * 1000), ZoneId.systemDefault());
+                // if the trade happened during the bar
+                if (bar.inPeriod(tradeTimeStamp)) {
+                    // add the trade to the bar
+                    double tradePrice = Double.parseDouble(tradeLine[1]);
+                    double tradeAmount = Double.parseDouble(tradeLine[2]);
+                    bar.addTrade(tradeAmount, tradePrice);
+                } else {
+                    // the trade happened after the end of the bar
+                    // go to the next bar but stay with the same trade (don't increment i)
+                    // this break will drop us after the inner "while", skipping the increment
+                    break;
+                }
+                i++;
+            } while (i < lines.size());
+            // if the bar has any trades add it to the bars list
+            // this is where the break drops to
+            if (bar.getTrades() > 0) {
+                bars.add(bar);
             }
-        }
+        } while (barEndTime.isBefore(endTime));
+        return bars;
     }
 
     public static void main(String[] args) {
         TimeSeries series = CsvTradesLoader.loadBitstampSeries();
 
         System.out.println("Series: " + series.getName() + " (" + series.getSeriesPeriodDescription() + ")");
-        System.out.println("Number of ticks: " + series.getTickCount());
-        System.out.println("First tick: \n"
-                + "\tVolume: " + series.getTick(0).getVolume() + "\n"
-                + "\tNumber of trades: " + series.getTick(0).getTrades() + "\n"
-                + "\tClose price: " + series.getTick(0).getClosePrice());
+        System.out.println("Number of bars: " + series.getBarCount());
+        System.out.println("First bar: \n"
+                + "\tVolume: " + series.getBar(0).getVolume() + "\n"
+                + "\tNumber of trades: " + series.getBar(0).getTrades() + "\n"
+                + "\tClose price: " + series.getBar(0).getClosePrice());
     }
 }

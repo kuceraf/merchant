@@ -22,18 +22,17 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 @Log4j2
-public abstract class AExchangeService implements ExchangeService {
+public abstract class BaseExchangeService {
     protected final org.knowm.xchange.Exchange xchangeAdapter;
     protected final CurrencyPair currencyPair;
 
-    protected AExchangeService(@Nonnull Exchange xchangeAdapter, @Nonnull CurrencyPair currencyPair) {
+    protected BaseExchangeService(@Nonnull Exchange xchangeAdapter, @Nonnull CurrencyPair currencyPair) {
         this.xchangeAdapter = xchangeAdapter;
         this.currencyPair = currencyPair;
     }
 
     protected abstract OrderBook getOrderBook() throws MerchantExchangeException, MerchantExchangeNonFatalException;
 
-    @Override
     public String getExchangeName() {
         return xchangeAdapter.getExchangeSpecification().getExchangeName();
     }
@@ -54,12 +53,10 @@ public abstract class AExchangeService implements ExchangeService {
         return ticker; // TODO - convert to time series
     }
 
-    @Override
     public CurrencyPair getCurrencyPair() {
         return currencyPair;
     }
 
-    @Override
     public ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice)
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
         ExchangeOrder exchangeOrder = null;
@@ -85,7 +82,6 @@ public abstract class AExchangeService implements ExchangeService {
         return exchangeOrder;
     }
 
-    @Override
     public ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount)
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
         BigDecimal baseCurrencyAmount = null;
@@ -98,7 +94,6 @@ public abstract class AExchangeService implements ExchangeService {
         return placeOrder(Order.OrderType.BID, baseCurrencyAmount, currentBidPrice);
     }
 
-    @Override
     public OpenOrders getOpenOrders()
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
         OpenOrders openOrders = null;
@@ -111,7 +106,6 @@ public abstract class AExchangeService implements ExchangeService {
         return openOrders;
     }
 
-    @Override
     public InstrumentPrice getCurrentPrices()
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
         OrderBook orderBook = getOrderBook();
