@@ -1,11 +1,11 @@
 package com.fku.strategy.impl.scalping;
 
+import com.fku.exchange.domain.ExchangeOrder;
+import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.exchange.error.MerchantExchangeException;
 import com.fku.exchange.error.MerchantExchangeNonFatalException;
 import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
-import com.fku.exchange.domain.ExchangeOrder;
-import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.strategy.error.MerchantStrategyException;
 import com.fku.strategy.impl.ATradingStrategy;
 import lombok.Setter;
@@ -13,17 +13,17 @@ import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.List;
+
 import static com.fku.strategy.impl.StrategyHelper.calculateSellPriceWithRequiredProfit;
 import static com.fku.strategy.impl.StrategyHelper.isOrderFilled;
 
 @Log4j2
-public class ScalpingStrategy extends ATradingStrategy {
+public class ScalpingStrategy extends ATradingStrategy implements InitializingBean {
 
     /**
      * Pro maket BTC/EUR je to 10EUR (counterCurrencyBuyOrderAmount = 10)
@@ -53,8 +53,8 @@ public class ScalpingStrategy extends ATradingStrategy {
         super(exchangeService, exchangeOrderRepository);
     }
 
-    @PostConstruct
-    private void info() {
+    @Override
+    public void afterPropertiesSet() throws Exception {
         log.info("Strategy [{}] is initialized", this.getClass());
         log.info("Strategy executes on [{}] exchange market", exchangeService.getExchangeName());
     }

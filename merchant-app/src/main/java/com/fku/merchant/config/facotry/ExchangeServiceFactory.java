@@ -6,10 +6,10 @@ import com.fku.exchange.service.impl.dummy.DummyExchangeService;
 import com.fku.exchange.service.impl.gdax.GDAXExchangeService;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 
-import javax.annotation.PostConstruct;
 
 public class ExchangeServiceFactory extends AbstractFactoryBean<ExchangeService> {
     @Value("${exchange.currencyPair}")
@@ -17,12 +17,6 @@ public class ExchangeServiceFactory extends AbstractFactoryBean<ExchangeService>
 
     private SupportedExchangeType exchangeType;
     private Exchange xchangeAdapter;
-    private CurrencyPair currencyPair;
-
-    @PostConstruct
-    public void setUp() {
-        currencyPair = new CurrencyPair(this.currencyPairProperty);
-    }
 
     public ExchangeServiceFactory(SupportedExchangeType exchangeType, Exchange xchangeAdapter) {
         this.exchangeType = exchangeType;
@@ -38,7 +32,7 @@ public class ExchangeServiceFactory extends AbstractFactoryBean<ExchangeService>
     protected ExchangeService createInstance() throws Exception {
         switch (exchangeType) {
             case GDAX:
-                return new GDAXExchangeService(xchangeAdapter, currencyPair);
+                return new GDAXExchangeService(xchangeAdapter, new CurrencyPair(this.currencyPairProperty));
             case DUMMY:
                 return new DummyExchangeService();
             default:

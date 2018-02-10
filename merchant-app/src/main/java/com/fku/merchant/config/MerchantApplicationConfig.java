@@ -11,16 +11,15 @@ import com.fku.strategy.SupportedStrategyType;
 import com.fku.strategy.TradingStrategy;
 import org.knowm.xchange.Exchange;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import javax.annotation.PostConstruct;
-
 @Configuration
 @EnableScheduling
-public class MerchantApplicationConfig {
+public class MerchantApplicationConfig implements InitializingBean {
     @Value("${exchange.type}")
     private String exchangeTypeProperty;
     private SupportedExchangeType exchangeType;
@@ -29,8 +28,9 @@ public class MerchantApplicationConfig {
     private String strategyTypeProperty;
     private SupportedStrategyType strategyType;
 
-    @PostConstruct
-    private void setUp() {
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
         exchangeType = SupportedExchangeType.valueOf(exchangeTypeProperty.toUpperCase());
         strategyType = SupportedStrategyType.valueOf(strategyTypeProperty.toUpperCase());
     }

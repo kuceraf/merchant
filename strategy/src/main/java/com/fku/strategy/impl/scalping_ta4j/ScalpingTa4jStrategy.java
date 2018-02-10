@@ -5,16 +5,16 @@ import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.strategy.impl.ATradingStrategy;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.InitializingBean;
 import org.ta4j.core.*;
 import org.ta4j.core.indicators.SMAIndicator;
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator;
 import org.ta4j.core.trading.rules.OverIndicatorRule;
 import org.ta4j.core.trading.rules.UnderIndicatorRule;
 
-import javax.annotation.PostConstruct;
 
 @Log4j2
-public class ScalpingTa4jStrategy extends ATradingStrategy {
+public class ScalpingTa4jStrategy extends ATradingStrategy implements InitializingBean {
 
     /** Close price of the last tick */
     private static Decimal LAST_BAR_CLOSE_PRICE;
@@ -26,8 +26,8 @@ public class ScalpingTa4jStrategy extends ATradingStrategy {
         super(exchangeService, exchangeOrderRepository);
     }
 
-    @PostConstruct
-    public void init() {
+    @Override
+    public void afterPropertiesSet() throws Exception {
         log.info("Strategy [{}] initialization", this.getClass());
         // init data
         series = CsvTradesLoader.loadBitstampSeries(); // TODO tick from exchange end convert them to time series
