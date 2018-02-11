@@ -42,25 +42,17 @@ public class GDAXMapperTest {
                 .isBefore(timeSeriesTested.getLastBar().getBeginTime());
 
         assertThat(timeSeriesTested.getFirstBar().getBeginTime())
-                .isEqualTo(ZonedDateTime.parse("2017-07-01T17:00+02:00[Europe/Prague]"));
+                .isEqualTo(ZonedDateTime.parse("2017-07-01T17:00+02:00[Europe/Prague]")); // 1498921200 -> 2017-07-01T17:00+02:00[Europe/Prague]
+        assertThat(timeSeriesTested.getFirstBar().getEndTime())
+                .isEqualTo(ZonedDateTime.parse("2017-07-01T17:01+02:00[Europe/Prague]"));
 
-//        assertThat(timeSeriesTested.getFirstBar())
-//                .extracting(Bar::getBeginTime,
-//                            Bar::getEndTime,
-//                            Bar::getTimePeriod)
-//                .as("First must be the earliest bar")
-//                .contains(  ZonedDateTime.parse("2017-07-01T17:00+02:00[Europe/Prague]"), // 1498921200 -> 2017-07-01T17:00+02:00[Europe/Prague]
-//                            ZonedDateTime.parse("2017-07-01T17:01+02:00[Europe/Prague]"),
-//                            Duration.ofSeconds(60));
+        assertThat(timeSeriesTested.getLastBar().getBeginTime())
+                .isEqualTo(ZonedDateTime.parse("2017-07-01T17:59+02:00[Europe/Prague]")); // 1498924740 -> 2017-07-01T17:59+02:00[Europe/Prague]
+        assertThat(timeSeriesTested.getLastBar().getEndTime())
+                .isEqualTo(ZonedDateTime.parse("2017-07-01T18:00+02:00[Europe/Prague]"));
 
-//                assertThat(timeSeriesTested.getLastBar())
-//                .extracting(Bar::getBeginTime,
-//                            Bar::getEndTime,
-//                            Bar::getTimePeriod)
-//                .as("Last must be the latest bar")
-//                .contains(  ZonedDateTime.parse("2017-07-01T17:59+02:00[Europe/Prague]"), // 1498924740 -> 2017-07-01T17:59+02:00[Europe/Prague]
-//                            ZonedDateTime.parse("2017-07-01T18:00+02:00[Europe/Prague]"),
-//                            Duration.ofSeconds(60));
+        assertThat(timeSeriesTested.getFirstBar().getTimePeriod())
+                .isEqualTo(Duration.ofSeconds(60));
 
         assertThat(timeSeriesTested.getFirstBar())
                 .as("Historical data from GDAX (candles) must be remapped time series correctly")
