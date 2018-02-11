@@ -9,6 +9,7 @@ import com.fku.exchange.domain.ExchangeOrder;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
+import org.ta4j.core.TimeSeries;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -32,7 +33,7 @@ public class DummyExchangeService implements ExchangeService {
     }
 
     @Override
-    public void getHistoricalDataSeries(String startTime, String endTime, String granularityInSec) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+    public TimeSeries getHistoricalTimeSeries(String startTime, String endTime, String granularityInSec) throws MerchantExchangeException, MerchantExchangeNonFatalException {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
 

@@ -7,6 +7,7 @@ import com.fku.exchange.error.MerchantExchangeNonFatalException;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
+import org.ta4j.core.TimeSeries;
 
 import java.math.BigDecimal;
 
@@ -19,6 +20,6 @@ public interface ExchangeService {
     OpenOrders getOpenOrders() throws MerchantExchangeException, MerchantExchangeNonFatalException;
     ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice)
             throws MerchantExchangeException, MerchantExchangeNonFatalException;
-     void getHistoricalDataSeries(String startTime, String endTime, String granularityInSec)
+     TimeSeries getHistoricalTimeSeries(String startTime, String endTime, String granularityInSec)
             throws MerchantExchangeException, MerchantExchangeNonFatalException;
 }

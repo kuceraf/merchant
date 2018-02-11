@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.marketdata.OrderBook;
+import org.ta4j.core.TimeSeries;
 import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.RestProxyFactory;
 
@@ -26,27 +27,27 @@ public class GDAXExchangeService extends BaseExchangeService implements Exchange
                 this.getClientConfig());
     }
 
-    @Override
+
     /**
      * The granularity field must be one of the following values: {60, 300, 900, 3600, 21600, 86400}.
      * Otherwise, your request will be rejected.
      * These values correspond to timeslices representing one minute, five minutes, fifteen minutes, one hour, six hours, and one day, respectively.
      */
-    public void getHistoricalDataSeries(String startTime, String endTime, String granularityInSec)
+    @Override
+    public TimeSeries getHistoricalTimeSeries(String startTime, String endTime, String granularityInSec)
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
+        GDAXHistoricRates[] gdaxHistoricRates = null;
         try {
-            GDAXHistoricRates[] historicRates = gdaxInterface.getHistoricRates(
+            gdaxHistoricRates = gdaxInterface.getHistoricRates(
                     currencyPair.base.getCurrencyCode(),
                     currencyPair.counter.getCurrencyCode(),
                     startTime,
                     endTime,
                     granularityInSec);
-            // https://github.com/timmolter/XChange/wiki/New-Implementation-Best-Practices
-            // TODO convert to timeSeries - Then you create an adapter class to take the provider-specific DTO (a raw DTO) and convert it into an XChange DTO
-            // see https://github.com/timmolter/XChange/blob/develop/xchange-bitstamp/src/main/java/org/knowm/xchange/bitstamp/BitstampAdapters.java
         } catch (IOException e) {
             ExchangeExceptionHandler.handleException(e);
         }
+        return GDAXMapper.remap(gdaxHistoricRates, Long.parseLong(granularityInSec));
     }
 
     @Override

@@ -8,6 +8,9 @@ import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.gdax.GDAXExchange;
+import org.ta4j.core.TimeSeries;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GDAXExchangeServiceIT {
     private static Exchange xchangeReal;
@@ -30,7 +33,8 @@ public class GDAXExchangeServiceIT {
         String startTime = "2017-07-01T10:00:00.000000-0500";
         String endTime = "2017-07-01T11:00:00.000000-0500";
         String granularity = "60";
-        gdaxExchangeServiceTested.getHistoricalDataSeries(startTime, endTime, granularity);
+        TimeSeries historicalTimeSeries = gdaxExchangeServiceTested.getHistoricalTimeSeries(startTime, endTime, granularity);
+        assertThat(historicalTimeSeries.getBarData()).hasSize(59);
     }
 
     @Test
