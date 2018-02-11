@@ -20,6 +20,17 @@ public interface ExchangeService {
     OpenOrders getOpenOrders() throws MerchantExchangeException, MerchantExchangeNonFatalException;
     ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice)
             throws MerchantExchangeException, MerchantExchangeNonFatalException;
-     TimeSeries getHistoricalTimeSeries(String startTime, String endTime, String granularityInSec)
+
+    /**
+     * Get historical time series from exchange
+     * Results in unauthenticated exchange API call.
+     * @param startTime of series
+     * @param endTime of series
+     * @param granularityInSec must be one of the following values: {60, 300, 900, 3600, 21600, 86400}
+     * @return time series created from historical date returned by exchange
+     * @throws MerchantExchangeException
+     * @throws MerchantExchangeNonFatalException
+     */
+    TimeSeries getHistoricalTimeSeries(String startTime, String endTime, String granularityInSec)
             throws MerchantExchangeException, MerchantExchangeNonFatalException;
 }

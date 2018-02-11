@@ -1,4 +1,4 @@
-package com.fku.strategy.impl.scalping_ta4j;
+package com.fku.strategy.impl.scalping_sma;
 
 import org.ta4j.core.Bar;
 import org.ta4j.core.BaseBar;
@@ -6,7 +6,7 @@ import org.ta4j.core.Decimal;
 
 import java.time.ZonedDateTime;
 
-public class DummyTickFactory {
+public class DummyBarFactory {
 
     /**
      * Generates a random tick.

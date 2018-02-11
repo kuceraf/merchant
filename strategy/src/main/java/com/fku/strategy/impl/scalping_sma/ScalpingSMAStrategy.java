@@ -1,6 +1,5 @@
-package com.fku.strategy.impl.scalping_ta4j;
+package com.fku.strategy.impl.scalping_sma;
 
-import com.fku.analyst.CsvTradesLoader;
 import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.strategy.impl.ATradingStrategy;
@@ -14,15 +13,18 @@ import org.ta4j.core.trading.rules.UnderIndicatorRule;
 
 
 @Log4j2
-public class ScalpingTa4jStrategy extends ATradingStrategy implements InitializingBean {
+public class ScalpingSMAStrategy extends ATradingStrategy implements InitializingBean {
+    private static final String START_TIME = "2017-07-01T10:00:00.000000-0500";
+    private static final String END_TIME = "2017-07-01T11:00:00.000000-0500";
+    private static final String GRANULARITY = "60";
 
     /** Close price of the last tick */
     private static Decimal LAST_BAR_CLOSE_PRICE;
-    private TimeSeries series;
+    private TimeSeries historicalSeries;
     private Strategy strategy;
     private TradingRecord tradingRecord;
 
-    public ScalpingTa4jStrategy(ExchangeService exchangeService, ExchangeOrderRepository exchangeOrderRepository) {
+    public ScalpingSMAStrategy(ExchangeService exchangeService, ExchangeOrderRepository exchangeOrderRepository) {
         super(exchangeService, exchangeOrderRepository);
     }
 
@@ -30,11 +32,11 @@ public class ScalpingTa4jStrategy extends ATradingStrategy implements Initializi
     public void afterPropertiesSet() throws Exception {
         log.info("Strategy [{}] initialization", this.getClass());
         // init data
-        series = CsvTradesLoader.loadBitstampSeries(); // TODO tick from exchange end convert them to time series
-        LAST_BAR_CLOSE_PRICE = series.getBar(series.getEndIndex()).getClosePrice();
+        historicalSeries = exchangeService.getHistoricalTimeSeries(START_TIME, END_TIME, GRANULARITY);
+        LAST_BAR_CLOSE_PRICE = historicalSeries.getBar(historicalSeries.getEndIndex()).getClosePrice();
 
         // init strategy
-        ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
+        ClosePriceIndicator closePrice = new ClosePriceIndicator(historicalSeries);
         SMAIndicator sma = new SMAIndicator(closePrice, 4);
 
         // Buy when SMA goes over close price
@@ -50,12 +52,12 @@ public class ScalpingTa4jStrategy extends ATradingStrategy implements Initializi
 
     @Override
     protected void executeStrategySpecific() throws Exception {
-        Bar newBar = DummyTickFactory.generateRandomBar(LAST_BAR_CLOSE_PRICE);
+        Bar newBar = DummyBarFactory.generateRandomBar(LAST_BAR_CLOSE_PRICE);
         log.info("------------------------------------------------------\n"
-                + "Tick "+getExecutionNo()+" added, close price = " + newBar.getClosePrice().toDouble());
-        series.addBar(newBar);
+                + "Tick "+getExecutionNo()+" added, close price = " + newBar.getClosePrice().doubleValue());
+        historicalSeries.addBar(newBar);
 
-        int endIndex = series.getEndIndex();
+        int endIndex = historicalSeries.getEndIndex();
         if (strategy.shouldEnter(endIndex)) {
             // Our strategy should enter
             log.info("Strategy should ENTER on " + endIndex);
@@ -63,8 +65,8 @@ public class ScalpingTa4jStrategy extends ATradingStrategy implements Initializi
             if (entered) {
                 Order entry = tradingRecord.getLastEntry();
                 log.info("Entered on " + entry.getIndex()
-                        + " (price=" + entry.getPrice().toDouble()
-                        + ", amount=" + entry.getAmount().toDouble() + ")");
+                        + " (price=" + entry.getPrice().doubleValue()
+                        + ", amount=" + entry.getAmount().doubleValue() + ")");
             }
         } else if (strategy.shouldExit(endIndex)) {
             // Our strategy should exit
@@ -73,8 +75,8 @@ public class ScalpingTa4jStrategy extends ATradingStrategy implements Initializi
             if (exited) {
                 Order exit = tradingRecord.getLastExit();
                 log.info("Exited on " + exit.getIndex()
-                        + " (price=" + exit.getPrice().toDouble()
-                        + ", amount=" + exit.getAmount().toDouble() + ")");
+                        + " (price=" + exit.getPrice().doubleValue()
+                        + ", amount=" + exit.getAmount().doubleValue() + ")");
             }
         }
 
