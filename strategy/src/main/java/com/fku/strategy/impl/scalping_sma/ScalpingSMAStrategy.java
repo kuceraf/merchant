@@ -1,7 +1,10 @@
 package com.fku.strategy.impl.scalping_sma;
 
+import com.fku.exchange.error.MerchantExchangeException;
+import com.fku.exchange.error.MerchantExchangeNonFatalException;
 import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
+import com.fku.exchange.service.impl.Granularity;
 import com.fku.strategy.impl.ATradingStrategy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.InitializingBean;
@@ -10,6 +13,10 @@ import org.ta4j.core.indicators.SMAIndicator;
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator;
 import org.ta4j.core.trading.rules.OverIndicatorRule;
 import org.ta4j.core.trading.rules.UnderIndicatorRule;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 
 @Log4j2
@@ -32,7 +39,7 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements Initializin
     public void afterPropertiesSet() throws Exception {
         log.info("Strategy [{}] initialization", this.getClass());
         // init data
-        historicalSeries = exchangeService.getHistoricalTimeSeries(START_TIME, END_TIME, GRANULARITY);
+//        historicalSeries = exchangeService.getHistoricalTimeSeries(START_TIME, END_TIME, GRANULARITY);
         LAST_BAR_CLOSE_PRICE = historicalSeries.getBar(historicalSeries.getEndIndex()).getClosePrice();
 
         // init strategy
@@ -48,6 +55,14 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements Initializin
 
         // Initializing the trading history
         tradingRecord = new BaseTradingRecord();
+    }
+
+    TimeSeries getHistoricalTimeSeriesWith15minGranularity(int numberOfPeriod) throws Exception {
+//        Instant endTime = Instant.now();
+//        Instant startTime = Instant.from(LocalTime.now().minusMinutes(numberOfPeriod * 15L));
+        LocalDateTime endDateTime = LocalDateTime.now();
+        LocalDateTime startDateTime = endDateTime.minusSeconds(numberOfPeriod * Granularity.FIVETEN_MINUTES.getSeconds());
+        return exchangeService.getHistoricalTimeSeries(startDateTime, endDateTime, Granularity.FIVETEN_MINUTES); // startDateTime need not be taken into account, then it returns longer time series
     }
 
     @Override

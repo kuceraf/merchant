@@ -5,6 +5,7 @@ import com.fku.exchange.error.MerchantExchangeException;
 import com.fku.exchange.error.MerchantExchangeNonFatalException;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.service.impl.BaseExchangeService;
+import com.fku.exchange.service.impl.Granularity;
 import com.fku.exchange.service.impl.gdax.dto.GDAXHistoricRates;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.Exchange;
@@ -16,6 +17,8 @@ import si.mazi.rescu.RestProxyFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Log4j2
 public class GDAXExchangeService extends BaseExchangeService implements ExchangeService {
@@ -27,27 +30,23 @@ public class GDAXExchangeService extends BaseExchangeService implements Exchange
                 this.getClientConfig());
     }
 
-
-    /**
-     * The granularity field must be one of the following values: {60, 300, 900, 3600, 21600, 86400}.
-     * Otherwise, your request will be rejected.
-     * These values correspond to timeslices representing one minute, five minutes, fifteen minutes, one hour, six hours, and one day, respectively.
-     */
     @Override
-    public TimeSeries getHistoricalTimeSeries(String startTime, String endTime, String granularityInSec)
+    // If data points are readily available, your response may contain as many as 350 candles and some of those candles may precede your declared start value.
+    // See: https://docs.gdax.com/?ruby#get-historic-rates
+    public TimeSeries getHistoricalTimeSeries(LocalDateTime startDateTime, LocalDateTime endDateTime, Granularity granularity)
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
         GDAXHistoricRates[] gdaxHistoricRates = null;
         try {
             gdaxHistoricRates = gdaxInterface.getHistoricRates(
                     currencyPair.base.getCurrencyCode(),
                     currencyPair.counter.getCurrencyCode(),
-                    startTime,
-                    endTime,
-                    granularityInSec);
+                    startDateTime.format(DateTimeFormatter.ISO_DATE_TIME), // must be in ISO 8601 format
+                    endDateTime.format(DateTimeFormatter.ISO_DATE_TIME), // must be in ISO 8601 format
+                    String.valueOf(granularity.getSeconds())); // must be one of the following values: {60 (1min), 300 (5min), 900 (15min), 3600 (1h), 21600(6h), 86400 (1d)}, otherwise, your request will be rejected.
         } catch (IOException e) {
             ExchangeExceptionHandler.handleException(e);
         }
-        return GDAXMapper.remap(gdaxHistoricRates, Long.parseLong(granularityInSec));
+        return GDAXMapper.remap(gdaxHistoricRates, granularity.getSeconds());
     }
 
     @Override

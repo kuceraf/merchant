@@ -6,12 +6,14 @@ import com.fku.exchange.error.MerchantExchangeException;
 import com.fku.exchange.error.MerchantExchangeNonFatalException;
 import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.exchange.domain.ExchangeOrder;
+import com.fku.exchange.service.impl.Granularity;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.ta4j.core.TimeSeries;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static com.fku.exchange.service.impl.dummy.Constants.*;
@@ -33,9 +35,14 @@ public class DummyExchangeService implements ExchangeService {
     }
 
     @Override
-    public TimeSeries getHistoricalTimeSeries(String startTime, String endTime, String granularityInSec) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+    public TimeSeries getHistoricalTimeSeries(LocalDateTime startDateTime, LocalDateTime endDateTime, Granularity granularityInSec) throws MerchantExchangeException, MerchantExchangeNonFatalException {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
+
+//    @Override
+//    public TimeSeries getHistoricalTimeSeries(int numberOfPeriod, String granularityInSec) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+//        throw new UnsupportedOperationException("Not implemented!"); // TODO
+//    }
 
     @Override
     public ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice) throws MerchantExchangeException, MerchantExchangeNonFatalException {

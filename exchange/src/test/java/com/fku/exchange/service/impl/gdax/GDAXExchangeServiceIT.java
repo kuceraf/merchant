@@ -1,5 +1,6 @@
 package com.fku.exchange.service.impl.gdax;
 
+import com.fku.exchange.service.impl.Granularity;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -9,6 +10,8 @@ import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.gdax.GDAXExchange;
 import org.ta4j.core.TimeSeries;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,10 +33,9 @@ public class GDAXExchangeServiceIT {
 
     @Test
     public void getHistoricalDataSeries() throws Exception {
-        String startTime = "2017-07-01T10:00:00.000000-0500";
-        String endTime = "2017-07-01T11:00:00.000000-0500";
-        String granularity = "60";
-        TimeSeries historicalTimeSeries = gdaxExchangeServiceTested.getHistoricalTimeSeries(startTime, endTime, granularity);
+        TimeSeries historicalTimeSeries = gdaxExchangeServiceTested.getHistoricalTimeSeries(LocalDateTime.parse("2017-07-01T10:00:00"),
+                                                                                            LocalDateTime.parse("2017-07-01T11:00:00"),
+                                                                                            Granularity.ONE_MINUTE);
         assertThat(historicalTimeSeries.getBarData()).hasSize(59);
     }
 
