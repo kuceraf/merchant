@@ -3,37 +3,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.fku</groupId>
     <artifactId>strategy</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.9.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.fku</groupId>
+        <artifactId>merchant</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>9</java.version>
-        <projectlombok.version>1.16.20</projectlombok.version>
-    </properties>
-
     <dependencies>
-        <!--Project-->
-        <dependency>
-            <groupId>com.fku</groupId>
-            <artifactId>exchange</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fku</groupId>
-            <artifactId>technical-analyst</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!--Spring-->
+        <!--Spring boot inherited-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -42,17 +23,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
-
-        <!--Other-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-            <scope>provided</scope>
-            <version>${projectlombok.version}</version>
-        </dependency>
-
-        <!--TETS-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -63,6 +33,21 @@
                 </exclusion>
             </exclusions>
             <scope>test</scope>
+        </dependency>
+        <!--Merchant parent inherited-->
+        <dependency>
+            <groupId>com.fku</groupId>
+            <artifactId>exchange</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fku</groupId>
+            <artifactId>technical-analyst</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
