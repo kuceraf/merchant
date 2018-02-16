@@ -39,10 +39,10 @@ public class DummyExchangeService implements ExchangeService {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
 
-//    @Override
-//    public TimeSeries getHistoricalTimeSeries(int numberOfPeriod, String granularityInSec) throws MerchantExchangeException, MerchantExchangeNonFatalException {
-//        throw new UnsupportedOperationException("Not implemented!"); // TODO
-//    }
+    @Override
+    public TimeSeries getHistoricalTimeSeries(Granularity granularity) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+        throw new UnsupportedOperationException("Not implemented!"); // TODO
+    }
 
     @Override
     public ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice) throws MerchantExchangeException, MerchantExchangeNonFatalException {

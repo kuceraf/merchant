@@ -35,4 +35,14 @@ public interface ExchangeService {
      */
     TimeSeries getHistoricalTimeSeries(LocalDateTime startDateTime, LocalDateTime endDateTime, Granularity granularity)
             throws MerchantExchangeException, MerchantExchangeNonFatalException;
+
+    /**
+     * Get maximal time series from now
+     * @param granularity
+     * @return
+     * @throws MerchantExchangeException
+     * @throws MerchantExchangeNonFatalException
+     */
+    TimeSeries getHistoricalTimeSeries(Granularity granularity)
+            throws MerchantExchangeException, MerchantExchangeNonFatalException;
 }

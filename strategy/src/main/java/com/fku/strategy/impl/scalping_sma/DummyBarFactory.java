@@ -12,14 +12,14 @@ public class DummyBarFactory {
      * Generates a random tick.
      * @return a random tick
      */
-     static Bar generateRandomBar(Decimal lastTickClosePrice) {
+     static Bar generateRandomBar(Decimal lastTickClosePrice, long offsetInSecond) {
         final Decimal maxRange = Decimal.valueOf("0.03"); // 3.0%
         Decimal openPrice = lastTickClosePrice;
         Decimal minPrice = openPrice.minus(openPrice.multipliedBy(maxRange.multipliedBy(Decimal.valueOf(Math.random()))));
         Decimal maxPrice = openPrice.plus(openPrice.multipliedBy(maxRange.multipliedBy(Decimal.valueOf(Math.random()))));
         Decimal closePrice = randDecimal(minPrice, maxPrice);
         lastTickClosePrice = closePrice;
-        return new BaseBar(ZonedDateTime.now(), openPrice, maxPrice, minPrice, closePrice, Decimal.ONE);
+        return new BaseBar(ZonedDateTime.now().plusSeconds(offsetInSecond), openPrice, maxPrice, minPrice, closePrice, Decimal.ONE);
     }
 
     /**

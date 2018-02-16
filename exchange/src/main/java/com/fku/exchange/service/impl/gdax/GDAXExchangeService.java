@@ -33,7 +33,7 @@ public class GDAXExchangeService extends BaseExchangeService implements Exchange
     @Override
     // If data points are readily available, your response may contain as many as 350 candles and some of those candles may precede your declared start value.
     // See: https://docs.gdax.com/?ruby#get-historic-rates
-    public TimeSeries getHistoricalTimeSeries(LocalDateTime startDateTime, LocalDateTime endDateTime, Granularity granularity)
+    public TimeSeries getHistoricalTimeSeries(@Nonnull  LocalDateTime startDateTime, @Nonnull LocalDateTime endDateTime, @Nonnull Granularity granularity)
             throws MerchantExchangeException, MerchantExchangeNonFatalException {
         GDAXHistoricRates[] gdaxHistoricRates = null;
         try {
@@ -42,6 +42,21 @@ public class GDAXExchangeService extends BaseExchangeService implements Exchange
                     currencyPair.counter.getCurrencyCode(),
                     startDateTime.format(DateTimeFormatter.ISO_DATE_TIME), // must be in ISO 8601 format
                     endDateTime.format(DateTimeFormatter.ISO_DATE_TIME), // must be in ISO 8601 format
+                    String.valueOf(granularity.getSeconds())); // must be one of the following values: {60 (1min), 300 (5min), 900 (15min), 3600 (1h), 21600(6h), 86400 (1d)}, otherwise, your request will be rejected.
+        } catch (IOException e) {
+            ExchangeExceptionHandler.handleException(e);
+        }
+        return GDAXMapper.remap(gdaxHistoricRates, granularity.getSeconds());
+    }
+
+    @Override
+    public TimeSeries getHistoricalTimeSeries(@Nonnull Granularity granularity)
+            throws MerchantExchangeException, MerchantExchangeNonFatalException {
+        GDAXHistoricRates[] gdaxHistoricRates = null;
+        try {
+            gdaxHistoricRates = gdaxInterface.getHistoricRates(
+                    currencyPair.base.getCurrencyCode(),
+                    currencyPair.counter.getCurrencyCode(),
                     String.valueOf(granularity.getSeconds())); // must be one of the following values: {60 (1min), 300 (5min), 900 (15min), 3600 (1h), 21600(6h), 86400 (1d)}, otherwise, your request will be rejected.
         } catch (IOException e) {
             ExchangeExceptionHandler.handleException(e);

@@ -33,10 +33,4 @@ public class ScalpingSMAStrategyTest {
     public void setUp() throws Exception {
         strategyTested = new ScalpingSMAStrategy(gdaxExchangeServiceReal, exchangeOrderRepositoryMocked);
     }
-
-    @Test
-    public void getHistoricalTimeSeriesWith15minGranularity() throws Exception{
-        TimeSeries timeSeries = strategyTested.getHistoricalTimeSeriesWith15minGranularity(2);
-        assertThat(timeSeries).isNotNull();
-    }
 }

@@ -19,4 +19,9 @@ public interface GDAXRemoteInterface {
     GDAXHistoricRates[] getHistoricRates(@PathParam("baseCurrency") String baseCurrency, @PathParam("targetCurrency") String targetCurrency,
                                          @PathParam("startTime") String startTime, @PathParam("endTime") String endTime,
                                          @PathParam("granularityInSecs") String granularityInSecs) throws GDAXException, IOException;
+
+    @GET
+    @Path("products/{baseCurrency}-{targetCurrency}/candles?granularity={granularityInSecs}")
+    GDAXHistoricRates[] getHistoricRates(@PathParam("baseCurrency") String baseCurrency, @PathParam("targetCurrency") String targetCurrency,
+                                         @PathParam("granularityInSecs") String granularityInSecs) throws GDAXException, IOException;
 }
