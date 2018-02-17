@@ -11,6 +11,8 @@ import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.marketdata.OrderBook;
+import org.knowm.xchange.dto.marketdata.Ticker;
+import org.ta4j.core.Bar;
 import org.ta4j.core.TimeSeries;
 import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.RestProxyFactory;
@@ -62,6 +64,17 @@ public class GDAXExchangeService extends BaseExchangeService implements Exchange
             ExchangeExceptionHandler.handleException(e);
         }
         return GDAXMapper.remap(gdaxHistoricRates, granularity.getSeconds());
+    }
+
+    @Override
+    public Bar getBar(Granularity granularity) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+        Ticker ticker = null;
+        try {
+            ticker = xchangeAdapter.getMarketDataService().getTicker(currencyPair);
+        } catch (IOException e) {
+            ExchangeExceptionHandler.handleException(e);
+        }
+        return GDAXMapper.remap(ticker, granularity.getSeconds());
     }
 
     @Override

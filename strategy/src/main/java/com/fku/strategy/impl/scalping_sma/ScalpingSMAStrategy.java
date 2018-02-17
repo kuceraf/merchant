@@ -17,9 +17,6 @@ import java.time.format.DateTimeFormatter;
 
 @Log4j2
 public class ScalpingSMAStrategy extends ATradingStrategy implements InitializingBean {
-//    private static final String START_TIME = "2017-07-01T10:00:00.000000-0500";
-//    private static final String END_TIME = "2017-07-01T11:00:00.000000-0500";
-//    private static final String GRANULARITY = "60";
     private static final Granularity GRANULARITY = Granularity.FIVE_MINUTES;
 
     /** Close price of the last tick */
@@ -60,7 +57,8 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements Initializin
 
     @Override
     protected void executeStrategySpecific() throws Exception {
-        Bar newBar = DummyBarFactory.generateRandomBar(LAST_BAR_CLOSE_PRICE, GRANULARITY.getSeconds());
+        Bar newBar = exchangeService.getBar(GRANULARITY);
+
         log.info("------------------------------------------------------\n"
                 + "Tick "+getExecutionNo()+" added, close price = " + newBar.getClosePrice().doubleValue());
         historicalSeries.addBar(newBar);

@@ -39,20 +39,6 @@ public abstract class BaseExchangeService {
 
 //    TODO WebSocket streaming https://github.com/bitrich-info/xchange-stream
 
-    public void getHistoricRates() {
-        // TODO - https://docs.gdax.com/#get-historic-rates
-//        https://docs.gdax.com/#get-historic-rates
-    }
-    public Ticker getTicker() throws MerchantExchangeException, MerchantExchangeNonFatalException {
-        Ticker ticker = null;
-        try {
-            ticker = xchangeAdapter.getMarketDataService().getTicker(currencyPair);
-        } catch (Exception e) {
-            ExchangeExceptionHandler.handleException(e);
-        }
-        return ticker; // TODO - convert to time series
-    }
-
     public CurrencyPair getCurrencyPair() {
         return currencyPair;
     }

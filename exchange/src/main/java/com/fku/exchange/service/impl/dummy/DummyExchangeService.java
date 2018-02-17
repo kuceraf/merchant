@@ -10,6 +10,7 @@ import com.fku.exchange.service.impl.Granularity;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
+import org.ta4j.core.Bar;
 import org.ta4j.core.TimeSeries;
 
 import java.math.BigDecimal;
@@ -41,6 +42,12 @@ public class DummyExchangeService implements ExchangeService {
 
     @Override
     public TimeSeries getHistoricalTimeSeries(Granularity granularity) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+        throw new UnsupportedOperationException("Not implemented!"); // TODO
+    }
+
+    @Override
+    public Bar getBar(Granularity granularity) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+//     pouzit   DummyBarFactory.generateRandomBar(LAST_BAR_CLOSE_PRICE, GRANULARITY.getSeconds());
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
 

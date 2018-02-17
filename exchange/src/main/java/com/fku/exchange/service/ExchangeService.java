@@ -8,6 +8,7 @@ import com.fku.exchange.service.impl.Granularity;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
+import org.ta4j.core.Bar;
 import org.ta4j.core.TimeSeries;
 
 import java.math.BigDecimal;
@@ -45,4 +46,7 @@ public interface ExchangeService {
      */
     TimeSeries getHistoricalTimeSeries(Granularity granularity)
             throws MerchantExchangeException, MerchantExchangeNonFatalException;
+
+    Bar getBar(Granularity granularity)
+            throws MerchantExchangeException, MerchantExchangeNonFatalException;;
 }

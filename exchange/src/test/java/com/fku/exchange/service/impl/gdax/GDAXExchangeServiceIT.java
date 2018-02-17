@@ -9,11 +9,11 @@ import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.gdax.GDAXExchange;
+import org.ta4j.core.Bar;
 import org.ta4j.core.TimeSeries;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,8 +57,14 @@ public class GDAXExchangeServiceIT {
     }
 
     @Test
-    public void getTicks() throws Exception {
-        gdaxExchangeServiceTested.getTicker();
+    public void getBar() throws Exception {
+        Bar bar = gdaxExchangeServiceTested.getBar(Granularity.FIVE_MINUTES);
+        assertThat(bar).isNotNull();
+        assertThat(bar.getClosePrice()).isNotNull();
+        Duration betweenBeginAndEnd = Duration.between(
+                bar.getBeginTime(), bar.getEndTime()
+        );
+        assertThat(betweenBeginAndEnd.getSeconds())
+                .isEqualTo(Granularity.FIVE_MINUTES.getSeconds());
     }
-
 }

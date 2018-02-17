@@ -21,7 +21,8 @@ public class ExchangeExceptionHandler {
             }
         } else if (e instanceof IOException) {
 //            Indication that a networking error occurred while fetching JSON data
-            // TODO - non fatal error?
+            log.error(e.getMessage(), e);
+            throw new MerchantExchangeNonFatalException(e.getMessage(), e);
         } else {
             final String errorMsg = "Unknown error occurred during exchange interaction";
             log.error(errorMsg, e);
