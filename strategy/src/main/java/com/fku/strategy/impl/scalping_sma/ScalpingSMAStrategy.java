@@ -3,6 +3,8 @@ package com.fku.strategy.impl.scalping_sma;
 import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.service.impl.Granularity;
+import com.fku.strategy.TradingStrategy;
+import com.fku.strategy.domain.ChartDataDTO;
 import com.fku.strategy.impl.ATradingStrategy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.InitializingBean;
@@ -13,15 +15,19 @@ import org.ta4j.core.trading.rules.OverIndicatorRule;
 import org.ta4j.core.trading.rules.UnderIndicatorRule;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Log4j2
-public class ScalpingSMAStrategy extends ATradingStrategy implements InitializingBean {
+public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStrategy, InitializingBean {
     private static final Granularity GRANULARITY = Granularity.FIVE_MINUTES;
 
     /** Close price of the last tick */
     private static Decimal LAST_BAR_CLOSE_PRICE;
     private TimeSeries historicalSeries;
+    private ClosePriceIndicator closePriceIndicator;
+    private SMAIndicator sma;
     private Strategy strategy;
     private TradingRecord tradingRecord;
 
@@ -34,6 +40,7 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements Initializin
         log.info("Strategy [{}] initialization", this.getClass());
         // init data
         historicalSeries = exchangeService.getHistoricalTimeSeries(GRANULARITY);
+        historicalSeries.setMaximumBarCount(400); // It ensures that your memory consumption won't increase infinitely (the series will turn it into a moving time series.)
         log.info("Historical time series from exchange (size:{}, start:{}, end:{})",
                 historicalSeries.getBarCount(),
                 historicalSeries.getFirstBar().getBeginTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
@@ -41,14 +48,14 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements Initializin
         LAST_BAR_CLOSE_PRICE = historicalSeries.getBar(historicalSeries.getEndIndex()).getClosePrice();
 
         // init strategy
-        ClosePriceIndicator closePrice = new ClosePriceIndicator(historicalSeries);
-        SMAIndicator sma = new SMAIndicator(closePrice, 4);
+        closePriceIndicator = new ClosePriceIndicator(historicalSeries);
+        sma = new SMAIndicator(closePriceIndicator, 4);
 
         // Buy when SMA goes over close price
         // Sell when close price goes over SMA
         strategy = new BaseStrategy(
-                new OverIndicatorRule(sma, closePrice),
-                new UnderIndicatorRule(sma, closePrice));
+                new OverIndicatorRule(sma, closePriceIndicator),
+                new UnderIndicatorRule(sma, closePriceIndicator));
 
 
         // init the trading history
@@ -56,11 +63,24 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements Initializin
     }
 
     @Override
+    public ChartDataDTO getChartData() {
+        ChartDataDTO chartDataDTO = new ChartDataDTO();
+        chartDataDTO.setName("Close price TS");
+        List<int[]> data = new ArrayList<>();
+        chartDataDTO.setData(data);
+
+        for (int i = 0; i < historicalSeries.getBarCount(); i++) {
+            int[] dataPair = {i ,historicalSeries.getBar(i).getClosePrice().intValue()};
+            data.add(dataPair);
+        }
+        return chartDataDTO;
+    }
+
+    @Override
     protected void executeStrategySpecific() throws Exception {
         Bar newBar = exchangeService.getBar(GRANULARITY);
+        log.info("Adding Bar ({})", newBar);
 
-        log.info("------------------------------------------------------\n"
-                + "Tick "+getExecutionNo()+" added, close price = " + newBar.getClosePrice().doubleValue());
         historicalSeries.addBar(newBar);
 
         int endIndex = historicalSeries.getEndIndex();

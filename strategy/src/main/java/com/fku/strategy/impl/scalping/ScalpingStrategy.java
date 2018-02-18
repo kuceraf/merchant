@@ -6,6 +6,8 @@ import com.fku.exchange.error.MerchantExchangeException;
 import com.fku.exchange.error.MerchantExchangeNonFatalException;
 import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
+import com.fku.strategy.TradingStrategy;
+import com.fku.strategy.domain.ChartDataDTO;
 import com.fku.strategy.error.MerchantStrategyException;
 import com.fku.strategy.impl.ATradingStrategy;
 import lombok.Setter;
@@ -15,6 +17,8 @@ import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.ta4j.core.Strategy;
+import org.ta4j.core.TimeSeries;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,8 +27,7 @@ import static com.fku.strategy.impl.StrategyHelper.calculateSellPriceWithRequire
 import static com.fku.strategy.impl.StrategyHelper.isOrderFilled;
 
 @Log4j2
-public class ScalpingStrategy extends ATradingStrategy implements InitializingBean {
-
+public class ScalpingStrategy extends ATradingStrategy implements TradingStrategy, InitializingBean {
     /**
      * Pro maket BTC/EUR je to 10EUR (counterCurrencyBuyOrderAmount = 10)
      *
@@ -79,6 +82,11 @@ public class ScalpingStrategy extends ATradingStrategy implements InitializingBe
                     throw new IllegalStateException("Unknown order type");
             }
         }
+    }
+
+    @Override
+    public ChartDataDTO getChartData() {
+        return null;
     }
 
     @Override

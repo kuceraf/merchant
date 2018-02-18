@@ -8,7 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Log4j2
-public abstract class ATradingStrategy implements TradingStrategy {
+public abstract class ATradingStrategy {
     protected final ExchangeService exchangeService;
     protected final ExchangeOrderRepository exchangeOrderRepository;
     private Long executionNo = 0L;
@@ -19,12 +19,10 @@ public abstract class ATradingStrategy implements TradingStrategy {
         this.exchangeOrderRepository = exchangeOrderRepository;
     }
 
-    @Override
     public Long getExecutionNo() {
         return executionNo;
     }
 
-    @Override
     public void execute() throws Exception {
         log.info("Execution of [{}]", this.getClass().getSimpleName());
         executionNo++;

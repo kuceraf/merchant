@@ -34,6 +34,7 @@ public class StrategyRunnerScheduled implements StrategyRunner {
     @Scheduled(fixedDelay = 30000)
     public void scheduledExecution() {
         try {
+            log.info("----------------------------");
             log.info("BEGIN Strategy execution (number [{}])", tradingStrategy.getExecutionNo());
             long startTime = System.currentTimeMillis();
 

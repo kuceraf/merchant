@@ -95,7 +95,6 @@
                 <!--<scope>provided</scope>-->
                 <version>${projectlombok.version}</version>
             </dependency>
-
             <!--Test-->
             <dependency>
                 <groupId>org.assertj</groupId>
