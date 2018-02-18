@@ -85,7 +85,7 @@ public class ScalpingStrategy extends ATradingStrategy implements TradingStrateg
     }
 
     @Override
-    public ChartDataDTO getChartData() {
+    public TimeSeries getTimeSeries() {
         return null;
     }
 

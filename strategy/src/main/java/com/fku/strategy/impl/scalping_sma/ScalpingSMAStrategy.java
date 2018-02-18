@@ -26,8 +26,6 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStra
     /** Close price of the last tick */
     private static Decimal LAST_BAR_CLOSE_PRICE;
     private TimeSeries historicalSeries;
-    private ClosePriceIndicator closePriceIndicator;
-    private SMAIndicator sma;
     private Strategy strategy;
     private TradingRecord tradingRecord;
 
@@ -48,8 +46,8 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStra
         LAST_BAR_CLOSE_PRICE = historicalSeries.getBar(historicalSeries.getEndIndex()).getClosePrice();
 
         // init strategy
-        closePriceIndicator = new ClosePriceIndicator(historicalSeries);
-        sma = new SMAIndicator(closePriceIndicator, 4);
+        ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(historicalSeries);
+        SMAIndicator sma = new SMAIndicator(closePriceIndicator, 4);
 
         // Buy when SMA goes over close price
         // Sell when close price goes over SMA
@@ -63,17 +61,8 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStra
     }
 
     @Override
-    public ChartDataDTO getChartData() {
-        ChartDataDTO chartDataDTO = new ChartDataDTO();
-        chartDataDTO.setName("Close price TS");
-        List<int[]> data = new ArrayList<>();
-        chartDataDTO.setData(data);
-
-        for (int i = 0; i < historicalSeries.getBarCount(); i++) {
-            int[] dataPair = {i ,historicalSeries.getBar(i).getClosePrice().intValue()};
-            data.add(dataPair);
-        }
-        return chartDataDTO;
+    public TimeSeries getTimeSeries() {
+        return historicalSeries;
     }
 
     @Override

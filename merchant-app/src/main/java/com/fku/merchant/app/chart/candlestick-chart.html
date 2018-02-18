@@ -16,17 +16,47 @@
         // draws it.
         function drawChart() {
             var jsonResp = $.ajax({
-                url: "http://localhost:8080/chart_data",
+                url: "http://localhost:8080/candlestick",
                 dataType: "json",
                 async: false
             }).responseJSON;
 
-            // Create the data table.
-            var data = new google.visualization.DataTable();
-            data.addColumn('number', 'X');
-            data.addColumn('number', 'Y');
 
-            data.addRows(jsonResp.data);
+
+            var dummyData = [
+                [
+                    'Po',
+                    8809.03,
+                    8809.04,
+                    8809.04,
+                    8809.04
+                ],
+                [
+                    'Ut',
+                    8809,
+                    8809.03,
+                    8809,
+                    8809.04
+                ],
+                [
+                    'St',
+                    8809,
+                    8809.01,
+                    8834,
+                    8834
+                ]
+            ];
+            // // Create the data table.
+            // var data = new google.visualization.DataTable();
+            // data.addColumn('number', 'X');
+            // data.addColumn('number', 'Y');
+            //
+            // data.addRows(jsonResp.data);
+
+            var data = google.visualization.arrayToDataTable(
+                jsonResp.data
+                // Treat first row as data as well.
+            , true);
 
             // Set chart options
             var options = {
@@ -40,7 +70,7 @@
                 backgroundColor: '#f1f8e9'};
 
             // Instantiate and draw our chart, passing in some options.
-            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            var chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
             chart.draw(data, options);
         }
     </script>

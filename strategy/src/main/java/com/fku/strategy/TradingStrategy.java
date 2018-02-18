@@ -9,5 +9,6 @@ public interface TradingStrategy {
     Long getExecutionNo();
 
     // TODO move it to different class (it could be provided by repository)
-    ChartDataDTO getChartData();
+//    ChartDataDTO getChartData();
+    TimeSeries getTimeSeries();
 }

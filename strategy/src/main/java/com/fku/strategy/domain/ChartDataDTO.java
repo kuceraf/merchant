@@ -8,5 +8,5 @@ import java.util.List;
 public class ChartDataDTO {
     private String name;
     // data pair [X, Y]
-    private List<int[]> data;
+    private List<double[]> data;
 }

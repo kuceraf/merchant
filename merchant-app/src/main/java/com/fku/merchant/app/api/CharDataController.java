@@ -1,5 +1,6 @@
 package com.fku.merchant.app.api;
 
+import com.fku.merchant.app.chart.ChartDataProvider;
 import com.fku.strategy.domain.ChartDataDTO;
 import com.fku.strategy.TradingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,27 +12,24 @@ import org.ta4j.core.Strategy;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin()
 @RestController
 public class CharDataController {
-
     final
-    TradingStrategy tradingStrategy;
+    private ChartDataProvider chartDataProvider;
 
     @Autowired
-    public CharDataController(TradingStrategy tradingStrategy) {
-        this.tradingStrategy = tradingStrategy;
+    public CharDataController(ChartDataProvider chartDataProvider) {
+        this.chartDataProvider = chartDataProvider;
     }
 
-    @CrossOrigin()
-    @RequestMapping("/chart_data")
-    public ChartDataDTO timeSeries() {
+    @RequestMapping("/candlestick")
+    public ChartDataDTO candlestick() {
+        return chartDataProvider.getCandlestickData();
+    }
 
-        return tradingStrategy.getChartData();
-
-//        List<int[]> data = new ArrayList<>();
-//        data.add(new int[]{0,0});
-//        data.add(new int[]{1,10});
-//        data.add(new int[]{2,23});
-//        return new ChartDataDTO("Testovaci TS", chartData);
+    @RequestMapping("/line_chart")
+    public ChartDataDTO lineChart() {
+        return chartDataProvider.getLineChartData();
     }
 }
