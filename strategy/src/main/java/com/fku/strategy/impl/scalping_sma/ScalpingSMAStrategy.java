@@ -4,7 +4,6 @@ import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.service.impl.Granularity;
 import com.fku.strategy.TradingStrategy;
-import com.fku.strategy.domain.ChartDataDTO;
 import com.fku.strategy.impl.ATradingStrategy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.InitializingBean;
@@ -15,8 +14,6 @@ import org.ta4j.core.trading.rules.OverIndicatorRule;
 import org.ta4j.core.trading.rules.UnderIndicatorRule;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Log4j2

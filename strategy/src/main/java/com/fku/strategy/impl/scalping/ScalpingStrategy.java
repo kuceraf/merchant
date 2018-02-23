@@ -7,7 +7,6 @@ import com.fku.exchange.error.MerchantExchangeNonFatalException;
 import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.strategy.TradingStrategy;
-import com.fku.strategy.domain.ChartDataDTO;
 import com.fku.strategy.error.MerchantStrategyException;
 import com.fku.strategy.impl.ATradingStrategy;
 import lombok.Setter;
@@ -17,7 +16,6 @@ import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.ta4j.core.Strategy;
 import org.ta4j.core.TimeSeries;
 
 import java.math.BigDecimal;

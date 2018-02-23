@@ -1,7 +1,5 @@
 package com.fku.strategy;
 
-import com.fku.strategy.domain.ChartDataDTO;
-import org.ta4j.core.Strategy;
 import org.ta4j.core.TimeSeries;
 
 public interface TradingStrategy {
