@@ -1,7 +1,6 @@
 package com.fku.merchant.app.chart;
 
 import com.fku.strategy.TradingStrategy;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.Bar;
 
@@ -9,14 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class LineChartDataProvider extends ChartDataProvider<List<double[]>> {
+public class LineChartDataProvider extends ChartDataProvider<List<LineChartDataProvider.DateAndDouble>> {
 
     public LineChartDataProvider(TradingStrategy tradingStrategy) {
         super(tradingStrategy);
     }
 
     @Override
-    List<double[]> initData() {
+    List<DateAndDouble> initData() {
         return new ArrayList<>();
     }
 
@@ -26,8 +25,26 @@ public class LineChartDataProvider extends ChartDataProvider<List<double[]>> {
     }
 
     @Override
-    void addChartDataSpec(Bar bar, List<double[]> data, int i) {
-        double[] dataPair = {i ,bar.getClosePrice().intValue()};
-        data.add(dataPair);
+    void addChartDataSpec(Bar bar, List<DateAndDouble> data, int i) {
+        DateAndDouble dateAndDouble = new DateAndDouble(bar.getEndTime().toInstant().toEpochMilli(), bar.getClosePrice().doubleValue());
+        data.add(dateAndDouble);
+    }
+
+    class DateAndDouble {
+        private long dateTime;
+        private Double closePrice;
+
+        DateAndDouble(long dateTime, Double closePrice) {
+            this.dateTime = dateTime;
+            this.closePrice = closePrice;
+        }
+
+        public long getDateTime() {
+            return dateTime;
+        }
+
+        public Double getClosePrice() {
+            return closePrice;
+        }
     }
 }

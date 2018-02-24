@@ -6,7 +6,7 @@
     <script type="text/javascript">
 
         // Load the Visualization API and the corechart package.
-        google.charts.load('current', {'packages':['corechart']});
+        google.charts.load('current', {'packages':['line']});
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
@@ -15,33 +15,46 @@
         // instantiates the pie chart, passes in the data and
         // draws it.
         function drawChart() {
-            var jsonResp = $.ajax({
+            let jsonResp = $.ajax({
                 url: "http://localhost:8080/line_chart",
                 dataType: "json",
                 async: false
             }).responseJSON;
 
             // Create the data table.
-            var data = new google.visualization.DataTable();
-            data.addColumn('number', 'X');
-            data.addColumn('number', 'Y');
+            let data = new google.visualization.DataTable();
+            data.addColumn('datetime', 'time');
+            data.addColumn('number', 'Close Price');
 
-            data.addRows(jsonResp.data);
+            console.debug('jsonResp.data', jsonResp.data);
+            const chartData = jsonResp.data.map(objectVale => [new Date(objectVale.dateTime), objectVale.closePrice]);
+            console.debug('chartData', chartData);
+
+            data.addRows(chartData);
+
+            // create formatter and reformat data
+            let formatter_long = new google.visualization.DateFormat({pattern: "dd-MM-yy HH:mm:ss", timeZone: 1});
+            formatter_long.format(data, 0);
 
             // Set chart options
-            var options = {
-                'title':'Time Series',
+            let options = {
+                'title':jsonResp.name,
                 hAxis: {
-                    title: 'Time'
+                    title: 'Time',
+                    format: 'time'
                 },
                 vAxis: {
-                    title: 'Close Price'
+                    title: 'Close Price',
+                    format: 'currency'
                 },
-                backgroundColor: '#f1f8e9'};
+                legend: { position: 'bottom' },
+                width: 900,
+                height: 400
+            };
 
             // Instantiate and draw our chart, passing in some options.
-            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
+            let chart = new google.charts.Line(document.getElementById('chart_div'));
+            chart.draw(data, google.charts.Line.convertOptions(options));
         }
     </script>
 </head>
