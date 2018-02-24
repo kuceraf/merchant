@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 
 @Log4j2
 public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStrategy, InitializingBean {
-    private static final Granularity GRANULARITY = Granularity.FIVE_MINUTES;
+    private static final Granularity GRANULARITY = Granularity.ONE_MINUTE;
 
     /** Close price of the last tick */
     private static Decimal LAST_BAR_CLOSE_PRICE;
@@ -35,8 +35,8 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStra
         log.info("Strategy [{}] initialization", this.getClass());
         // init data
         historicalSeries = exchangeService.getHistoricalTimeSeries(GRANULARITY);
-        historicalSeries.setMaximumBarCount(400); // It ensures that your memory consumption won't increase infinitely (the series will turn it into a moving time series.)
-        log.info("Historical time series from exchange (size:{}, start:{}, end:{})",
+        historicalSeries.setMaximumBarCount(historicalSeries.getBarCount()); // It ensures that your memory consumption won't increase infinitely (the series will turn it into a moving time series.)
+        log.info("Historical time series from exchange (size: {}, start: {}, end: {})",
                 historicalSeries.getBarCount(),
                 historicalSeries.getFirstBar().getBeginTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
                 historicalSeries.getLastBar().getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
@@ -46,7 +46,7 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStra
         ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(historicalSeries);
         SMAIndicator sma = new SMAIndicator(closePriceIndicator, 4);
 
-        // Buy when SMA goes over close price
+        // Buy when SMA (of last x close price) goes over close price
         // Sell when close price goes over SMA
         strategy = new BaseStrategy(
                 new OverIndicatorRule(sma, closePriceIndicator),
@@ -64,9 +64,17 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStra
 
     @Override
     protected void executeStrategySpecific() throws Exception {
-        Bar newBar = exchangeService.getBar(GRANULARITY);
-        log.info("Adding Bar ({})", newBar);
+        Bar newBar = exchangeService.getHistoricalTimeSeries(GRANULARITY).getLastBar();
 
+        if (newBar.getEndTime().toInstant().compareTo(historicalSeries.getLastBar().getEndTime().toInstant()) <= 0) {
+            log.warn("Exchange returned bar witch has endTime [{}] before or equal to last endTime in series [{}] - skipping",
+                    newBar.getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                    historicalSeries.getLastBar().getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            );
+            return;
+        }
+
+        log.info("Adding Bar ({})", newBar);
         historicalSeries.addBar(newBar);
 
         int endIndex = historicalSeries.getEndIndex();

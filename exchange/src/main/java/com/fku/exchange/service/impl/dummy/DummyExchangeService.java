@@ -41,15 +41,20 @@ public class DummyExchangeService implements ExchangeService {
     }
 
     @Override
-    public TimeSeries getHistoricalTimeSeries(Granularity granularity) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+    public Bar getLastBar(Granularity granularity) throws MerchantExchangeException, MerchantExchangeNonFatalException {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
 
     @Override
-    public Bar getBar(Granularity granularity) throws MerchantExchangeException, MerchantExchangeNonFatalException {
-//     pouzit   DummyBarFactory.generateRandomBar(LAST_BAR_CLOSE_PRICE, GRANULARITY.getSeconds());
+    public TimeSeries getHistoricalTimeSeries(Granularity granularity) throws MerchantExchangeException, MerchantExchangeNonFatalException {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
+
+//    @Override
+//    public Bar getBar(Granularity granularity) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+////     pouzit   DummyBarFactory.generateRandomBar(LAST_BAR_CLOSE_PRICE, GRANULARITY.getSeconds());
+//        throw new UnsupportedOperationException("Not implemented!"); // TODO
+//    }
 
     @Override
     public ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice) throws MerchantExchangeException, MerchantExchangeNonFatalException {

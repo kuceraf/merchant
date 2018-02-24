@@ -34,24 +34,24 @@ public class GDAXMapper {
         return new BaseTimeSeries("gdax-historic-rates", bars);
     }
 
-    /**
-     *
-     * @param ticker - Snapshot information about the last trade (tick)
-     * @param periodInSecond - time period for mapping
-     * @return
-     */
-    public static Bar remap(Ticker ticker, long periodInSecond) {
-        if (ticker == null) return null;
-        ZonedDateTime startDateTime = ZonedDateTime.ofInstant(ticker.getTimestamp().toInstant(), ZoneId.systemDefault());
-
-        return new BaseBar(
-                Duration.ofSeconds(periodInSecond),
-                startDateTime.plusSeconds(periodInSecond),
-                ticker.getOpen()!=null ? Decimal.valueOf(ticker.getOpen()): Decimal.valueOf(0),
-                ticker.getHigh() !=null ? Decimal.valueOf(ticker.getHigh()): Decimal.valueOf(0),
-                ticker.getLow() != null ? Decimal.valueOf(ticker.getLow()): Decimal.valueOf(0),
-                Decimal.valueOf(Objects.requireNonNull(ticker.getLast())), // mustn't be null - is used for strategy analysis. source GDAX ticker price
-                ticker.getVolume() !=null ? Decimal.valueOf(ticker.getVolume()): Decimal.valueOf(0)
-                );
-    }
+//    /**
+//     *
+//     * @param ticker - Snapshot information about the last trade (tick)
+//     * @param periodInSecond - time period for mapping
+//     * @return
+//     */
+//    public static Bar remap(Ticker ticker, long periodInSecond) {
+//        if (ticker == null) return null;
+//        ZonedDateTime startDateTime = ZonedDateTime.ofInstant(ticker.getTimestamp().toInstant(), ZoneId.systemDefault());
+//
+//        return new BaseBar(
+//                Duration.ofSeconds(periodInSecond),
+//                startDateTime.plusSeconds(periodInSecond),
+//                ticker.getOpen()!=null ? Decimal.valueOf(ticker.getOpen()): Decimal.valueOf(0),
+//                ticker.getHigh() !=null ? Decimal.valueOf(ticker.getHigh()): Decimal.valueOf(0),
+//                ticker.getLow() != null ? Decimal.valueOf(ticker.getLow()): Decimal.valueOf(0),
+//                Decimal.valueOf(Objects.requireNonNull(ticker.getLast())), // mustn't be null - is used for strategy analysis. source GDAX ticker price
+//                ticker.getVolume() !=null ? Decimal.valueOf(ticker.getVolume()): Decimal.valueOf(0)
+//                );
+//    }
 }

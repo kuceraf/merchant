@@ -56,15 +56,15 @@ public class GDAXExchangeServiceIT {
         }
     }
 
-    @Test
-    public void getBar() throws Exception {
-        Bar bar = gdaxExchangeServiceTested.getBar(Granularity.FIVE_MINUTES);
-        assertThat(bar).isNotNull();
-        assertThat(bar.getClosePrice()).isNotNull();
-        Duration betweenBeginAndEnd = Duration.between(
-                bar.getBeginTime(), bar.getEndTime()
-        );
-        assertThat(betweenBeginAndEnd.getSeconds())
-                .isEqualTo(Granularity.FIVE_MINUTES.getSeconds());
-    }
+//    @Test
+//    public void getBar() throws Exception {
+//        Bar bar = gdaxExchangeServiceTested.getBar(Granularity.FIVE_MINUTES);
+//        assertThat(bar).isNotNull();
+//        assertThat(bar.getClosePrice()).isNotNull();
+//        Duration betweenBeginAndEnd = Duration.between(
+//                bar.getBeginTime(), bar.getEndTime()
+//        );
+//        assertThat(betweenBeginAndEnd.getSeconds())
+//                .isEqualTo(Granularity.FIVE_MINUTES.getSeconds());
+//    }
 }

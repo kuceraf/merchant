@@ -67,15 +67,21 @@ public class GDAXExchangeService extends BaseExchangeService implements Exchange
     }
 
     @Override
-    public Bar getBar(Granularity granularity) throws MerchantExchangeException, MerchantExchangeNonFatalException {
-        Ticker ticker = null;
-        try {
-            ticker = xchangeAdapter.getMarketDataService().getTicker(currencyPair);
-        } catch (IOException e) {
-            ExchangeExceptionHandler.handleException(e);
-        }
-        return GDAXMapper.remap(ticker, granularity.getSeconds());
+    public Bar getLastBar(@Nonnull Granularity granularity)
+            throws MerchantExchangeException, MerchantExchangeNonFatalException {
+        return getHistoricalTimeSeries(granularity).getLastBar();
     }
+
+//    @Override
+//    public Bar getBar(Granularity granularity) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+//        Ticker ticker = null;
+//        try {
+//            ticker = xchangeAdapter.getMarketDataService().getTicker(currencyPair);
+//        } catch (IOException e) {
+//            ExchangeExceptionHandler.handleException(e);
+//        }
+//        return GDAXMapper.remap(ticker, granularity.getSeconds());
+//    }
 
     @Override
     protected OrderBook getOrderBook()

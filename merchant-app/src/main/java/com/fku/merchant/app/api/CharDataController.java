@@ -31,6 +31,6 @@ public class CharDataController {
 
     @RequestMapping("/line_chart")
     public ChartDTO lineChart() {
-        return chartDataProviderMap.get(ChartType.LINE).getChartData(20);
+        return chartDataProviderMap.get(ChartType.LINE).getChartData(50);
     }
 }

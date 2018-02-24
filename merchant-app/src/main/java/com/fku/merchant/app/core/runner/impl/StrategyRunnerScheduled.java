@@ -31,18 +31,19 @@ public class StrategyRunnerScheduled implements StrategyRunner {
     // The delay in milliseconds. the period will be measured from the completion time of each preceding invocation
     // If you do not provide a pool-size attribute, the default thread pool will only have a single thread.
     // Scheduler starts automatically, when bean is created by spring
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(fixedDelay = 60000)
     public void scheduledExecution() {
         try {
+            Long strategyExecutionNo = tradingStrategy.getExecutionNo();
             log.info("----------------------------");
-            log.info("BEGIN Strategy execution (number [{}])", tradingStrategy.getExecutionNo());
+            log.info("BEGIN Strategy execution (number [{}])", strategyExecutionNo);
             long startTime = System.currentTimeMillis();
 
             tradingStrategy.execute();
 
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
-            log.info("END Strategy execution (number [{}], duration [{}] ms)", tradingStrategy.getExecutionNo(), elapsedTime);
+            log.info("END Strategy execution (number [{}], duration [{}] ms)", strategyExecutionNo, elapsedTime);
         }
         // Order of catch block is important (always catch specific exeptions first!)
         catch (MerchantExchangeNonFatalException e) {

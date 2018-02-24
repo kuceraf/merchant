@@ -24,7 +24,7 @@ public abstract class ATradingStrategy {
     }
 
     public void execute() throws Exception {
-        log.info("Execution of [{}]", this.getClass().getSimpleName());
+        log.debug("Execution of [{}]", this.getClass().getSimpleName());
         executionNo++;
         checkProfitability();
         executeStrategySpecific();

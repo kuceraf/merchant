@@ -34,6 +34,7 @@ public interface ExchangeService {
      * @throws MerchantExchangeException
      * @throws MerchantExchangeNonFatalException
      */
+    @Deprecated
     TimeSeries getHistoricalTimeSeries(LocalDateTime startDateTime, LocalDateTime endDateTime, Granularity granularity)
             throws MerchantExchangeException, MerchantExchangeNonFatalException;
 
@@ -47,6 +48,10 @@ public interface ExchangeService {
     TimeSeries getHistoricalTimeSeries(Granularity granularity)
             throws MerchantExchangeException, MerchantExchangeNonFatalException;
 
-    Bar getBar(Granularity granularity)
-            throws MerchantExchangeException, MerchantExchangeNonFatalException;;
+    Bar getLastBar(Granularity granularity)
+            throws MerchantExchangeException, MerchantExchangeNonFatalException;
+
+//    @Deprecated
+//    Bar getBar(Granularity granularity)
+//            throws MerchantExchangeException, MerchantExchangeNonFatalException;;
 }
