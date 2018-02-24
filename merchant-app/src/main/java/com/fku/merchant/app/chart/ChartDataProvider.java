@@ -16,7 +16,7 @@ public abstract class ChartDataProvider<T> {
 
     public abstract ChartType getType();
     abstract T initData();
-    abstract void addChartDataSpec(Bar bar, T data, int i);
+    abstract void addChartDataSpec(TimeSeries timeSeries, T data, int i);
 
     public ChartDTO<T> getChartData(int size) {
         T data = initData();
@@ -27,7 +27,7 @@ public abstract class ChartDataProvider<T> {
         int beginIndex = timeSeries.getBarCount() - size;
         if(beginIndex < 0) return null;
         for (int i = beginIndex; i < timeSeries.getBarCount(); i++) {
-            addChartDataSpec(timeSeries.getBar(i), data, i);
+            addChartDataSpec(timeSeries, data, i);
         }
         chartDTO.setData(data);
         return chartDTO;

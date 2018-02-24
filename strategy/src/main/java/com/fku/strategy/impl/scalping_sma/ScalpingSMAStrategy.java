@@ -44,7 +44,7 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStra
 
         // init strategy
         ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(historicalSeries);
-        SMAIndicator sma = new SMAIndicator(closePriceIndicator, 4);
+        SMAIndicator sma = new SMAIndicator(closePriceIndicator, 20);
 
         // Buy when SMA (of last x close price) goes over close price
         // Sell when close price goes over SMA

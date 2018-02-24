@@ -25,9 +25,14 @@
             let data = new google.visualization.DataTable();
             data.addColumn('datetime', 'time');
             data.addColumn('number', 'Close Price');
+            data.addColumn('number', 'SMA Close Price');
 
             console.debug('jsonResp.data', jsonResp.data);
-            const chartData = jsonResp.data.map(objectVale => [new Date(objectVale.dateTime), objectVale.closePrice]);
+            const chartData = jsonResp.data.map(objectVale => [
+                new Date(objectVale.dateTime),
+                objectVale.closePrice,
+                objectVale.smaClosePrice
+            ]);
             console.debug('chartData', chartData);
 
             data.addRows(chartData);
