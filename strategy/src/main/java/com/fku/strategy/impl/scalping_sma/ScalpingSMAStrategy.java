@@ -4,6 +4,7 @@ import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.service.impl.Granularity;
 import com.fku.strategy.TradingStrategy;
+import com.fku.strategy.error.StrategyNonFatalException;
 import com.fku.strategy.impl.ATradingStrategy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.InitializingBean;
@@ -71,7 +72,7 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStra
                     newBar.getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
                     historicalSeries.getLastBar().getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
             );
-            return;
+            throw new StrategyNonFatalException("Cannot add new bar to time series");
         }
 
         log.info("Adding Bar ({})", newBar);

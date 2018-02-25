@@ -6,7 +6,6 @@ import com.fku.exchange.error.ExchangeExceptionHandler;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.error.MerchantExchangeException;
-import com.fku.exchange.error.MerchantExchangeNonFatalException;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
@@ -31,7 +30,7 @@ public abstract class BaseExchangeService {
         this.currencyPair = currencyPair;
     }
 
-    protected abstract OrderBook getOrderBook() throws MerchantExchangeException, MerchantExchangeNonFatalException;
+    protected abstract OrderBook getOrderBook() throws MerchantExchangeException;
 
     public String getExchangeName() {
         return xchangeAdapter.getExchangeSpecification().getExchangeName();
@@ -44,7 +43,7 @@ public abstract class BaseExchangeService {
     }
 
     public ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice)
-            throws MerchantExchangeException, MerchantExchangeNonFatalException {
+            throws MerchantExchangeException {
         ExchangeOrder exchangeOrder = null;
         LimitOrder newBuyLimitOrder = new LimitOrder.Builder(orderType, this.currencyPair)
                 .originalAmount(baseCurrencyAmount)
@@ -69,7 +68,7 @@ public abstract class BaseExchangeService {
     }
 
     public ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount)
-            throws MerchantExchangeException, MerchantExchangeNonFatalException {
+            throws MerchantExchangeException {
         BigDecimal baseCurrencyAmount = null;
         try {
             BigDecimal lastInstrumentMarketPrice = xchangeAdapter.getMarketDataService().getTicker(this.currencyPair).getLast();
@@ -81,7 +80,7 @@ public abstract class BaseExchangeService {
     }
 
     public OpenOrders getOpenOrders()
-            throws MerchantExchangeException, MerchantExchangeNonFatalException {
+            throws MerchantExchangeException {
         OpenOrders openOrders = null;
         try {
             OpenOrdersParams openOrdersParams = xchangeAdapter.getTradeService().createOpenOrdersParams();
@@ -93,7 +92,7 @@ public abstract class BaseExchangeService {
     }
 
     public InstrumentPrice getCurrentPrices()
-            throws MerchantExchangeException, MerchantExchangeNonFatalException {
+            throws MerchantExchangeException {
         OrderBook orderBook = getOrderBook();
         return new InstrumentPrice(ExchangeHelper.getCurrentBidPrice(orderBook), ExchangeHelper.getCurrentAskPrice(orderBook));
     }

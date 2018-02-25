@@ -3,7 +3,7 @@ package com.fku.exchange.service;
 import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.exchange.error.MerchantExchangeException;
-import com.fku.exchange.error.MerchantExchangeNonFatalException;
+import com.fku.exchange.error.ExchangeNonFatalException;
 import com.fku.exchange.service.impl.Granularity;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
@@ -18,11 +18,11 @@ public interface ExchangeService {
     String getExchangeName();
     CurrencyPair getCurrencyPair();
 
-    InstrumentPrice getCurrentPrices() throws MerchantExchangeException, MerchantExchangeNonFatalException;
-    ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount) throws MerchantExchangeException, MerchantExchangeNonFatalException;
-    OpenOrders getOpenOrders() throws MerchantExchangeException, MerchantExchangeNonFatalException;
+    InstrumentPrice getCurrentPrices() throws MerchantExchangeException, ExchangeNonFatalException;
+    ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount) throws MerchantExchangeException, ExchangeNonFatalException;
+    OpenOrders getOpenOrders() throws MerchantExchangeException, ExchangeNonFatalException;
     ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice)
-            throws MerchantExchangeException, MerchantExchangeNonFatalException;
+            throws MerchantExchangeException, ExchangeNonFatalException;
 
     /**
      * Get historical time series from exchange
@@ -32,24 +32,24 @@ public interface ExchangeService {
      * @param granularity
      * @return time series created from historical date returned by exchange
      * @throws MerchantExchangeException
-     * @throws MerchantExchangeNonFatalException
+     * @throws ExchangeNonFatalException
      */
     @Deprecated
     TimeSeries getHistoricalTimeSeries(LocalDateTime startDateTime, LocalDateTime endDateTime, Granularity granularity)
-            throws MerchantExchangeException, MerchantExchangeNonFatalException;
+            throws MerchantExchangeException;
 
     /**
      * Get maximal time series from now
      * @param granularity
      * @return
      * @throws MerchantExchangeException
-     * @throws MerchantExchangeNonFatalException
+     * @throws ExchangeNonFatalException
      */
     TimeSeries getHistoricalTimeSeries(Granularity granularity)
-            throws MerchantExchangeException, MerchantExchangeNonFatalException;
+            throws MerchantExchangeException;
 
     Bar getLastBar(Granularity granularity)
-            throws MerchantExchangeException, MerchantExchangeNonFatalException;
+            throws MerchantExchangeException;
 
 //    @Deprecated
 //    Bar getBar(Granularity granularity)

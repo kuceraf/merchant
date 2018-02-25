@@ -3,7 +3,7 @@ package com.fku.strategy.impl.scalping;
 import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.exchange.error.MerchantExchangeException;
-import com.fku.exchange.error.MerchantExchangeNonFatalException;
+import com.fku.exchange.error.ExchangeNonFatalException;
 import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.strategy.TradingStrategy;
@@ -167,7 +167,7 @@ public class ScalpingStrategy extends ATradingStrategy implements TradingStrateg
         }
     }
 
-    private void placeBuyOrderAtCurrentPrice() throws MerchantExchangeException, MerchantExchangeNonFatalException {
+    private void placeBuyOrderAtCurrentPrice() throws MerchantExchangeException, ExchangeNonFatalException {
         InstrumentPrice currentPrices = exchangeService.getCurrentPrices();
         BigDecimal currentBidPrice = currentPrices.getBidPrice();
         ExchangeOrder newExchangeOrder = exchangeService.placeBuyOrder(currentBidPrice, counterCurrencyBuyOrderAmount);

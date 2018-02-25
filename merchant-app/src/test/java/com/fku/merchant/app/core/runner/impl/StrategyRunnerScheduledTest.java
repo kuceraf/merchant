@@ -1,6 +1,6 @@
 package com.fku.merchant.app.core.runner.impl;
 
-import com.fku.exchange.error.MerchantExchangeNonFatalException;
+import com.fku.exchange.error.ExchangeNonFatalException;
 import com.fku.merchant.app.core.ShutdownManager;
 import com.fku.strategy.error.MerchantStrategyException;
 import com.fku.strategy.TradingStrategy;
@@ -42,7 +42,7 @@ public class StrategyRunnerScheduledTest {
     @Test
     public void scheduledExecution_strategyNonFatalException() throws Exception {
         // Given
-        doThrow(new MerchantExchangeNonFatalException("test")).when(tradingStrategyMocked).execute();
+        doThrow(new ExchangeNonFatalException("test")).when(tradingStrategyMocked).execute();
         // When (non-fatal exception is thrown)
         strategyRunnerScheduledTested.scheduledExecution();
         //Then (application must not be shutdown)

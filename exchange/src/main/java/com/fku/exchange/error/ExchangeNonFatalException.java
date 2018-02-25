@@ -1,12 +1,12 @@
 package com.fku.exchange.error;
 
-public final class MerchantExchangeNonFatalException extends Exception {
+public class ExchangeNonFatalException extends MerchantExchangeException {
     /**
      * Constructor builds exception with error message.
      *
      * @param msg the error message.
      */
-    public MerchantExchangeNonFatalException(String msg) {
+    public ExchangeNonFatalException(String msg) {
         super(msg);
     }
 
@@ -15,7 +15,7 @@ public final class MerchantExchangeNonFatalException extends Exception {
      *
      * @param e the original exception.
      */
-    public MerchantExchangeNonFatalException(Throwable e) {
+    public ExchangeNonFatalException(Throwable e) {
         super(e);
     }
 
@@ -25,7 +25,7 @@ public final class MerchantExchangeNonFatalException extends Exception {
      * @param msg the error message.
      * @param e   the original exception.
      */
-    public MerchantExchangeNonFatalException(String msg, Throwable e) {
+    public ExchangeNonFatalException(String msg, Throwable e) {
         super(msg, e);
     }
 }

@@ -3,7 +3,7 @@ package com.fku.strategy.error;
 /**
  * When this exception is thrown is must cause the application shutdown
  */
-public final class MerchantStrategyException extends Exception {
+public class MerchantStrategyException extends Exception {
 
     /**
      * Constructor builds exception with error message.

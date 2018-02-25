@@ -1,6 +1,6 @@
 package com.fku.exchange.error;
 
-public final class MerchantExchangeException extends Exception {
+public class MerchantExchangeException extends Exception {
     /**
      * Constructor builds exception with error message.
      *

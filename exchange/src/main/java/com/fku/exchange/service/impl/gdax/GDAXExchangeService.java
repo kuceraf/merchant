@@ -2,7 +2,7 @@ package com.fku.exchange.service.impl.gdax;
 
 import com.fku.exchange.error.ExchangeExceptionHandler;
 import com.fku.exchange.error.MerchantExchangeException;
-import com.fku.exchange.error.MerchantExchangeNonFatalException;
+import com.fku.exchange.error.ExchangeNonFatalException;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.service.impl.BaseExchangeService;
 import com.fku.exchange.service.impl.Granularity;
@@ -11,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.marketdata.OrderBook;
-import org.knowm.xchange.dto.marketdata.Ticker;
 import org.ta4j.core.Bar;
 import org.ta4j.core.TimeSeries;
 import si.mazi.rescu.ClientConfig;
@@ -36,7 +35,7 @@ public class GDAXExchangeService extends BaseExchangeService implements Exchange
     // If data points are readily available, your response may contain as many as 350 candles and some of those candles may precede your declared start value.
     // See: https://docs.gdax.com/?ruby#get-historic-rates
     public TimeSeries getHistoricalTimeSeries(@Nonnull  LocalDateTime startDateTime, @Nonnull LocalDateTime endDateTime, @Nonnull Granularity granularity)
-            throws MerchantExchangeException, MerchantExchangeNonFatalException {
+            throws MerchantExchangeException, ExchangeNonFatalException {
         GDAXHistoricRates[] gdaxHistoricRates = null;
         try {
             gdaxHistoricRates = gdaxInterface.getHistoricRates(
@@ -53,7 +52,7 @@ public class GDAXExchangeService extends BaseExchangeService implements Exchange
 
     @Override
     public TimeSeries getHistoricalTimeSeries(@Nonnull Granularity granularity)
-            throws MerchantExchangeException, MerchantExchangeNonFatalException {
+            throws MerchantExchangeException, ExchangeNonFatalException {
         GDAXHistoricRates[] gdaxHistoricRates = null;
         try {
             gdaxHistoricRates = gdaxInterface.getHistoricRates(
@@ -68,7 +67,7 @@ public class GDAXExchangeService extends BaseExchangeService implements Exchange
 
     @Override
     public Bar getLastBar(@Nonnull Granularity granularity)
-            throws MerchantExchangeException, MerchantExchangeNonFatalException {
+            throws MerchantExchangeException, ExchangeNonFatalException {
         return getHistoricalTimeSeries(granularity).getLastBar();
     }
 
@@ -85,7 +84,7 @@ public class GDAXExchangeService extends BaseExchangeService implements Exchange
 
     @Override
     protected OrderBook getOrderBook()
-            throws MerchantExchangeException, MerchantExchangeNonFatalException {
+            throws MerchantExchangeException, ExchangeNonFatalException {
         OrderBook orderBook = null;
         try {
             // !!! GDAX need extra arg for order book size

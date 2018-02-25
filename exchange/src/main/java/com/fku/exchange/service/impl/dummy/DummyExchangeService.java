@@ -3,7 +3,7 @@ package com.fku.exchange.service.impl.dummy;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.service.impl.ExchangeHelper;
 import com.fku.exchange.error.MerchantExchangeException;
-import com.fku.exchange.error.MerchantExchangeNonFatalException;
+import com.fku.exchange.error.ExchangeNonFatalException;
 import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.service.impl.Granularity;
@@ -31,22 +31,22 @@ public class DummyExchangeService implements ExchangeService {
     }
 
     @Override
-    public InstrumentPrice getCurrentPrices() throws MerchantExchangeException, MerchantExchangeNonFatalException {
+    public InstrumentPrice getCurrentPrices() throws MerchantExchangeException, ExchangeNonFatalException {
         return new InstrumentPrice(LIMIT_BID_PRICE, LIMIT_ASK_PRICE);
     }
 
     @Override
-    public TimeSeries getHistoricalTimeSeries(LocalDateTime startDateTime, LocalDateTime endDateTime, Granularity granularityInSec) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+    public TimeSeries getHistoricalTimeSeries(LocalDateTime startDateTime, LocalDateTime endDateTime, Granularity granularityInSec) throws MerchantExchangeException, ExchangeNonFatalException {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
 
     @Override
-    public Bar getLastBar(Granularity granularity) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+    public Bar getLastBar(Granularity granularity) throws MerchantExchangeException, ExchangeNonFatalException {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
 
     @Override
-    public TimeSeries getHistoricalTimeSeries(Granularity granularity) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+    public TimeSeries getHistoricalTimeSeries(Granularity granularity) throws MerchantExchangeException, ExchangeNonFatalException {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
 
@@ -57,7 +57,7 @@ public class DummyExchangeService implements ExchangeService {
 //    }
 
     @Override
-    public ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+    public ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice) throws MerchantExchangeException, ExchangeNonFatalException {
         return new ExchangeOrder(
                 UUID.randomUUID().toString(),
                 orderType,
@@ -66,7 +66,7 @@ public class DummyExchangeService implements ExchangeService {
     }
 
     @Override
-    public ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount) throws MerchantExchangeException, MerchantExchangeNonFatalException {
+    public ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount) throws MerchantExchangeException, ExchangeNonFatalException {
         BigDecimal baseCurrencyAmount = ExchangeHelper.calculateBaseCurrencyAmount(counterCurrencyAmount, INSTRUMENT_LAST_PRICE);
         return new ExchangeOrder(
                 UUID.randomUUID().toString(),
@@ -76,7 +76,7 @@ public class DummyExchangeService implements ExchangeService {
     }
 
     @Override
-    public OpenOrders getOpenOrders() throws MerchantExchangeException, MerchantExchangeNonFatalException {
+    public OpenOrders getOpenOrders() throws MerchantExchangeException, ExchangeNonFatalException {
         return DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder(EXISTING_OPEN_ORDER_ID);
     }
 }
