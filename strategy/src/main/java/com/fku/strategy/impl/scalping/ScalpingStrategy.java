@@ -9,6 +9,7 @@ import com.fku.exchange.service.ExchangeService;
 import com.fku.strategy.TradingStrategy;
 import com.fku.strategy.error.MerchantStrategyException;
 import com.fku.strategy.impl.ATradingStrategy;
+import com.fku.ta.TechnicalAnalysis;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.currency.CurrencyPair;
@@ -24,7 +25,7 @@ import java.util.List;
 import static com.fku.strategy.impl.StrategyHelper.calculateSellPriceWithRequiredProfit;
 import static com.fku.strategy.impl.StrategyHelper.isOrderFilled;
 
-@Log4j2
+@Log4j2 // TODO prenest logiku do ScalpingSMAStrategy a tuto trudu odstranit
 public class ScalpingStrategy extends ATradingStrategy implements TradingStrategy, InitializingBean {
     /**
      * Pro maket BTC/EUR je to 10EUR (counterCurrencyBuyOrderAmount = 10)
@@ -83,7 +84,8 @@ public class ScalpingStrategy extends ATradingStrategy implements TradingStrateg
     }
 
     @Override
-    public TimeSeries getTimeSeries() {
+    public TechnicalAnalysis getTechnicalAnalysis() {
+        // TODO
         return null;
     }
 

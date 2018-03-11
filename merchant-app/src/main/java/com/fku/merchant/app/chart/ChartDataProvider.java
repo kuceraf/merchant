@@ -20,7 +20,7 @@ public abstract class ChartDataProvider<T> {
 
     public ChartDTO<T> getChartData(int size) {
         T data = initData();
-        TimeSeries timeSeries = tradingStrategy.getTimeSeries();
+        TimeSeries timeSeries = tradingStrategy.getTechnicalAnalysis().getTimeSeries();
         ChartDTO<T> chartDTO = new ChartDTO<>();
         chartDTO.setName(getType().name());
 
