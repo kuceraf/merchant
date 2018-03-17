@@ -36,8 +36,8 @@ public class GDAXActiveExchangeService extends BaseExchangeService implements Ac
                 .limitPrice(limitPrice)
                 .build();
 
-        log.info("Sending {} order to exchange (price:{}, amount:{})--->", orderType.toString(), limitPrice, baseCurrencyAmount);
-
+//        log.info("Sending {} order to exchange (price:{}, amount:{})--->", orderType.toString(), limitPrice, baseCurrencyAmount);
+        log.info("REAL - Placing order [orderType:{}, baseCurrencyAmount:{}, limitPrice:{}]", orderType, baseCurrencyAmount, limitPrice);
         try {
             String orderId = xchangeAdapter.getTradeService().placeLimitOrder(newBuyLimitOrder);
             exchangeOrder = new ExchangeOrder(
