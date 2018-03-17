@@ -1,8 +1,11 @@
 package com.fku.merchant.config.facotry;
 
+import com.fku.exchange.service.ActiveExchangeService;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.SupportedExchangeType;
+import com.fku.exchange.service.PassiveExchangeService;
 import com.fku.exchange.service.impl.dummy.DummyExchangeService;
+import com.fku.exchange.service.impl.dummy.MockedActiveExchangeService;
 import com.fku.exchange.service.impl.gdax.GDAXActiveExchangeService;
 import com.fku.exchange.service.impl.gdax.GDAXExchangeService;
 import com.fku.exchange.service.impl.gdax.GDAXPassiveExchangeService;
@@ -16,6 +19,8 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
 public class ExchangeServiceFactory extends AbstractFactoryBean<ExchangeService> {
     @Value("${exchange.currencyPair}")
     private String currencyPairProperty;
+    @Value("${exchange.mockActiveOperation:false}")
+    private boolean mockActiveOperation;
 
     private SupportedExchangeType exchangeType;
     private Exchange xchangeAdapter;
@@ -34,8 +39,13 @@ public class ExchangeServiceFactory extends AbstractFactoryBean<ExchangeService>
     protected ExchangeService createInstance() throws Exception {
         switch (exchangeType) {
             case GDAX:
-                GDAXPassiveExchangeService passiveExchangeService = new GDAXPassiveExchangeService(xchangeAdapter, new CurrencyPair(this.currencyPairProperty));
-                GDAXActiveExchangeService activeExchangeService = new GDAXActiveExchangeService(xchangeAdapter, new CurrencyPair(this.currencyPairProperty), passiveExchangeService);
+                final PassiveExchangeService passiveExchangeService = new GDAXPassiveExchangeService(xchangeAdapter, new CurrencyPair(this.currencyPairProperty));
+                final ActiveExchangeService activeExchangeService;
+                if (mockActiveOperation) {
+                    activeExchangeService = new MockedActiveExchangeService();
+                } else {
+                    activeExchangeService = new GDAXActiveExchangeService(xchangeAdapter, new CurrencyPair(this.currencyPairProperty), passiveExchangeService);
+                }
                 return new GDAXExchangeService(passiveExchangeService, activeExchangeService);
             case DUMMY:
                 return new DummyExchangeService();
