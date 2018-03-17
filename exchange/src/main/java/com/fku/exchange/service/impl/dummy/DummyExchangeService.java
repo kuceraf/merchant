@@ -36,11 +36,6 @@ public class DummyExchangeService implements ExchangeService {
     }
 
     @Override
-    public TimeSeries getHistoricalTimeSeries(LocalDateTime startDateTime, LocalDateTime endDateTime, Granularity granularityInSec) throws MerchantExchangeException {
-        throw new UnsupportedOperationException("Not implemented!"); // TODO
-    }
-
-    @Override
     public Bar getLastBar(Granularity granularity) throws MerchantExchangeException {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }

@@ -17,10 +17,10 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GDAXExchangeServiceIT {
+public class GDAXPassiveExchangeServiceIT {
     private static Exchange xchangeReal;
     private static final CurrencyPair CURRENCY_PAIR = CurrencyPair.BTC_EUR;
-    private GDAXExchangeService gdaxExchangeServiceTested;
+    private GDAXPassiveExchangeService gdaxExchangeServiceTested;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -30,15 +30,7 @@ public class GDAXExchangeServiceIT {
 
     @Before
     public void setUp() throws Exception {
-        gdaxExchangeServiceTested = new GDAXExchangeService(xchangeReal, CURRENCY_PAIR);
-    }
-
-    @Test
-    public void getHistoricalDataSeries() throws Exception {
-        TimeSeries historicalTimeSeries = gdaxExchangeServiceTested.getHistoricalTimeSeries(LocalDateTime.parse("2017-07-01T10:00:00"),
-                                                                                            LocalDateTime.parse("2017-07-01T11:00:00"),
-                                                                                            Granularity.ONE_MINUTE);
-        assertThat(historicalTimeSeries.getBarData()).hasSize(59);
+        gdaxExchangeServiceTested = new GDAXPassiveExchangeService(xchangeReal, CURRENCY_PAIR);
     }
 
     @Test
@@ -55,16 +47,4 @@ public class GDAXExchangeServiceIT {
                     .isEqualTo(Granularity.FIVE_MINUTES.getSeconds());
         }
     }
-
-//    @Test
-//    public void getBar() throws Exception {
-//        Bar bar = gdaxExchangeServiceTested.getBar(Granularity.FIVE_MINUTES);
-//        assertThat(bar).isNotNull();
-//        assertThat(bar.getClosePrice()).isNotNull();
-//        Duration betweenBeginAndEnd = Duration.between(
-//                bar.getBeginTime(), bar.getEndTime()
-//        );
-//        assertThat(betweenBeginAndEnd.getSeconds())
-//                .isEqualTo(Granularity.FIVE_MINUTES.getSeconds());
-//    }
 }

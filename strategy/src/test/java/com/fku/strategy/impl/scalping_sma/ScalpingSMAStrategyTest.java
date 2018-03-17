@@ -26,7 +26,7 @@ public class ScalpingSMAStrategyTest {
         ExchangeSpecification exSpec = new GDAXExchange().getDefaultExchangeSpecification();
         Exchange xchangeReal = ExchangeFactory.INSTANCE.createExchange(exSpec);
         // TODO replace it by MOCK !!!
-        gdaxExchangeServiceReal = new GDAXExchangeService(xchangeReal, CurrencyPair.BTC_EUR);
+//        gdaxExchangeServiceReal = new GDAXExchangeService(xchangeReal, CurrencyPair.BTC_EUR);
     }
 
     @Before
