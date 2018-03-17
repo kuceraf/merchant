@@ -18,11 +18,11 @@ public interface ExchangeService {
     String getExchangeName();
     CurrencyPair getCurrencyPair();
 
-    InstrumentPrice getCurrentPrices() throws MerchantExchangeException, ExchangeNonFatalException;
-    ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount) throws MerchantExchangeException, ExchangeNonFatalException;
-    OpenOrders getOpenOrders() throws MerchantExchangeException, ExchangeNonFatalException;
-    ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice)
-            throws MerchantExchangeException, ExchangeNonFatalException;
+    InstrumentPrice getCurrentPrices() throws MerchantExchangeException;
+    ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount) throws MerchantExchangeException;
+    OpenOrders getOpenOrders() throws MerchantExchangeException;
+    ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice) throws MerchantExchangeException;
+    ExchangeOrder placeBuyOrderAtCurrentPrice(BigDecimal counterCurrencyBuyOrderAmount) throws MerchantExchangeException;
 
     /**
      * Get historical time series from exchange

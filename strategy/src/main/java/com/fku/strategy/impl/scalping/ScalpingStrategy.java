@@ -67,7 +67,8 @@ public class ScalpingStrategy extends ATradingStrategy implements TradingStrateg
 
         if (lastOrder == null) {
             log.info("First time strategy execution - placing new BUY order");
-            placeBuyOrderAtCurrentPrice();
+            ExchangeOrder newExchangeOrder = exchangeService.placeBuyOrderAtCurrentPrice(counterCurrencyBuyOrderAmount);
+            exchangeOrderRepository.save(newExchangeOrder);
         } else {
             switch (lastOrder.getType()) {
                 case BID: //= buying order
@@ -119,7 +120,8 @@ public class ScalpingStrategy extends ATradingStrategy implements TradingStrateg
             log.info("^^^ Yay!!! Last SELL order (Id:{}) filled at {}",
                     lastAskOrder.getId(),
                     lastAskOrder.getPrice());
-            placeBuyOrderAtCurrentPrice();
+            ExchangeOrder newExchangeOrder = exchangeService.placeBuyOrderAtCurrentPrice(counterCurrencyBuyOrderAmount);
+            exchangeOrderRepository.save(newExchangeOrder);
         } else {
         // SELL order not filled yet - log why
             BigDecimal currentAskPrice = exchangeService.getCurrentPrices().getAskPrice();
@@ -167,12 +169,5 @@ public class ScalpingStrategy extends ATradingStrategy implements TradingStrateg
                     lastBuyOrder.getId(),
                     lastBuyOrder.getPrice());
         }
-    }
-
-    private void placeBuyOrderAtCurrentPrice() throws MerchantExchangeException, ExchangeNonFatalException {
-        InstrumentPrice currentPrices = exchangeService.getCurrentPrices();
-        BigDecimal currentBidPrice = currentPrices.getBidPrice();
-        ExchangeOrder newExchangeOrder = exchangeService.placeBuyOrder(currentBidPrice, counterCurrencyBuyOrderAmount);
-        exchangeOrderRepository.save(newExchangeOrder);
     }
 }

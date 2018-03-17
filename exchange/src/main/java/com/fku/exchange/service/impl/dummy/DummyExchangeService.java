@@ -31,22 +31,22 @@ public class DummyExchangeService implements ExchangeService {
     }
 
     @Override
-    public InstrumentPrice getCurrentPrices() throws MerchantExchangeException, ExchangeNonFatalException {
+    public InstrumentPrice getCurrentPrices() throws MerchantExchangeException {
         return new InstrumentPrice(LIMIT_BID_PRICE, LIMIT_ASK_PRICE);
     }
 
     @Override
-    public TimeSeries getHistoricalTimeSeries(LocalDateTime startDateTime, LocalDateTime endDateTime, Granularity granularityInSec) throws MerchantExchangeException, ExchangeNonFatalException {
+    public TimeSeries getHistoricalTimeSeries(LocalDateTime startDateTime, LocalDateTime endDateTime, Granularity granularityInSec) throws MerchantExchangeException {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
 
     @Override
-    public Bar getLastBar(Granularity granularity) throws MerchantExchangeException, ExchangeNonFatalException {
+    public Bar getLastBar(Granularity granularity) throws MerchantExchangeException {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
 
     @Override
-    public TimeSeries getHistoricalTimeSeries(Granularity granularity) throws MerchantExchangeException, ExchangeNonFatalException {
+    public TimeSeries getHistoricalTimeSeries(Granularity granularity) throws MerchantExchangeException {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
 
@@ -57,7 +57,7 @@ public class DummyExchangeService implements ExchangeService {
 //    }
 
     @Override
-    public ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice) throws MerchantExchangeException, ExchangeNonFatalException {
+    public ExchangeOrder placeOrder(Order.OrderType orderType, BigDecimal baseCurrencyAmount, BigDecimal limitPrice) throws MerchantExchangeException {
         return new ExchangeOrder(
                 UUID.randomUUID().toString(),
                 orderType,
@@ -66,7 +66,7 @@ public class DummyExchangeService implements ExchangeService {
     }
 
     @Override
-    public ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount) throws MerchantExchangeException, ExchangeNonFatalException {
+    public ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount) throws MerchantExchangeException {
         BigDecimal baseCurrencyAmount = ExchangeHelper.calculateBaseCurrencyAmount(counterCurrencyAmount, INSTRUMENT_LAST_PRICE);
         return new ExchangeOrder(
                 UUID.randomUUID().toString(),
@@ -76,7 +76,12 @@ public class DummyExchangeService implements ExchangeService {
     }
 
     @Override
-    public OpenOrders getOpenOrders() throws MerchantExchangeException, ExchangeNonFatalException {
+    public ExchangeOrder placeBuyOrderAtCurrentPrice(BigDecimal counterCurrencyBuyOrderAmount) throws MerchantExchangeException {
+        return this.placeBuyOrder(this.getCurrentPrices().getBidPrice(), counterCurrencyBuyOrderAmount);
+    }
+
+    @Override
+    public OpenOrders getOpenOrders() throws MerchantExchangeException {
         return DummyExchangeDataFactory.getOpenOrdersWithAskOpenOrder(EXISTING_OPEN_ORDER_ID);
     }
 }

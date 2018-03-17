@@ -67,6 +67,12 @@ public abstract class BaseExchangeService {
         return exchangeOrder;
     }
 
+
+    public ExchangeOrder placeBuyOrderAtCurrentPrice(BigDecimal counterCurrencyBuyOrderAmount) throws MerchantExchangeException {
+        return this.placeBuyOrder(this.getCurrentPrices().getBidPrice(), counterCurrencyBuyOrderAmount);
+    }
+
+
     public ExchangeOrder placeBuyOrder(BigDecimal currentBidPrice, BigDecimal counterCurrencyAmount)
             throws MerchantExchangeException {
         BigDecimal baseCurrencyAmount = null;
