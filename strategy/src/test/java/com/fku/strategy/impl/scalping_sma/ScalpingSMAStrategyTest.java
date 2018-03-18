@@ -2,16 +2,12 @@ package com.fku.strategy.impl.scalping_sma;
 
 import com.fku.exchange.repository.ExchangeOrderRepository;
 import com.fku.exchange.service.ExchangeService;
-import com.fku.exchange.service.impl.gdax.GDAXExchangeService;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
-import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.gdax.GDAXExchange;
-import org.ta4j.core.TimeSeries;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

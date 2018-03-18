@@ -7,11 +7,10 @@ import com.fku.exchange.service.PassiveExchangeService;
 import com.fku.exchange.service.impl.dummy.DummyExchangeService;
 import com.fku.exchange.service.impl.dummy.MockedActiveExchangeService;
 import com.fku.exchange.service.impl.gdax.GDAXActiveExchangeService;
-import com.fku.exchange.service.impl.gdax.GDAXExchangeService;
+import com.fku.exchange.service.impl.ExchangeServiceFacade;
 import com.fku.exchange.service.impl.gdax.GDAXPassiveExchangeService;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 
@@ -46,7 +45,7 @@ public class ExchangeServiceFactory extends AbstractFactoryBean<ExchangeService>
                 } else {
                     activeExchangeService = new GDAXActiveExchangeService(xchangeAdapter, new CurrencyPair(this.currencyPairProperty), passiveExchangeService);
                 }
-                return new GDAXExchangeService(passiveExchangeService, activeExchangeService);
+                return new ExchangeServiceFacade(passiveExchangeService, activeExchangeService);
             case DUMMY:
                 return new DummyExchangeService();
             default:

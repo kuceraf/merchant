@@ -1,4 +1,4 @@
-package com.fku.exchange.service.impl.gdax;
+package com.fku.exchange.service.impl;
 
 import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.domain.InstrumentPrice;
@@ -29,11 +29,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Log4j2
-public class GDAXExchangeService implements ExchangeService {
+public class ExchangeServiceFacade implements ExchangeService {
     private final PassiveExchangeService passiveExchangeService;
     private final ActiveExchangeService activeExchangeService;
 
-    public GDAXExchangeService(PassiveExchangeService passiveExchangeService, ActiveExchangeService activeExchangeService) {
+    public ExchangeServiceFacade(PassiveExchangeService passiveExchangeService, ActiveExchangeService activeExchangeService) {
         this.passiveExchangeService = passiveExchangeService;
         this.activeExchangeService = activeExchangeService;
     }
