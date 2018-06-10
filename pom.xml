@@ -45,6 +45,7 @@
         <projectlombok.version>1.16.20</projectlombok.version>
         <ta4j.version>0.11</ta4j.version>
         <assertj-core.version>3.9.0</assertj-core.version>
+        <guava.version>23.0</guava.version>
     </properties>
 
     <modules>
@@ -94,6 +95,11 @@
                 <optional>true</optional>
                 <!--<scope>provided</scope>-->
                 <version>${projectlombok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
             <!--Test-->
             <dependency>
