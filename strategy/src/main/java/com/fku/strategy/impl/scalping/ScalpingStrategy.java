@@ -26,6 +26,7 @@ import static com.fku.strategy.impl.StrategyHelper.calculateSellPriceWithRequire
 import static com.fku.strategy.impl.StrategyHelper.isOrderFilled;
 
 @Log4j2 // TODO prenest logiku do ScalpingSMAStrategy a tuto trudu odstranit
+@Deprecated
 public class ScalpingStrategy extends ATradingStrategy implements TradingStrategy, InitializingBean {
     /**
      * Pro maket BTC/EUR je to 10EUR (counterCurrencyBuyOrderAmount = 10)

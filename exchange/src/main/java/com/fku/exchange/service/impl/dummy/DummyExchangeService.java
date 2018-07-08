@@ -11,9 +11,9 @@ import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.ta4j.core.Bar;
-import org.ta4j.core.TimeSeries;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 import static com.fku.exchange.service.impl.dummy.Constants.*;
@@ -46,7 +46,7 @@ public class DummyExchangeService implements ExchangeService {
     }
 
     @Override
-    public TimeSeries getHistoricalTimeSeries(Granularity granularity) throws MerchantExchangeException {
+    public List<Bar> getHistoricalBars() throws MerchantExchangeException {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
 

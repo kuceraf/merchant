@@ -45,7 +45,7 @@ public class StrategyRunnerScheduled implements MerchantRunner {
             exchangeService.nextBar();
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
-            log.info("END Strategy execution (number [{}], duration [{}] ms)", elapsedTime);
+            log.info("END Strategy execution (duration [{}] ms)", elapsedTime);
         }
         // Order of catch block is important (always catch specific exeptions first!)
         catch (ExchangeNonFatalException e) {

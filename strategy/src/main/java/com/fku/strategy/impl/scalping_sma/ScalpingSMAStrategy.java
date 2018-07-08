@@ -19,12 +19,14 @@ import org.ta4j.core.*;
 
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static com.fku.strategy.impl.StrategyHelper.calculateSellPriceWithRequiredProfit;
 import static com.fku.strategy.impl.StrategyHelper.isOrderFilled;
 
 
 @Log4j2
+@Deprecated
 public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStrategy, InitializingBean {
     private static final Granularity GRANULARITY = Granularity.ONE_MINUTE;
 
@@ -37,7 +39,7 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStra
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        TimeSeries timeSeries = exchangeService.getHistoricalTimeSeries(GRANULARITY);
+        TimeSeries timeSeries = new BaseTimeSeries(exchangeService.getHistoricalBars());
         technicalAnalysis = new SmaAndClosePriceTA(timeSeries);
     }
 
@@ -142,7 +144,8 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStra
     }
 
     private void refreshTimeSeries() throws MerchantExchangeException, StrategyNonFatalException {
-        Bar newBar = exchangeService.getHistoricalTimeSeries(GRANULARITY).getLastBar();
+        List<Bar> bars = exchangeService.getHistoricalBars();
+        Bar newBar = bars.get(bars.size() - 1);
         TimeSeries timeSeries = technicalAnalysis.getTimeSeries();
         if (newBar.getEndTime().toInstant().compareTo(timeSeries.getLastBar().getEndTime().toInstant()) <= 0) {
             log.warn("Exchange returned bar witch has endTime [{}] before or equal to last endTime in series [{}] - skipping",

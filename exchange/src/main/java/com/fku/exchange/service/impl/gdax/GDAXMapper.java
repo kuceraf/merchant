@@ -13,8 +13,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class GDAXMapper {
-    public static TimeSeries remap(GDAXHistoricRates[] gdaxHistoricRates, long periodInSecond) {
-        List<Bar> bars = Arrays.stream(gdaxHistoricRates)
+    public static List<Bar> remap(GDAXHistoricRates[] gdaxHistoricRates, long periodInSecond) {
+        return Arrays.stream(gdaxHistoricRates)
                 .sorted(Comparator.comparing(GDAXHistoricRates::getTime)) // time series must be sorted (eg: 0: 2017-07-01T17:00+02:00, 1: 2017-07-01T17:01+02:00 ...)
                 .map(rates -> {
                             long epochInMilliseconds = rates.getTime() * 1000; // seconds-based epoch value needs to be converted to milliseconds
@@ -31,7 +31,7 @@ public class GDAXMapper {
                         }
                 )
                 .collect(Collectors.toList());
-        return new BaseTimeSeries("gdax-historic-rates", bars);
+//        return new BaseTimeSeries("gdax-historic-rates", bars);
     }
 
 //    /**

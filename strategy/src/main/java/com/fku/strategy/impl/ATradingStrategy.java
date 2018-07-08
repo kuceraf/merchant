@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.math.BigDecimal;
 
 @Log4j2
+@Deprecated
 public abstract class ATradingStrategy {
     protected final ExchangeService exchangeService;
     protected final ExchangeOrderRepository exchangeOrderRepository;

@@ -12,9 +12,9 @@ import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.ta4j.core.Bar;
-import org.ta4j.core.TimeSeries;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Log4j2
 public class ExchangeServiceFacade implements ExchangeService {
@@ -48,14 +48,9 @@ public class ExchangeServiceFacade implements ExchangeService {
     }
 
     @Override
-    public TimeSeries getHistoricalTimeSeries(Granularity granularity) throws MerchantExchangeException {
-        return passiveExchangeService.getHistoricalTimeSeries(granularity);
+    public List<Bar> getHistoricalBars() throws MerchantExchangeException {
+        return passiveExchangeService.getHistoricalBars();
     }
-
-//    @Override
-//    public Bar getLastBar(Granularity granularity) throws MerchantExchangeException {
-//        return passiveExchangeService.getLastBar(granularity);
-//    }
 
     @Override
     public Observable<Bar> getBarObservable() throws MerchantExchangeException {

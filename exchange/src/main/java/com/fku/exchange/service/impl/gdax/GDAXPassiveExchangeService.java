@@ -9,8 +9,7 @@ import com.fku.exchange.service.impl.ExchangeHelper;
 import com.fku.exchange.service.impl.Granularity;
 import com.fku.exchange.service.impl.gdax.dto.GDAXHistoricRates;
 import io.reactivex.Observable;
-import io.reactivex.subjects.BehaviorSubject;
-import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 import lombok.extern.log4j.Log4j2;
 import org.knowm.xchange.Exchange;
@@ -19,64 +18,25 @@ import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.knowm.xchange.service.trade.params.orders.OpenOrdersParams;
 import org.ta4j.core.Bar;
-import org.ta4j.core.BaseBar;
-import org.ta4j.core.Decimal;
-import org.ta4j.core.TimeSeries;
 import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.List;
 
 @Log4j2
 public class GDAXPassiveExchangeService extends BaseExchangeService implements PassiveExchangeService {
     private final GDAXRemoteInterface gdaxInterface;
-    private final Granularity granularity = Granularity.FIVE_MINUTES;
+    private final Granularity granularity = Granularity.ONE_MINUTE;
 
-    private Subject<Bar> subject = ReplaySubject.create(); // ReplaySubject - It emits all the items of the source Observable, regardless of when the subscriber subscribes
+    private Subject<Bar> subject = PublishSubject.create();
 
     public GDAXPassiveExchangeService(@Nonnull Exchange xchangeAdapter, @Nonnull CurrencyPair currencyPair) throws MerchantExchangeException {
         super(xchangeAdapter, currencyPair);
         this.gdaxInterface = RestProxyFactory.createProxy(GDAXRemoteInterface.class,
                 xchangeAdapter.getExchangeSpecification().getSslUri(),
                 this.getClientConfig());
-
-        // init subject
-
-        GDAXHistoricRates[] gdaxHistoricRates = null;
-        try {
-            gdaxHistoricRates = gdaxInterface.getHistoricRates(
-                    currencyPair.base.getCurrencyCode(),
-                    currencyPair.counter.getCurrencyCode(),
-                    String.valueOf(granularity.getSeconds())); // must be one of the following values: {60 (1min), 300 (5min), 900 (15min), 3600 (1h), 21600(6h), 86400 (1d)}, otherwise, your request will be rejected.
-        } catch (IOException e) {
-            ExchangeExceptionHandler.handleException(e);
-        }
-        Arrays.stream(gdaxHistoricRates)
-                .sorted(Comparator.comparing(GDAXHistoricRates::getTime)) // time series must be sorted (eg: 0: 2017-07-01T17:00+02:00, 1: 2017-07-01T17:01+02:00 ...)
-                .map(rates -> {
-                            long epochInMilliseconds = rates.getTime() * 1000; // seconds-based epoch value needs to be converted to milliseconds
-                            ZonedDateTime startDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochInMilliseconds), ZoneId.systemDefault());
-                            return new BaseBar(
-                                    Duration.ofSeconds(granularity.getSeconds()),
-                                    startDateTime.plusSeconds(granularity.getSeconds()),
-                                    Decimal.valueOf(rates.getOpen()),
-                                    Decimal.valueOf(rates.getHigh()),
-                                    Decimal.valueOf(rates.getLow()),
-                                    Decimal.valueOf(rates.getClose()),
-                                    Decimal.valueOf(rates.getVolume())
-                            );
-                        }
-                ).forEach((bar) -> {
-                    log.info("*** init subject {}", bar);
-                    subject.onNext(bar);
-        });
     }
 
     @Override
@@ -107,7 +67,8 @@ public class GDAXPassiveExchangeService extends BaseExchangeService implements P
     }
 
     public void nextBar() throws MerchantExchangeException {
-        subject.onNext(getHistoricalTimeSeries(granularity).getLastBar());
+        List<Bar> bars = getHistoricalBars();
+        subject.onNext(bars.get(bars.size() - 1));
     }
 
     @Override
@@ -115,7 +76,7 @@ public class GDAXPassiveExchangeService extends BaseExchangeService implements P
         return subject;
     }
 
-    public TimeSeries getHistoricalTimeSeries(@Nonnull Granularity granularity) throws MerchantExchangeException {
+    public List<Bar> getHistoricalBars() throws MerchantExchangeException {
         GDAXHistoricRates[] gdaxHistoricRates = null;
         try {
             gdaxHistoricRates = gdaxInterface.getHistoricRates(
@@ -127,12 +88,6 @@ public class GDAXPassiveExchangeService extends BaseExchangeService implements P
         }
         return GDAXMapper.remap(gdaxHistoricRates, granularity.getSeconds());
     }
-
-
-//    @Override
-//    public Bar getLastBar(@Nonnull Granularity granularity) throws MerchantExchangeException {
-//        return getHistoricalTimeSeries(granularity).getLastBar();
-//    }
 
     private OrderBook getOrderBook() throws MerchantExchangeException {
         OrderBook orderBook = null;

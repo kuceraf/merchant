@@ -11,9 +11,9 @@ import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.gdax.GDAXExchange;
 import org.ta4j.core.Bar;
-import org.ta4j.core.TimeSeries;
 
 import java.time.Duration;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,12 +35,12 @@ public class GDAXPassiveExchangeServiceIT {
 
     @Test
     public void getHistoricalDataSeries_5MinGranularity() throws Exception {
-        TimeSeries historicalTimeSeries = gdaxExchangeServiceTested.getHistoricalTimeSeries(Granularity.FIVE_MINUTES);
-        assertThat(historicalTimeSeries.getBarData()).hasSize(351);
+        List<Bar> bars = gdaxExchangeServiceTested.getHistoricalBars();
+        assertThat(bars).hasSize(351);
 
-        for(int i =0; i < historicalTimeSeries.getEndIndex(); i++) {
+        for(int i =0; i < bars.size(); i++) {
             Duration betweenPeriod = Duration.between(
-                    historicalTimeSeries.getBar(i).getBeginTime() , historicalTimeSeries.getBar(i +1).getBeginTime()
+                    bars.get(i).getBeginTime() , bars.get(i +1).getBeginTime()
             );
             assertThat(betweenPeriod.getSeconds())
                     .as("Duration between two successive date in time series with 5 min granularity must be 5 min.")

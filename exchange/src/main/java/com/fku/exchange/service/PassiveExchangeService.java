@@ -21,14 +21,12 @@ public interface PassiveExchangeService {
 
     /**
      * Get maximal time series from now
-     * @param granularity
      * @return
      * @throws MerchantExchangeException
      * @throws ExchangeNonFatalException
      */
-    TimeSeries getHistoricalTimeSeries(Granularity granularity) throws MerchantExchangeException;
-//    Bar getLastBar(Granularity granularity) throws MerchantExchangeException;
-
+    List<Bar> getHistoricalBars() throws MerchantExchangeException;
     Observable<Bar> getBarObservable() throws MerchantExchangeException;
+    // called from scheduler to emit new bar to subscribers
     void nextBar() throws MerchantExchangeException;
 }
