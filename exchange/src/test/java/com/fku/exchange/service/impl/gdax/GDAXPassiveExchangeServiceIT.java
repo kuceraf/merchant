@@ -1,6 +1,7 @@
 package com.fku.exchange.service.impl.gdax;
 
 import com.fku.exchange.service.impl.Granularity;
+import io.reactivex.Observable;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -13,7 +14,6 @@ import org.ta4j.core.Bar;
 import org.ta4j.core.TimeSeries;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,5 +46,13 @@ public class GDAXPassiveExchangeServiceIT {
                     .as("Duration between two successive date in time series with 5 min granularity must be 5 min.")
                     .isEqualTo(Granularity.FIVE_MINUTES.getSeconds());
         }
+    }
+
+    @Test
+    public void observeBars() throws Exception {
+        Observable<Bar> barObservable = gdaxExchangeServiceTested.getBarObservable();
+        barObservable.subscribe(bar -> {
+            System.out.println(bar);
+        } );
     }
 }

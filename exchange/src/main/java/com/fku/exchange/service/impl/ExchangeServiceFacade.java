@@ -2,31 +2,19 @@ package com.fku.exchange.service.impl;
 
 import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.domain.InstrumentPrice;
-import com.fku.exchange.error.ExchangeExceptionHandler;
 import com.fku.exchange.error.MerchantExchangeException;
-import com.fku.exchange.error.ExchangeNonFatalException;
 import com.fku.exchange.service.ActiveExchangeService;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.service.PassiveExchangeService;
-import com.fku.exchange.service.impl.BaseExchangeService;
-import com.fku.exchange.service.impl.Granularity;
-import com.fku.exchange.service.impl.gdax.dto.GDAXHistoricRates;
+import io.reactivex.Observable;
 import lombok.extern.log4j.Log4j2;
-import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
-import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.ta4j.core.Bar;
 import org.ta4j.core.TimeSeries;
-import si.mazi.rescu.ClientConfig;
-import si.mazi.rescu.RestProxyFactory;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Log4j2
 public class ExchangeServiceFacade implements ExchangeService {
@@ -64,9 +52,19 @@ public class ExchangeServiceFacade implements ExchangeService {
         return passiveExchangeService.getHistoricalTimeSeries(granularity);
     }
 
+//    @Override
+//    public Bar getLastBar(Granularity granularity) throws MerchantExchangeException {
+//        return passiveExchangeService.getLastBar(granularity);
+//    }
+
     @Override
-    public Bar getLastBar(Granularity granularity) throws MerchantExchangeException {
-        return passiveExchangeService.getLastBar(granularity);
+    public Observable<Bar> getBarObservable() throws MerchantExchangeException {
+        return passiveExchangeService.getBarObservable();
+    }
+
+    @Override
+    public void nextBar() throws MerchantExchangeException {
+         passiveExchangeService.nextBar();
     }
 
     // ACTIVE OPERATION

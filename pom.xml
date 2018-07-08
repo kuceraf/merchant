@@ -46,6 +46,7 @@
         <ta4j.version>0.11</ta4j.version>
         <assertj-core.version>3.9.0</assertj-core.version>
         <guava.version>23.0</guava.version>
+        <rxjava.version>2.1.14</rxjava.version>
     </properties>
 
     <modules>
@@ -100,6 +101,11 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.reactivex.rxjava2</groupId>
+                <artifactId>rxjava</artifactId>
+                <version>${rxjava.version}</version>
             </dependency>
             <!--Test-->
             <dependency>

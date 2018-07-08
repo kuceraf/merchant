@@ -6,6 +6,8 @@ import com.fku.strategy.SupportedStrategyType;
 import com.fku.strategy.TradingStrategy;
 import com.fku.strategy.impl.scalping.ScalpingStrategy;
 import com.fku.strategy.impl.scalping_sma.ScalpingSMAStrategy;
+import com.fku.strategy.impl.scalping_sma_reactive.ScalpingSMAReactiveStrategy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 
 public class TradingStrategyFactory extends AbstractFactoryBean<TradingStrategy> {
@@ -30,9 +32,11 @@ public class TradingStrategyFactory extends AbstractFactoryBean<TradingStrategy>
     protected TradingStrategy createInstance() throws Exception {
         switch (strategyType) {
             case SCALPING:
-                return new ScalpingStrategy(exchangeService, exchangeOrderRepository);
+//                return new ScalpingStrategy(exchangeService, exchangeOrderRepository);
             case SCALPING_SMA:
-                return new ScalpingSMAStrategy(exchangeService, exchangeOrderRepository);
+//                return new ScalpingSMAStrategy(exchangeService, exchangeOrderRepository);
+            case SCALPING_SMA_REACTIVE:
+                return new ScalpingSMAReactiveStrategy(exchangeService);
             default:
                 throw new IllegalStateException("Unsupported strategy: " + strategyType.name());
         }

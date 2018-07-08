@@ -85,12 +85,6 @@ public class ScalpingStrategy extends ATradingStrategy implements TradingStrateg
     }
 
     @Override
-    public TechnicalAnalysis getTechnicalAnalysis() {
-        // TODO
-        return null;
-    }
-
-    @Override
     protected void checkProfitability() throws MerchantStrategyException {
         ExchangeOrder lastOrder = exchangeOrderRepository.findLast();
         if(lastOrder != null && lastOrder.isAsk()) {

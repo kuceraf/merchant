@@ -3,10 +3,10 @@ package com.fku.exchange.service.impl.dummy;
 import com.fku.exchange.service.ExchangeService;
 import com.fku.exchange.service.impl.ExchangeHelper;
 import com.fku.exchange.error.MerchantExchangeException;
-import com.fku.exchange.error.ExchangeNonFatalException;
 import com.fku.exchange.domain.InstrumentPrice;
 import com.fku.exchange.domain.ExchangeOrder;
 import com.fku.exchange.service.impl.Granularity;
+import io.reactivex.Observable;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.OpenOrders;
@@ -14,7 +14,6 @@ import org.ta4j.core.Bar;
 import org.ta4j.core.TimeSeries;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static com.fku.exchange.service.impl.dummy.Constants.*;
@@ -35,8 +34,14 @@ public class DummyExchangeService implements ExchangeService {
         return new InstrumentPrice(LIMIT_BID_PRICE, LIMIT_ASK_PRICE);
     }
 
+
     @Override
-    public Bar getLastBar(Granularity granularity) throws MerchantExchangeException {
+    public void nextBar() throws MerchantExchangeException {
+        throw new UnsupportedOperationException("Not implemented!"); // TODO
+    }
+
+    @Override
+    public Observable<Bar> getBarObservable() throws MerchantExchangeException {
         throw new UnsupportedOperationException("Not implemented!"); // TODO
     }
 

@@ -41,7 +41,7 @@ public class ScalpingSMAStrategy extends ATradingStrategy implements TradingStra
         technicalAnalysis = new SmaAndClosePriceTA(timeSeries);
     }
 
-    @Override
+
     public TechnicalAnalysis getTechnicalAnalysis() {
         return technicalAnalysis;
     }

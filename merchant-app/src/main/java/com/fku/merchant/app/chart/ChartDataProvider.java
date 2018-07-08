@@ -20,16 +20,16 @@ public abstract class ChartDataProvider<T> {
 
     public ChartDTO<T> getChartData(int size) {
         T data = initData();
-        TimeSeries timeSeries = tradingStrategy.getTechnicalAnalysis().getTimeSeries();
-        ChartDTO<T> chartDTO = new ChartDTO<>();
-        chartDTO.setName(getType().name());
-
-        int beginIndex = timeSeries.getBarCount() - size;
-        if(beginIndex < 0) return null;
-        for (int i = beginIndex; i < timeSeries.getBarCount(); i++) {
-            addChartDataSpec(timeSeries, data, i);
-        }
-        chartDTO.setData(data);
-        return chartDTO;
+//        TimeSeries timeSeries = tradingStrategy.getTechnicalAnalysis().getTimeSeries(); TODO
+//        ChartDTO<T> chartDTO = new ChartDTO<>();
+//        chartDTO.setName(getType().name());
+//
+//        int beginIndex = timeSeries.getBarCount() - size;
+//        if(beginIndex < 0) return null;
+//        for (int i = beginIndex; i < timeSeries.getBarCount(); i++) {
+//            addChartDataSpec(timeSeries, data, i);
+//        }
+//        chartDTO.setData(data);
+        return null;
     }
 }

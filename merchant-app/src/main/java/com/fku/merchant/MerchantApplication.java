@@ -1,6 +1,6 @@
 package com.fku.merchant;
 
-import com.fku.merchant.app.core.runner.StrategyRunner;
+import com.fku.merchant.app.core.runner.MerchantRunner;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -16,13 +16,13 @@ import java.util.Arrays;
 @ComponentScan("com.fku.*")
 public class MerchantApplication implements CommandLineRunner {
 
-	private final StrategyRunner strategyRunner;
+	private final MerchantRunner merchantRunner;
 	private final Environment environment;
 
 	@Autowired
-	public MerchantApplication(StrategyRunner strategyRunner,
+	public MerchantApplication(MerchantRunner merchantRunner,
 							   Environment environment) {
-		this.strategyRunner = strategyRunner;
+		this.merchantRunner = merchantRunner;
 		this.environment = environment;
 	}
 
@@ -33,6 +33,6 @@ public class MerchantApplication implements CommandLineRunner {
 	@Override
 	public void run(String... strings) throws Exception {
 		log.info("MerchantApplication is starting with active profile: {}", Arrays.toString(environment.getActiveProfiles()));
-		strategyRunner.runStrategy();
+		merchantRunner.run();
 	}
 }

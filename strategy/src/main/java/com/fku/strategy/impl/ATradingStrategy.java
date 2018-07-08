@@ -28,7 +28,6 @@ public abstract class ATradingStrategy {
     @Value("${strategy.minimumPercentageProfit}")
     protected BigDecimal minimumPercentageProfit; // The minimum % gain was to achieve before placing a SELL order.
 
-
     @Autowired
     public ATradingStrategy(ExchangeService exchangeService, ExchangeOrderRepository exchangeOrderRepository) {
         this.exchangeService = exchangeService;
